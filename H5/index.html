@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>game</title>
+    <script type="text/javascript" src="static/js/flex.js"></script>
+  </head>
+  <body style="margin: 0; padding: 0;">
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+    <!-- 游戏音效 -->
+    <div id="audio"></div>
+    <script>
+    (function (doc, win) {
+        var docEl = doc.documentElement,
+            resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+            recalc = function () {
+                var clientWidth = docEl.clientWidth;
+                if (!clientWidth) return;
+                // if(clientWidth>=640){
+                //     docEl.style.fontSize = '100px';
+                // }else{
+                //     docEl.style.fontSize = 100 * (clientWidth / 640) + 'px';
+                // }
+                docEl.style.fontSize = 20 * (clientWidth / 750) + 'px';
+            };
+
+        if (!doc.addEventListener) return;
+        win.addEventListener(resizeEvt, recalc, false);
+        doc.addEventListener('DOMContentLoaded', recalc, false);
+    })(document, window);
+    </script>
+  </body>
+</html>

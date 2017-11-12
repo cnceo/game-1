@@ -1,0 +1,50 @@
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@mipmap/background"
+        tools:context="com.game.qt.MainActivity" >
+
+        <ImageView
+            android:id="@+id/bg1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:paddingTop="50px"
+            android:paddingBottom="150px"
+            android:src="@mipmap/head_icon" />
+
+        <ImageView
+            android:id="@+id/bg2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:paddingTop="150px"
+            android:paddingBottom="250px"
+            android:paddingLeft="250px"
+            android:paddingRight="250px"
+            android:src="@mipmap/gamename" />
+
+        <ImageView
+            android:id="@+id/bg3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="150dp"
+            android:layout_marginTop="-60dp"
+            android:layout_toStartOf="@+id/btn"
+            android:src="@mipmap/brand" />
+
+        <Button
+            android:id="@+id/btn"
+            android:layout_width="447px"
+            android:layout_height="129px"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="15dp"
+            android:background="@mipmap/wechat_login"></Button>
+    </RelativeLayout>
+
