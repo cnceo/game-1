@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import UserInterface from '@/components/UserInterface'
-import GameInterface from '@/components/GameInterface'
+import UserInterface from '@/pages/UserInterface'
+import GameInterface from '@/pages/GameInterface'
 
 Vue.use(Router)
 

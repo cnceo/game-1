@@ -4,32 +4,33 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import App from './App'
 import router from './router'
-import Install from './components/commons/Install'
+import Install from './components/Install'
 import Audio from './libs/Audio'
+import store from './store'
 
 Vue.use(Vuex)
 Vue.use(Install)
 Vue.use(Audio)
 
-const store = new Vuex.Store({
-  // 存储状态值
-  state: {
-    user: ''
-  },
-  // 状态值的改变方法,操作状态值
-  // 提交mutations是更改Vuex状态的唯一方法
-  mutations: {
-    increment (state, params) {
-      // 变更状态
-      state.user = state
-    }
-  },
-  actions: {
-    increment (context, params) {
-      context.commit('increment', params)
-    }
-  }
-})
+// const store = new Vuex.Store({
+//   // 存储状态值
+//   state: {
+//     user: ''
+//   },
+//   // 状态值的改变方法,操作状态值
+//   // 提交mutations是更改Vuex状态的唯一方法
+//   mutations: {
+//     increment (state, params) {
+//       // 变更状态
+//       state.user = state
+//     }
+//   },
+//   actions: {
+//     increment (context, params) {
+//       context.commit('increment', params)
+//     }
+//   }
+// })
 
 // import JsBridge from 'JsBridge'
 window.getUserInfo = function (user) {

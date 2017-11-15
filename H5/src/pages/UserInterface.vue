@@ -3,7 +3,7 @@
     <div class="face-bar">   
       <div class="box g-flex-row">
         <!--用户信息-->
-        <div class="user-info g-flex-row">
+        <!-- <div class="user-info g-flex-row">
           <div class="user-avatar">
             <img src="../assets/Avatarframe.png" width="100%"  height="100%"/>
             <div class="user-img">
@@ -18,10 +18,10 @@
             <div class="user-black f-relative"></div></br>
             <div class="user-card f-relative">{{userInfo.card}}</div>
           </div>
-        </div>
+        </div> -->
         <!--基本设置-->
         <ul class="base-settting g-flex-row">
-          <li @click="help">
+          <!-- <li @click="help">
             <img src="../assets/rules.png" width="100%"/>
           </li>
           <li @click="message">
@@ -29,11 +29,11 @@
           </li>
           <li @click="setting">
             <img src="../assets/steup.png" width="100%"/>
-          </li>
+          </li> -->
         </ul>
      </div>
     </div>
-    <div class="voice-info">
+    <!-- <div class="voice-info">
       <p class="text">这里是公告信息</p>
       <span class="s-icon"></span>
     </div>
@@ -52,7 +52,7 @@
     </div>
     <div class="z-bg" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1">
       <img src="../assets/background.png" alt=""  width="100%">
-    </div>
+    </div> -->
 
     <!--规则-->
     <Modal :showModal="showRuleModal"
@@ -259,6 +259,28 @@ export default {
         timer = null
       }
     }, 500)
+    // 获取消息信息
+    console.log(this.$store)
+    this.$store.dispatch('indexPublic', {})
+    function createCORS (method, url) {
+      var xhr = new XMLHttpRequest()
+      if ('withCredentials' in xhr) {
+        xhr.open(method, url, true)
+      } else if (typeof XDomainRequest !== 'undefined') {
+        xhr = new XDomainRequest()
+        xhr.open(method, url)
+      } else {
+        xhr = null
+      }
+      return xhr
+    }
+    var request = createCORS('post', 'http://www.syhpgkj.com:8080/app/get/notice')
+    if (request) {
+      request.onload = function (data) {
+        console.log(request.responseText)
+      }
+      request.send()
+    }
   },
   methods: {
     handleArray (arr, data) {
