@@ -41,6 +41,7 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
 import img1 from '../assets/card1.png'
 import img2 from '../assets/card2.png'
 import img3 from '../assets/card3.png'
@@ -48,8 +49,6 @@ import img3 from '../assets/card3.png'
 export default {
   name: 'app',
   props: {
-    sounds: {
-    },
     account: {
       type: Boolean,
       default: true
@@ -58,16 +57,20 @@ export default {
   watch: {
     sounds: {
       handler: function (val) {
-        console.log(val)
-        this.music = val
+        // console.log(val)
+        this.music = val.music
+        this.sound = val.sound
       },
       deep: true
     }
   },
+  computed: mapGetters({
+    'sounds': 'listenMusic'
+  }),
   data () {
     return {
       showSetModal: false,
-      sound: {max: 1, cur: 0.5},
+      sound: {},
       music: {},
       setTabs: [
         {
@@ -133,20 +136,36 @@ export default {
       this.selectSet = index
     },
     selectDesktop (data) {
-      console.log(data)
+     // console.log(data)
     },
     selectCard (data) {
-      console.log(data)
+    // console.log(data)
     },
     // 音效设置
     changeSound (val) {
       this.$audio.setvol(val)
+      // 保存设置的音效
+      this.$store.dispatch('getMusic', {
+        music: this.music,
+        sound: {
+          max: this.sound.max,
+          cur: val
+        }
+      })
      // window.android.setSound(val)
     },
     // 音乐设置
     changeMusic (val) {
       // 调用android原生内部方法
       window.android.setSound(val)
+       // 保存设置的音效
+      this.$store.dispatch('getMusic', {
+        music: {
+          max: this.music.max,
+          cur: val
+        },
+        sound: this.sound
+      })
     },
     changeAccount () {
       // 调用android原生内部方法
@@ -184,7 +203,7 @@ export default {
               width: 150px;
             }
             .bar{
-              flex: 1;
+              flex: 0 0 auto;
             }
           }
         }

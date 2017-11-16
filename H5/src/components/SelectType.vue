@@ -26,11 +26,9 @@ export default {
   },
   watch: {
     types (val) {
-      console.log(val)
     }
   },
   created () {
-    console.log(this.types)
   },
   data () {
     return {

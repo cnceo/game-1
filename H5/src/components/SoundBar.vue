@@ -17,8 +17,9 @@ export default {
   },
   watch: {
     sound (val) {
+     // console.log(val)
       // 初始化音量进度条
-      let rate = this.sound.cur / this.sound.max
+      let rate = val.cur / val.max
       let [dotElem, barWidth, dotWidth] = this.initSound()
       dotElem.style.left = barWidth * rate - (dotWidth / 2) + 'px'
     }
@@ -35,52 +36,52 @@ export default {
       if (event.target.getAttribute('name') !== 'bar') {
         return false
       }
-      let [dotElem, barWidth, dotWidth] = this.initSound()
       let site = event.offsetX
-      // 进度条对应显示
-      if (site <= 0) {
-        dotElem.style.left = 0
-      } else if (site >= (barWidth - dotWidth)) {
-        dotElem.style.left = barWidth - dotWidth + 'px'
-      } else {
-        dotElem.style.left = site + 'px'
-      }
-      // 获取当前的位置
-      let curSite = parseInt(dotElem.style.left)
-      // 计算此时的音量
-      let maxSound = this.sound.max
-      let rate = (curSite / barWidth)
-      let curSound = Math.round(maxSound * rate)
-      // 将最终值传给父元素
-      this.$emit('on-change', curSound)
+      this.calcVolume(site)
     },
     moveDot (event) {
-      let [dotElem, barWidth, dotWidth] = this.initSound()
       let barElem = this.$refs.soundbox
-      let dotSite = event.changedTouches[0].clientX
+      let dotSite = event.changedTouches[0].screenX
       let startSite = this.getBodyOffset(barElem)
-      let site = dotSite - (startSite - barWidth)
+      let site = dotSite - startSite
+      this.calcVolume(site)
+    },
+    calcVolume (site) {
+      let [dotElem, barWidth, dotWidth] = this.initSound()
       // 进度条对应显示
-      if (dotSite <= (startSite - barWidth)) {
+      if (site <= dotWidth) {
         dotElem.style.left = 0
-      } else if (dotSite >= (startSite - dotWidth)) {
-        dotElem.style.left = barWidth - dotWidth + 'px'
+      } else if (site >= (barWidth - dotWidth)) {
+        dotElem.style.left = (barWidth - dotWidth) + 'px'
       } else {
-        dotElem.style.left = site - (barWidth / 2) + 'px'
+        dotElem.style.left = site - (dotWidth / 2) + 'px'
       }
       // 获取当前的位置
-      let curSite = parseInt(dotElem.style.left)
+      let curSite = site <= 0 ? 0 : (site >= barWidth) ? barWidth : site
+      console.log(curSite)
       // 计算此时的音量
       let maxSound = this.sound.max
       let rate = (curSite / barWidth)
-      let curSound = Math.round(maxSound * rate)
+     // console.log(rate)
+      let curSound = 0
+      if (maxSound === 1) {
+        curSound = (maxSound * rate).toFixed(1)
+      } else {
+        curSound = parseInt(maxSound * rate)
+      }
+      console.log(curSound)
       // 将最终值传给父元素
       this.$emit('on-change', curSound)
     },
+    // 计算声音条相对屏幕的左偏移量
     getBodyOffset (elem) {
       let offsetLeft = 0
+      let flag = 0
       while (elem.tagName.toString().toLowerCase() !== 'body') {
-        offsetLeft += elem.offsetLeft
+        if (flag !== elem.offsetLeft) {
+          offsetLeft += elem.offsetLeft
+          flag = elem.offsetLeft
+        }
         elem = elem.parentNode
       }
       return offsetLeft
