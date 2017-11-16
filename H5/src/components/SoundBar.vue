@@ -15,6 +15,10 @@ export default {
     sound: {
     }
   },
+  data () {
+    return {
+    }
+  },
   watch: {
     sound (val) {
      // console.log(val)
@@ -40,24 +44,40 @@ export default {
       this.calcVolume(site)
     },
     moveDot (event) {
+      if (event.target.getAttribute('name') !== 'dot') {
+        return false
+      }
       let barElem = this.$refs.soundbox
+      let barWidth = parseInt(barElem.style.width)
       let dotSite = event.changedTouches[0].screenX
-      let startSite = this.getBodyOffset(barElem)
-      let site = dotSite - startSite
+      // let startSite = this.getBodyOffset(barElem)
+      let clientWidth = document.documentElement.clientWidth
+      let startSite = (clientWidth - (barWidth + 60)) / 2 + 60
+      let site = ''
+      if (dotSite < startSite) {
+        site = 0
+      } else if (dotSite > (startSite + barWidth)) {
+        site = startSite + barWidth
+      } else {
+        site = dotSite - startSite
+      }
       this.calcVolume(site)
     },
     calcVolume (site) {
       let [dotElem, barWidth, dotWidth] = this.initSound()
       // 进度条对应显示
-      if (site <= dotWidth) {
-        dotElem.style.left = 0
-      } else if (site >= (barWidth - dotWidth)) {
-        dotElem.style.left = (barWidth - dotWidth) + 'px'
+      if (site < (dotWidth / 2)) {
+        return
+        // dotElem.style.left = 0
+      } else if (site > (barWidth - (dotWidth / 2))) {
+        return
+       // dotElem.style.left = (barWidth - dotWidth) + 'px'
       } else {
         dotElem.style.left = site - (dotWidth / 2) + 'px'
       }
       // 获取当前的位置
-      let curSite = site <= 0 ? 0 : (site >= barWidth) ? barWidth : site
+      // let curSite = site <= 0 ? 0 : (site >= barWidth) ? barWidth : site
+      let curSite = site
       console.log(curSite)
       // 计算此时的音量
       let maxSound = this.sound.max
@@ -70,7 +90,7 @@ export default {
         curSound = parseInt(maxSound * rate)
       }
       console.log(curSound)
-      // 将最终值传给父元素
+      // 将最终值传给父组件
       this.$emit('on-change', curSound)
     },
     // 计算声音条相对屏幕的左偏移量

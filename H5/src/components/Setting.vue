@@ -24,11 +24,11 @@
           <div v-show="selectSet === 1">
             <ul>
               <li>
-                <span class="label">音效：</span>
+                <span class="label" style="width: 60px">音效：</span>
                 <SoundBar :sound="sound" class="bar" @on-change="changeSound"></SoundBar>
               </li>
               <li>
-                <span class="label">音乐：</span>
+                <span class="label" style="width: 60px">音乐：</span>
                 <SoundBar :sound="music" class="bar" @on-change="changeMusic"></SoundBar>
               </li>
             </ul>

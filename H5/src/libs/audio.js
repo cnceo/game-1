@@ -15,7 +15,7 @@ Audio.install = function (Vue, options) {
       }, 1000)
       audio.volume = this.volume
       audio.play()
-      window.android.read('当前音频大小为：' + audio.volume)
+      // window.android.read('当前音频大小为：' + audio.volume)
     }
   }
   Vue.prototype.$audio.setvol = function (val) {
