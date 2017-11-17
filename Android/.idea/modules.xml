@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/qt.iml" filepath="$PROJECT_DIR$/qt.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Android.iml" filepath="$PROJECT_DIR$/Android.iml" />
+      <module fileurl="file://E:\git项目\game\Android\app\app.iml" filepath="E:\git项目\game\Android\app\app.iml" />
+      <module fileurl="file://E:\git项目\game\Android\qt.iml" filepath="E:\git项目\game\Android\qt.iml" />
     </modules>
   </component>
 </project>
