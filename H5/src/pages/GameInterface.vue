@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import avatar from '../assets/head_img.jpg'
+import avatar from '../assets/imgs/head_img.jpg'
 export default {
   name: 'app',
   data () {

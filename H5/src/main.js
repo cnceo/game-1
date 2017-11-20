@@ -7,6 +7,7 @@ import router from './router'
 import Install from './components/Install'
 import Audio from './libs/Audio'
 import store from './store'
+import './assets/less/modal.less'
 
 Vue.use(Vuex)
 Vue.use(Install)

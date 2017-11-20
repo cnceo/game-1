@@ -42,9 +42,9 @@
 
 <script>
 import {mapGetters} from 'vuex'
-import img1 from '../assets/card1.png'
-import img2 from '../assets/card2.png'
-import img3 from '../assets/card3.png'
+import img1 from '../assets/imgs/card1.png'
+import img2 from '../assets/imgs/card2.png'
+import img3 from '../assets/imgs/card3.png'
 
 export default {
   name: 'app',

@@ -1,0 +1,5 @@
+/*规则*/
+#app .rule-modal .modal-content {
+  background: url('../imgs/img_Rules_Rulebackground.png') 0 0 no-repeat;
+  background-size: 100% 100%;
+}

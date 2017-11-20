@@ -5,9 +5,9 @@
         <!--用户信息-->
         <div class="user-info g-flex-row">
           <div class="user-avatar">
-            <img src="../assets/Avatarframe.png" width="100%"  height="100%"/>
+            <img src="../assets/imgs/Avatarframe.png" width="100%"  height="100%"/>
             <div class="user-img">
-              <img src="../assets/head_img.jpg" width="100%" />
+              <img src="../assets/imgs/head_img.jpg" width="100%" />
             </div>
           </div>
           <div class="user-id-card">
@@ -22,13 +22,13 @@
         <!--基本设置-->
         <ul class="base-settting g-flex-row">
           <li @click="help">
-            <img src="../assets/rules.png" width="100%"/>
+            <img src="../assets/imgs/rules.png" width="100%"/>
           </li>
           <li @click="message">
-            <img src="../assets/message.png" width="100%"/>
+            <img src="../assets/imgs/message.png" width="100%"/>
           </li>
           <li @click="setting">
-            <img src="../assets/steup.png" width="100%"/>
+            <img src="../assets/imgs/steup.png" width="100%"/>
           </li>
         </ul>
      </div>
@@ -39,19 +39,19 @@
     </div>
     <div class="face-body g-flex-row">
       <div class="bg-girl">
-        <img src="../assets/beautyGirl.png"  width="100%"/> 
+        <img src="../assets/imgs/beautyGirl.png"  width="100%"/> 
       </div>
       <div class="all-room">
         <div class="room-item create-room" @click="createRoom">
-          <img src="../assets/createroom.png"  width="100%"/> 
+          <img src="../assets/imgs/createroom.png"  width="100%"/> 
         </div>
         <div class="room-item join-room" @click="joinRoom">
-          <img src="../assets/joinroom.png"  width="100%"/> 
+          <img src="../assets/imgs/joinroom.png"  width="100%"/> 
         </div>
       </div>
     </div>
     <div class="z-bg" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1">
-      <img src="../assets/background.png" alt=""  width="100%">
+      <img src="../assets/imgs/background.png" alt=""  width="100%">
     </div>
 
     <!--规则-->
@@ -62,7 +62,9 @@
       <div slot="body" class="rule-body">
         <div class="game-tabs">
           <span v-for="(item, index) in gameTabs" @click="changeGame(index)" :key="index"
-          :class="{'game-active': item.select}">{{item.label}}</span>
+          :class="{'game-active': item.select}">
+            <img :src="item.img" alt="">
+          </span>
         </div>
         <div class="game-box">
           <div v-show="selectGame === 0">清推内容</div>
@@ -156,8 +158,9 @@
 </template>
 
 <script>
-
+import tabImgs from './tabImgs'
 const MAX_ROOM_NUM = 4
+
 export default {
   name: 'HelloWorld',
   data () {
@@ -174,15 +177,15 @@ export default {
       showJoinRoom: false,
       tabs: [
         {
-          label: '清推',
+          img: tabImgs.imgs[0],
           select: true
         },
         {
-          label: '混推',
+          img: tabImgs.imgs[1],
           select: false
         },
         {
-          label: '大九',
+          img: tabImgs.imgs[2],
           select: false
         }
       ],
@@ -371,11 +374,12 @@ export default {
       }
     },
     changeGame (index) {
+      console.log(tabImgs)
       this.gameTabs.forEach((item, ids) => {
         if (ids === index) {
-          item.select = true
+          item.img = tabImgs.hoverImgs[ids]
         } else {
-          item.select = false
+          item.img = tabImgs.imgs[ids]
         }
       })
       this.selectGame = index
@@ -431,13 +435,13 @@ export default {
 .user-face{
   font-size: 36px;
   height: 100%;
-  // background: url('../assets/background.png') 0 0 no-repeat;
+  // background: url('../assets/imgs/background.png') 0 0 no-repeat;
   // background-size: 100% 100%;
   .face-bar{
     flex: 0 0 200px;
     height: 200px;
     padding: 0 60px;
-    background: url('../assets/bar.png') 0 0 no-repeat;
+    background: url('../assets/imgs/bar.png') 0 0 no-repeat;
     background-size: 100% 100%;
     .base-settting{
       flex: 0 0 450px;
@@ -485,7 +489,7 @@ export default {
         margin-right: 30px;
         border-radius: 20px;
         overflow: hidden;
-        background-image: url('../assets/Avatarframe.png');
+        background-image: url('../assets/imgs/Avatarframe.png');
         background-size: 100% 100%;
         .user-img{
           position: absolute;
@@ -508,17 +512,17 @@ export default {
       .user-id-card{
         margin-right: 30px;
         .user-name{
-          background-image: url('../assets/username.png');
+          background-image: url('../assets/imgs/username.png');
           background-size: 100% 100%;
         }
         .user-id{
-          background: url('../assets/userID.png') 0 0 no-repeat;
+          background: url('../assets/imgs/userID.png') 0 0 no-repeat;
           background-size: 100% 100%;
         }
       }
       .user-room-card{
         .user-card{
-          background: url('../assets/roomcard.png') 0 0 no-repeat;
+          background: url('../assets/imgs/roomcard.png') 0 0 no-repeat;
           background-size: 100% 100%;
         }
       }
@@ -533,7 +537,7 @@ export default {
     line-height: 60px;
     text-align: left;
     color: #fff;
-    background: url('../assets/Announcement_background.png') 0 0 no-repeat;
+    background: url('../assets/imgs/Announcement_background.png') 0 0 no-repeat;
     background-size: 100% 100%;
     p.text{
       margin-left: 180px;
@@ -544,7 +548,7 @@ export default {
       left: 60px;
       width: 80px;
       height: 56px;
-      background: url('../assets/Announcement.png') 0 0 no-repeat;
+      background: url('../assets/imgs/Announcement.png') 0 0 no-repeat;
       background-size: 100% 100%;
     }
   }
@@ -600,10 +604,9 @@ export default {
       height: 80px;
       line-height: 80px;
       margin-top: 30px;
-      background: #fad700;
-    }
-    span.game-active{
-      background: #ddd;
+      img{
+        width: 100%;
+      }
     }
   }
   .game-box{
@@ -662,4 +665,5 @@ export default {
     flex: 1;
   }
 }
+
 </style>
