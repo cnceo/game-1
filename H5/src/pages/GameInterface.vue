@@ -164,7 +164,8 @@ export default {
   flex: 1;
 }
 .game-face{
-  background: pink;
+  background: url('../assets/imgs/img_Room_announcement-background.png') 0 0 no-repeat;
+  background-size: 100% 100%;
   .user-site{
     .user-item{
       position: fixed;

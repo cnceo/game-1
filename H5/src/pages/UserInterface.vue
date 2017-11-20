@@ -58,7 +58,9 @@
     <Modal :showModal="showRuleModal"
     @on-close="closeRuleModal"
     class="rule-modal">
-      <div slot="title" class="rule-title title-active">规则</div>
+      <div slot="title" class="rule-title title-active">
+        <img src="../assets/imgs/img_Rules_rule.png" alt=""  width="100%">
+      </div>
       <div slot="body" class="rule-body">
         <div class="game-tabs">
           <span v-for="(item, index) in gameTabs" @click="changeGame(index)" :key="index"
@@ -78,7 +80,9 @@
     <Modal :showModal="showMsgModal"
     @on-close="closeMsgModal"
     class="msg-modal">
-      <div slot="title" class="msg-title title-active">信息</div>
+      <div slot="title" class="msg-title title-active">
+         <img src="../assets/imgs/img_Message_message.png" alt=""  width="100%">
+      </div>
       <div slot="body" class="msg-body">这里是公告信息</div>
     </Modal>
 
@@ -94,44 +98,66 @@
         <div class="create-content">
           <div class="game-tabs">
             <span v-for="(item, index) in createRoomTabs" @click="changeRoom(index)" :key="index"
-            :class="{'game-active': item.select}">{{item.label}}</span>
+            >
+              <img :src="item.img" alt="">
+            </span>
           </div>
           <div class="game-box">
             <div v-show="selectRoom === 0">
               <div class="row">
-                <span class="label">局数：</span>
-                <selectType :types="ds1_1" class="bar" @on-select="selectTime1"></selectType>
+                <span class="label">
+                   <img src="../assets/imgs/img_Create_Thenumberofinnings.png" alt="" width="100%">
+                </span>
+                <selectType :types="ds1_1" :bigImg="bigImg" class="bar" @on-select="selectTime1"></selectType>
               </div>
               <div class="row">
-                <span class="label">分数：</span>
-                <selectType :types="ds1_2" class="bar" @on-select="selectScore1"></selectType>
+                 <span class="label">
+                   <img src="../assets/imgs/img_Create_Froction.png" alt="" width="100%">
+                </span>
+                <selectType :types="ds1_2" :bigImg="bigImg" class="bar" @on-select="selectScore1"></selectType>
               </div>
             </div>
             <div v-show="selectRoom === 1">
               <div class="row">
-                <span class="label">局数：</span>
-                <selectType :types="ds2_1" class="bar" @on-select="selectTime2"></selectType>
+                 <span class="label">
+                   <img src="../assets/imgs/img_Create_Thenumberofinnings.png" alt="" width="100%">
+                </span>
+                <selectType :types="ds2_1" :bigImg="bigImg" class="bar" @on-select="selectTime2"></selectType>
               </div>
               <div class="row">
-                <span class="label">分数：</span>
-                <selectType :types="ds2_2" class="bar" @on-select="selectScore2"></selectType>
+                 <span class="label">
+                   <img src="../assets/imgs/img_Create_Froction.png" alt="" width="100%">
+                </span>
+                <selectType :types="ds2_2" :bigImg="bigImg" class="bar" @on-select="selectScore2"></selectType>
               </div>
             </div>
             <div v-show="selectRoom === 2">
-              <div class="row">
-                <span class="label">局数：</span>
-                <selectType :types="ds3_1" class="bar" @on-select="selectTime3"></selectType>
+             <div class="row">
+                 <span class="label">
+                   <img src="../assets/imgs/img_Create_Thenumberofinnings.png" alt="" width="100%">
+                </span>
+                <selectType :types="ds3_1" :bigImg="bigImg" class="bar" @on-select="selectTime3"></selectType>
               </div>
               <div class="row">
-                <span class="label">分数：</span>
-                <selectType :types="ds3_2" class="bar" @on-select="selectScore3"></selectType>
+                 <span class="label">
+                   <img src="../assets/imgs/img_Create_Froction.png" alt="" width="100%">
+                </span>
+                <selectType :types="ds3_2" :bigImg="bigImg" class="bar" @on-select="selectScore3"></selectType>
               </div>
             </div>
           </div>
         </div>
         <div class="foot-change">
-          <span class="toggle" @click="createGameRoom">创建房间</span>
-          <span class="toggle" @click="invoiceGameRoom">代开房间</span>    
+          <div class="toggle">
+            <span class="box" @click="createGameRoom">
+              <img src="../assets/imgs/img_Create_Createaroom.png" alt="" width="100%">
+            </span>
+          </div>
+          <div class="toggle">
+            <span class="box" @click="invoiceGameRoom">
+              <img src="../assets/imgs/img_Create_Topoenaroom.png" alt="" width="100%">
+            </span>  
+          </div>    
         </div>
       </div>
     </Modal>
@@ -140,7 +166,9 @@
     <Modal :showModal="showJoinRoom"
     @on-close="closeJoinRoom"
     class="join-modal">
-      <div slot="title" class="join-title title-active">加入房间</div>
+      <div slot="title" class="join-title title-active">
+        <img src="../assets/imgs/img_Join_joinyourroom.png" alt=""  width="100%">
+      </div>
       <div slot="body" class="join-body">
         <div class="fill-room-card">
           <span class="num-item" v-for="(item, index) in roomNums" :key="index">
@@ -149,7 +177,9 @@
         </div>
         <div class="select-num">
           <div class="num-row" v-for="(item, index) in nums" :key="index">
-            <span class="num-cell" v-for="(its, i) in item" :key="i" @click="selectNum(its, i)">{{its}}</span>
+            <span class="num-cell" v-for="(its, i) in item" :key="i" @click="selectNum(its.num, i)">
+              <img :src="its.img" alt="" width="100%">
+            </span>
           </div>
         </div>
       </div>
@@ -177,7 +207,7 @@ export default {
       showJoinRoom: false,
       tabs: [
         {
-          img: tabImgs.imgs[0],
+          img: tabImgs.hoverImgs[0],
           select: true
         },
         {
@@ -193,29 +223,29 @@ export default {
       selectGame: 0,
       ds1: [
         {
-          label: '10局',
+          img: tabImgs.tables[0],
           select: true
         },
         {
-          label: '30局（房卡X2）',
+          img: tabImgs.tables[1],
           select: false
         }
       ],
       ds2: [
         {
-          label: '20分',
+          img: tabImgs.scores[0],
           select: true
         },
         {
-          label: '50分',
+          img: tabImgs.scores[1],
           select: false
         },
         {
-          label: '100分',
+          img: tabImgs.scores[2],
           select: false
         },
         {
-          label: '200分',
+          img: tabImgs.scores[3],
           select: false
         }
       ],
@@ -227,16 +257,12 @@ export default {
       ds2_2: [],
       ds3_1: [],
       ds3_2: [],
-      nums: [
-        [1, 2, 3],
-        [4, 5, 6],
-        [7, 8, 9],
-        ['重输', 0, '删除']
-      ],
+      nums: tabImgs.nums,
       roomNums: ['', '', '', ''],
       numIndex: 0,
       createRoomTabs: [],
-      selectRoom: 0
+      selectRoom: 0,
+      bigImg: false
     }
   },
   created () {
@@ -312,7 +338,7 @@ export default {
       return window.JSON.parse(data)
     },
     message () {
-      this.$audio.play()
+      this.$audio.play(this.$audio.ui)
       this.showMsgModal = true
       console.log(this.showMsgModal)
     },
@@ -320,29 +346,32 @@ export default {
       this.showMsgModal = false
     },
     help () {
-      this.$audio.play()
+      this.$audio.play(this.$audio.ui)
       this.showRuleModal = true
     },
     closeRuleModal () {
       this.showRuleModal = false
     },
     setting () {
-      this.$audio.play()
+      this.$audio.play(this.$audio.ui)
       this.$refs.setting.openSetModal()
     },
     createRoom () {
+      this.$audio.play(this.$audio.btn)
       this.showCreateRoom = true
     },
     closeCreateRoom () {
       this.showCreateRoom = false
     },
     joinRoom () {
+      this.$audio.play(this.$audio.btn)
       this.showJoinRoom = true
     },
     closeJoinRoom () {
       this.showJoinRoom = false
     },
     selectNum (item, index) {
+      this.$audio.play(this.$audio.ui)
       if (typeof item === 'string') {
         this.handleSelect(index)
         return false
@@ -359,6 +388,7 @@ export default {
       }
     },
     handleSelect (index) {
+      this.$audio.play(this.$audio.ui)
       if (index === 0) {
         // 重输
         this.roomNums.forEach((item, index) => {
@@ -374,7 +404,7 @@ export default {
       }
     },
     changeGame (index) {
-      console.log(tabImgs)
+      this.$audio.play(this.$audio.ui)
       this.gameTabs.forEach((item, ids) => {
         if (ids === index) {
           item.img = tabImgs.hoverImgs[ids]
@@ -385,38 +415,39 @@ export default {
       this.selectGame = index
     },
     changeRoom (index) {
+      this.$audio.play(this.$audio.ui)
       this.createRoomTabs.forEach((item, ids) => {
         if (ids === index) {
-          item.select = true
+          item.img = tabImgs.hoverImgs[ids]
         } else {
-          item.select = false
+          item.img = tabImgs.imgs[ids]
         }
       })
       this.selectRoom = index
     },
     selectTime1 () {
-
+      this.$audio.play(this.$audio.ui)
     },
     selectScore1 () {
-
+      this.$audio.play(this.$audio.ui)
     },
     selectTime2 () {
-
+      this.$audio.play(this.$audio.ui)
     },
     selectScore2 () {
-
+      this.$audio.play(this.$audio.ui)
     },
     selectTime3 () {
-
+      this.$audio.play(this.$audio.ui)
     },
     selectScore3 () {
-
+      this.$audio.play(this.$audio.ui)
     },
     createGameRoom () {
-
+      this.$audio.play(this.$audio.btn)
     },
     invoiceGameRoom () {
-
+      this.$audio.play(this.$audio.btn)
     }
   }
 }
@@ -584,25 +615,23 @@ export default {
 }
 .title-active{
   display: inline-block;
-  width: 300px;
-  height: 120px;
-  background: #fad700;
 }
-.msg-body, .rule-body, .create-body, .join-body{
-  margin-top: 120px;
+
+.msg-body, .rule-body, .create-body{
+  margin-top: 30px;
   color: #fff;
 }
 .rule-body, .create-content{
   display: flex;
   .game-tabs{
-    flex: 0 0 120px;
-    width: 120px;
-    margin-right: 80px;
+    flex: 0 0 230px;
+    width: 230px;
+    padding: 0 15px;
     span{
       display: block;
-      width: 120px;
-      height: 80px;
-      line-height: 80px;
+      width: 100%;
+      height: 72px;
+      line-height: 72px;
       margin-top: 30px;
       img{
         width: 100%;
@@ -619,15 +648,16 @@ export default {
     flex-direction: row;
     align-items: center;
     padding: 20px 120px;
-    background: yellow;
+    background: url('../assets/imgs/img_Join_input.png') 0 0 no-repeat;
+    background-size: 100% 100%;
     .num-item{
-      flex: 0 0 120px;
-      width: 120px;
+      flex: 0 0 150px;
+      width: 150px;
       height: 80px;
-      border-right: 3px solid #000;
-    }
-    .num-item:first-child{
-      border-left: 3px solid #000;
+      line-height: 80px;
+      text-align: center;
+      font-size: 72px;
+      color: #fff;
     }
   }
   .select-num{
@@ -637,14 +667,13 @@ export default {
     .num-row{
       display: flex;
       flex-direction: row;
-      flex: 1;
-      margin-top: 20px;
+      flex: 1;  
       .num-cell{
         flex: 1;
-        width: 210px;
-        height: 60px;
+        width: 245px;
+        height: 90px;
+        margin-top: 20px;
         color: pink;
-        background: yellow;
       }
       .num-cell:not(:last-child) {
         margin-right: 50px;
@@ -656,13 +685,36 @@ export default {
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin: 60px 0;
   .label{
-    flex: 0 0 150px;
-    width: 150px;
+    flex: 0 0 100px;
+    width: 100px;
   }
   .bar{
     flex: 1;
+  }
+}
+.set-modal{
+  .row{
+    margin: 80px 0;
+  }
+}
+.create-modal{
+  .row{
+    margin: 40px 0;
+  }
+}
+.foot-change{
+  font-size: 0;
+  width: 80%;
+  margin: 30px auto;
+  .toggle{
+    display: inline-block;
+    width: 50%;
+    text-align: center;
+    .box{
+      display: inline-block;
+      width: 240px;
+    }
   }
 }
 

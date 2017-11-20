@@ -4,10 +4,12 @@ Audio.install = function (Vue, options) {
     volume: 0.8,
     max: 1
   }
-  Vue.prototype.$audio.play = function () {
+  Vue.prototype.$audio.ui = 'static/audios/ui_click.mp3'
+  Vue.prototype.$audio.btn = 'static/audios/btn_click.mp3'
+  Vue.prototype.$audio.play = function (src) {
     let elem = document.getElementById('audio')
     let audio = document.createElement('audio')
-    audio.src = 'static/audios/ui_click.mp3'
+    audio.src = src
     elem.appendChild(audio)
     if (audio.paused || audio.ended) {
       setTimeout(() => {

@@ -67,7 +67,7 @@ export default {
       color: #fff;
     }
     .game-body{
-      padding: 20px 60px 30px 60px;
+      padding: 20px 0 30px 0;
     }
   }
   .modal-mask{

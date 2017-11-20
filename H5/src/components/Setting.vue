@@ -6,33 +6,45 @@
       <div slot="title" class="set-title">
         <div class="set-tabs">
           <span v-for="(item, index) in setTabs" @click="changeSet(index)" :key="index" 
-          class="title-active" :class="{'set-active': item.select}">{{item.label}}</span>
+          class="title-active">
+             <img :src="item.img" alt="" width="100%">
+          </span>
         </div>
       </div>
       <div slot="body" class="set-body">
         <div class="set-box">
           <div v-show="selectSet === 0">
             <div class="row">
-              <span class="label">桌面：</span>
+              <span class="label">
+                <img src="../assets/imgs/img_Setup_Desktop.png" alt="" width="100%">
+              </span>
               <selectType :types="ds0_1" class="bar" @on-select="selectDesktop"></selectType>
             </div>
             <div class="row">
-              <span class="label">牌面：</span>
+              <span class="label">
+                <img src="../assets/imgs/img_Setup_Rowsurface.png" alt="" width="100%">
+              </span>
               <selectType :types="ds0_2" class="bar" @on-select="selectCard"></selectType>
             </div>
           </div>
           <div v-show="selectSet === 1">
-            <ul>
-              <li>
-                <span class="label" style="width: 60px">音效：</span>
+            <ul class="sound-bar">
+              <li class="row">
+                <span class="label">
+                  <img src="../assets/imgs/img_Setup_Sound.png" alt="" width="100%">
+                </span>
                 <SoundBar :sound="sound" class="bar" @on-change="changeSound"></SoundBar>
               </li>
-              <li>
-                <span class="label" style="width: 60px">音乐：</span>
+              <li class="row">
+                <span class="label">
+                  <img src="../assets/imgs/img_Setup_Music.png" alt="" width="100%">
+                </span>
                 <SoundBar :sound="music" class="bar" @on-change="changeMusic"></SoundBar>
               </li>
             </ul>
-            <span class="toggle" @click="changeAccount" v-show="account">切换账号</span> 
+            <span class="toggle" @click="changeAccount" v-show="account">
+              <img src="../assets/imgs/img_Setup_Exchangeaccount.png" alt="" width="100%">  
+            </span> 
           </div>
         </div>
       </div>
@@ -42,9 +54,7 @@
 
 <script>
 import {mapGetters} from 'vuex'
-import img1 from '../assets/imgs/card1.png'
-import img2 from '../assets/imgs/card2.png'
-import img3 from '../assets/imgs/card3.png'
+import tabImgs from '../pages/tabImgs'
 
 export default {
   name: 'app',
@@ -74,26 +84,26 @@ export default {
       music: {},
       setTabs: [
         {
-          label: '系统设置',
+          img: tabImgs.hoverTabs[0],
           select: true
         },
         {
-          label: '游戏设置',
+          img: tabImgs.tabs[1],
           select: false
         }
       ],
       selectSet: 0,
       ds0: [
         {
-          img: img1,
+          img: tabImgs.cards[0],
           select: true
         },
         {
-          img: img2,
+          img: tabImgs.cards[1],
           select: false
         },
         {
-          img: img3,
+          img: tabImgs.cards[2],
           select: false
         }
       ],
@@ -120,25 +130,29 @@ export default {
       })
     },
     openSetModal () {
+      this.$audio.play(this.$audio.ui)
       this.showSetModal = true
     },
     closeSetModal () {
       this.showSetModal = false
     },
     changeSet (index) {
+      this.$audio.play(this.$audio.ui)
       this.setTabs.forEach((item, ids) => {
         if (ids === index) {
-          item.select = true
+          item.img = tabImgs.hoverTabs[index]
         } else {
-          item.select = false
+          item.img = tabImgs.tabs[index]
         }
       })
       this.selectSet = index
     },
     selectDesktop (data) {
+      this.$audio.play(this.$audio.ui)
      // console.log(data)
     },
     selectCard (data) {
+      this.$audio.play(this.$audio.ui)
     // console.log(data)
     },
     // 音效设置
@@ -168,6 +182,7 @@ export default {
       })
     },
     changeAccount () {
+      this.$audio.play(this.$audio.btn)
       // 调用android原生内部方法
       window.android.changeAccount('正在返回')
     }
@@ -178,9 +193,6 @@ export default {
 <style scoped lang="less">
 .title-active{
   display: inline-block;
-  width: 300px;
-  height: 120px;
-  background: #fad700;
 }
 .setting-sound{
   .set-modal{
@@ -190,44 +202,41 @@ export default {
       }
     }
     .set-body{
-      margin-top: 120px;
+      margin-top: 30px;
       .set-box{
-        ul{
-          li {
+        .row {
             display: flex;
             flex-direction: row;
             align-items: center;
-            margin: 60px 0;
+            margin: 30px 0;
             .label{
-              flex: 0 0 150px;
-              width: 150px;
-            }
-            .bar{
-              flex: 0 0 auto;
+             flex: 0 0 180px;
+             width: 180px;
             }
           }
-        }
       }
     }
     .toggle{
       display: inline-block;
-      width: 240px;
-      height: 80px;
-      background: yellow;
+      width: 300px;
     }
   }
 }
-.row{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin: 60px 0;
-  .label{
-    flex: 0 0 150px;
-    width: 150px;
-  }
-  .bar{
-    flex: 1;
-  }
+.setting-sound {
+  .set-modal{
+    .set-body{
+      .sound-bar{
+        .row{
+          margin: 80px auto;
+          .label{
+            flex: 0 0 180px;
+            width: 180px;
+            margin-right: 30px;
+          }
+        }
+      }
+    }
+  }  
+  
 }
 </style>

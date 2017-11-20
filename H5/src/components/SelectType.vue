@@ -2,13 +2,19 @@
   <div class="select-type">
     <ul>
       <li v-for="(item, index) in types" :key="index" class="row">
-        <span class="label" @click="selectType(index)" style="border-color: #f00" v-if="item.select"></span>
-        <span class="label" @click="selectType(index)" v-else></span>
-        <div class="select-info">
-          <img :src="item.img" v-show="!!item.img"/>
+        <span class="label" @click="selectType(index)" style="border-color: #f00">
+          <img src="../assets/imgs/img_Create_yes.png" alt=""  v-if="item.select" width="100%">
+        </span>
+        <div class="select-info1" v-if="bigImg">
+          <img :src="item.img" v-show="!!item.img" width="100%"/>
+          <span v-show="!!item.label" class="text">{{item.label}}</span>
+        </div>
+         <div class="select-info2" v-else>
+          <img :src="item.img" v-show="!!item.img" height="100%"/>
           <span v-show="!!item.label" class="text">{{item.label}}</span>
         </div>
       </li>
+      
     </ul>
   </div>
 </template>
@@ -22,6 +28,10 @@ export default {
       default: function () {
         return []
       }
+    },
+    bigImg: {
+      type: Boolean,
+      default: true
     }
   },
   watch: {
@@ -59,15 +69,24 @@ export default {
       display: flex;
       flex-direction: row;
       align-items: center;
-      flex: 0 0 auto;
+      margin-left: 30px;
       .label{
-        flex: 0 0 50px;
-        width: 50px;
-        height: 50px;
-        border: 3px solid #fff;
+        flex: 0 0 60px;
+        width: 60px;
+        height: 60px;
+        margin-right: 20px;
+        background: url('../assets/imgs/img_Create_Marquee.png') 0 0 no-repeat;
+        background-size: 100% 100%;
+        img{
+          position: relative;
+          top: 12px;
+        }
       }
-      .select-info{
-        flex: 1
+      .select-info1{
+        flex: 1;
+      }
+      .select-info2{
+       height: 50px;
       }
     }
   }
