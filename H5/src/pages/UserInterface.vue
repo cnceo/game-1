@@ -11,12 +11,12 @@
             </div>
           </div>
           <div class="user-id-card">
-            <div class="user-name f-relative">{{userInfo.name}}</div></br>
-            <div class="user-id f-relative">{{userInfo.id}}</div>
+            <div class="user-name f-relative"></div></br>
+            <div class="user-id f-relative"></div>
           </div>
           <div class="user-room-card">
             <div class="user-black f-relative"></div></br>
-            <div class="user-card f-relative">{{userInfo.card}}</div>
+            <div class="user-card f-relative"></div>
           </div>
         </div>
         <!--基本设置-->
@@ -188,6 +188,7 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
 import tabImgs from './tabImgs'
 const MAX_ROOM_NUM = 4
 
@@ -195,12 +196,6 @@ export default {
   name: 'HelloWorld',
   data () {
     return {
-      userInfo: {
-        name: '',
-        id: '',
-        card: ''
-      },
-      music: null,
       showRuleModal: false,
       showMsgModal: false,
       showCreateRoom: false,
@@ -262,8 +257,7 @@ export default {
       numIndex: 0,
       createRoomTabs: [],
       selectRoom: 0,
-      bigImg: false,
-      timer: null
+      bigImg: false
     }
   },
   created () {
@@ -271,55 +265,12 @@ export default {
     this.handleArray([this.gameTabs, this.createRoomTabs], this.tabs)
     this.handleArray([this.ds1_1, this.ds2_1, this.ds3_1], this.ds1)
     this.handleArray([this.ds1_2, this.ds2_2, this.ds3_2], this.ds2)
-    // 获取Android传来的数据
-   // window.music = '{max: 31, cur: 15}'
-    let total = 0
-    this.timer = setInterval(() => {
-      if (total >= 2) {
-        clearInterval(this.timer)
-        this.timer = null
-      }
-      if (window.user) { // object类型
-        total++
-        this.userInfo = window.JSON.parse(window.user)
-        this.$store.dispatch('getWxUserInfo', this.userInfo)
-      }
-      if (window.music) {
-        total++
-        this.music = Object.assign({}, this.handleJSON(window.music))
-        this.$store.dispatch('getMusic', {
-          sound: {
-            max: this.$audio.max,
-            cur: this.$audio.volume
-          },
-          music: this.music
-        })
-      }
-    }, 500)
-    // 获取消息信息
-    // this.$store.dispatch('indexPublic', {})
-    // function createCORS (method, url) {
-    //   var xhr = new XMLHttpRequest()
-    //   if ('withCredentials' in xhr) {
-    //     xhr.open(method, url, true)
-    //   } else if (typeof XDomainRequest !== 'undefined') {
-    //     xhr = new XDomainRequest()
-    //     xhr.open(method, url)
-    //   } else {
-    //     xhr = null
-    //   }
-    //   return xhr
-    // }
-    // var request = createCORS('post', 'http://www.syhpgkj.com:8080/app/get/notice')
-    // if (request) {
-    //   request.onload = function (data) {
-    //     console.log(request.responseText)
-    //   }
-    //   request.send()
-    // }
   },
+  computed: mapGetters({
+    userMsg: 'listenWxUser'
+  }),
   watch: {
-    userInfo (val) {
+    userMsg (val) {
       let params = {
         version: '0.0.1',
         source: 'android',
@@ -327,28 +278,21 @@ export default {
         nickname: val.nickname,
         sex: val.sex,
         headimgurl: val.headimgurl
-        // openid: 'oO8p8wqkSseyI3KPu7Sm02jskdIw',
+        // openid: 'oO8p8wqkSseyl3KPu7Sm02jskdlw',
         // nickname: 'Jeffery',
         // sex: '1',
-        // headimgurl: // 'http://wx.qIogo.cn/mmopen/vi_32/DYAIOgq83eqevDmfhVRfeibjyianWrRWYICSkjOAhgOiaDkAnHQkib6DVSsI8u8wSLPo5FEYCr0triauYI7DqkbiaKyg/0',
-        // 'http://wx.qlogo.cn/mmopen/vi_32/DYAlOgq83eqevDmfhVRfeibjyianWrRWYICSkjOAhgOiaDkAnHQkib6DVSsl8u8wSLPo5FEYCr0triauYl7DqkbiaKyg/0'
+        // headimgurl: 'http://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83eqevDmfhVRfeibjyianWrRWYlCSkjOAhgOiaDkAnHQkib6DVSsl8u8wSLPo5FEYCr0triauYl7DqkbiaKyg/0'
       }
-      let str = 'meizhuangdaka.com?&'
-      Object.keys(params).sort().forEach((key) => {
-        str += key + '=' + params[key] + '?&'
-      })
-      str += 'sign' + '=' + this.$md5(str)
-     // window.android.read(this.$md5(str))
-      window.android.read(val.headimgurl)
-      // window.android.read(window.JSON.stringify(params))
-     // let url = this.$axios.baseURL
-      this.$axios.get('/user/login?' + str)
+      let ajaxParams = this.$sign(params)
+      window.android.read(window.JSON.stringify(ajaxParams))
+      this.$axios.get('/user/login?' + ajaxParams)
       .then(function (res) {
-       // window.android.read(window.JSON.stringify(res))
+        console.log(res.data)
+        window.android.read(window.JSON.stringify(res))
       })
       .catch(function (error) {
         console.log(error)
-       // window.android.read(window.JSON.stringify(error))
+        window.android.read(window.JSON.stringify(error))
       })
     }
   },
@@ -365,13 +309,6 @@ export default {
           }
         })
       })
-    },
-    handleJSON (json) {
-      let reg = /[0-9a-zA-Z_]+/g
-      let data = json.replace(reg, function (str) {
-        return "'" + str + "'"
-      })
-      return window.JSON.parse(data)
     },
     message () {
       this.$audio.play(this.$audio.ui)

@@ -8,6 +8,7 @@ import Install from './components/Install'
 import Audio from './libs/Audio'
 import store from './store'
 import Util from './libs/util'
+import Sign from './libs/sign'
 import md5 from 'js-md5'
 import './assets/less/modal.less'
 var JSBridge = require('./libs/JsBridge')
@@ -15,6 +16,7 @@ var JSBridge = require('./libs/JsBridge')
 Vue.use(Vuex)
 Vue.use(Install)
 Vue.use(Audio)
+Vue.use(Sign)
 
 // const store = new Vuex.Store({
 //   // 存储状态值
