@@ -262,7 +262,8 @@ export default {
       numIndex: 0,
       createRoomTabs: [],
       selectRoom: 0,
-      bigImg: false
+      bigImg: false,
+      timer: null
     }
   },
   created () {
@@ -272,12 +273,16 @@ export default {
     this.handleArray([this.ds1_2, this.ds2_2, this.ds3_2], this.ds2)
     // 获取Android传来的数据
    // window.music = '{max: 31, cur: 15}'
-    let timer = null
     let total = 0
-    timer = setInterval(() => {
-      if (window.user) {
+    this.timer = setInterval(() => {
+      if (total >= 2) {
+        clearInterval(this.timer)
+        this.timer = null
+      }
+      if (window.user) { // object类型
         total++
-        this.userInfo = this.handleJSON(window.user)
+        this.userInfo = window.JSON.parse(window.user)
+        this.$store.dispatch('getWxUserInfo', this.userInfo)
       }
       if (window.music) {
         total++
@@ -289,10 +294,6 @@ export default {
           },
           music: this.music
         })
-      }
-      if (total >= 2) {
-        clearInterval(timer)
-        timer = null
       }
     }, 500)
     // 获取消息信息
@@ -317,6 +318,40 @@ export default {
     //   request.send()
     // }
   },
+  watch: {
+    userInfo (val) {
+      let params = {
+        version: '0.0.1',
+        source: 'android',
+        openid: val.openid,
+        nickname: val.nickname,
+        sex: val.sex,
+        headimgurl: val.headimgurl
+        // openid: 'oO8p8wqkSseyI3KPu7Sm02jskdIw',
+        // nickname: 'Jeffery',
+        // sex: '1',
+        // headimgurl: // 'http://wx.qIogo.cn/mmopen/vi_32/DYAIOgq83eqevDmfhVRfeibjyianWrRWYICSkjOAhgOiaDkAnHQkib6DVSsI8u8wSLPo5FEYCr0triauYI7DqkbiaKyg/0',
+        // 'http://wx.qlogo.cn/mmopen/vi_32/DYAlOgq83eqevDmfhVRfeibjyianWrRWYICSkjOAhgOiaDkAnHQkib6DVSsl8u8wSLPo5FEYCr0triauYl7DqkbiaKyg/0'
+      }
+      let str = 'meizhuangdaka.com?&'
+      Object.keys(params).sort().forEach((key) => {
+        str += key + '=' + params[key] + '?&'
+      })
+      str += 'sign' + '=' + this.$md5(str)
+     // window.android.read(this.$md5(str))
+      window.android.read(val.headimgurl)
+      // window.android.read(window.JSON.stringify(params))
+     // let url = this.$axios.baseURL
+      this.$axios.get('/user/login?' + str)
+      .then(function (res) {
+       // window.android.read(window.JSON.stringify(res))
+      })
+      .catch(function (error) {
+        console.log(error)
+       // window.android.read(window.JSON.stringify(error))
+      })
+    }
+  },
   methods: {
     handleArray (arr, data) {
       arr.forEach((item, index) => {
@@ -332,8 +367,9 @@ export default {
       })
     },
     handleJSON (json) {
-      let data = json.replace(/[0-9a-zA-Z_]+/g, function (str) {
-        return '"' + str + '"'
+      let reg = /[0-9a-zA-Z_]+/g
+      let data = json.replace(reg, function (str) {
+        return "'" + str + "'"
       })
       return window.JSON.parse(data)
     },

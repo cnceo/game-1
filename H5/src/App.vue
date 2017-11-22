@@ -14,6 +14,16 @@ export default {
       screenHeight: ''
     }
   },
+  created () {
+    // var vm = this
+    // this.$$.JsBridge.registerHandler('getUserInfo', function (data, responseCallback) {
+    //   // vm.id = JSON.parse(data).id;
+    //   // vm.token = JSON.parse(data).token
+    //   window.android.read(typeof data)
+    //   window.android.read(data)
+    //   responseCallback(data)
+    // })
+  },
   mounted () {
     this.screenWidth = document.documentElement.clientWidth + 'px'
     this.screenHeight = document.documentElement.clientHeight + 'px'

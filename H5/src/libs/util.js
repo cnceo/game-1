@@ -6,7 +6,7 @@ let util = {
 
 }
 
-const ajaxUrl = process.env.NODE_ENV === 'production' ? 'http://www.syhpgkj.com/app/user' : process.env.NODE_ENV === 'development' ? 'http://www.syhpgkj.com:8080/app' : 'http://www.syhpgkj.com:8080/app'
+const ajaxUrl = process.env.NODE_ENV === 'production' ? 'http://www.syhpgkj.com/app' : process.env.NODE_ENV === 'development' ? 'http://www.syhpgkj.com:8080/app' : 'http://www.syhpgkj.com:8080/app'
 
 // 基本配置
 let instanceParams = {
