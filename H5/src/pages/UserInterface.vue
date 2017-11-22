@@ -7,16 +7,16 @@
           <div class="user-avatar">
             <img src="../assets/imgs/Avatarframe.png" width="100%"  height="100%"/>
             <div class="user-img">
-              <img src="../assets/imgs/head_img.jpg" width="100%" />
+              <img :src="userInfo.headimgurl" width="100%" />
             </div>
           </div>
           <div class="user-id-card">
-            <div class="user-name f-relative"></div></br>
-            <div class="user-id f-relative"></div>
+            <div class="user-name f-relative">{{userInfo.nickname}}</div></br>
+            <div class="user-id f-relative">{{userInfo.id}}</div>
           </div>
           <div class="user-room-card">
             <div class="user-black f-relative"></div></br>
-            <div class="user-card f-relative"></div>
+            <div class="user-card f-relative">{{userInfo.roomNum}}</div>
           </div>
         </div>
         <!--基本设置-->
@@ -69,9 +69,9 @@
           </span>
         </div>
         <div class="game-box">
-          <div v-show="selectGame === 0">清推内容</div>
-          <div v-show="selectGame === 1">混推内容</div>
-          <div v-show="selectGame === 2">大九</div>
+          <div v-show="selectGame === 0" v-html="qtRules"></div>
+          <div v-show="selectGame === 1" v-html="htRules">混推内容</div>
+          <div v-show="selectGame === 2" v-html="djRules">大九</div>
         </div>
       </div>
     </Modal>
@@ -83,7 +83,7 @@
       <div slot="title" class="msg-title title-active">
          <img src="../assets/imgs/img_Message_message.png" alt=""  width="100%">
       </div>
-      <div slot="body" class="msg-body">这里是公告信息</div>
+      <div slot="body" class="msg-body">{{public}}</div>
     </Modal>
 
     <!--设置-->
@@ -196,6 +196,12 @@ export default {
   name: 'HelloWorld',
   data () {
     return {
+      userInfo: {
+        id: '',
+        nickname: '',
+        roomNum: '',
+        headimgurl: ''
+      },
       showRuleModal: false,
       showMsgModal: false,
       showCreateRoom: false,
@@ -219,29 +225,35 @@ export default {
       ds1: [
         {
           img: tabImgs.tables[0],
-          select: true
+          select: true,
+          value: 10
         },
         {
           img: tabImgs.tables[1],
-          select: false
+          select: false,
+          value: 30
         }
       ],
       ds2: [
         {
           img: tabImgs.scores[0],
-          select: true
+          select: true,
+          value: 20
         },
         {
           img: tabImgs.scores[1],
-          select: false
+          select: false,
+          value: 50
         },
         {
           img: tabImgs.scores[2],
-          select: false
+          select: false,
+          value: 100
         },
         {
           img: tabImgs.scores[3],
-          select: false
+          select: false,
+          value: 200
         }
       ],
       ds0_1: [],
@@ -257,7 +269,16 @@ export default {
       numIndex: 0,
       createRoomTabs: [],
       selectRoom: 0,
-      bigImg: false
+      bigImg: false,
+      public: '',
+      qtRules: '',
+      htRules: '',
+      djRules: '',
+      createRoomData: {
+        round: 10,
+        score: 20,
+        substitute: false
+      }
     }
   },
   created () {
@@ -267,13 +288,15 @@ export default {
     this.handleArray([this.ds1_2, this.ds2_2, this.ds3_2], this.ds2)
   },
   computed: mapGetters({
-    userMsg: 'listenWxUser'
+    userMsg: 'listenWxUser',
+    indexPublic: 'listenPublic',
+    qtRule: 'listenQtRule',
+    htRule: 'listenHtRule',
+    djRule: 'listenDjRule'
   }),
   watch: {
     userMsg (val) {
       let params = {
-        version: '0.0.1',
-        source: 'android',
         openid: val.openid,
         nickname: val.nickname,
         sex: val.sex,
@@ -284,16 +307,33 @@ export default {
         // headimgurl: 'http://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83eqevDmfhVRfeibjyianWrRWYlCSkjOAhgOiaDkAnHQkib6DVSsl8u8wSLPo5FEYCr0triauYl7DqkbiaKyg/0'
       }
       let ajaxParams = this.$sign(params)
+      let vm = this
       window.android.read(window.JSON.stringify(ajaxParams))
       this.$axios.get('/user/login?' + ajaxParams)
       .then(function (res) {
-        console.log(res.data)
+        Object.keys(vm.userInfo).forEach((key) => {
+          vm.userInfo[key] = res.data.model[key]
+        })
+        vm.userInfo.headimgurl = params.headimgurl
+        console.log(vm.userInfo)
         window.android.read(window.JSON.stringify(res))
       })
       .catch(function (error) {
         console.log(error)
         window.android.read(window.JSON.stringify(error))
       })
+    },
+    indexPublic (val) {
+      this.public = val.model
+    },
+    qtRule (val) {
+      this.qtRules = val.model
+    },
+    htRule (val) {
+      this.htRules = val.model
+    },
+    djRule (val) {
+      this.djRules = val.model
     }
   },
   methods: {
@@ -313,7 +353,8 @@ export default {
     message () {
       this.$audio.play(this.$audio.ui)
       this.showMsgModal = true
-      console.log(this.showMsgModal)
+      let ajaxParams = this.$sign({})
+      this.$store.dispatch('publicAjax', ajaxParams)
     },
     closeMsgModal () {
       this.showMsgModal = false
@@ -321,6 +362,10 @@ export default {
     help () {
       this.$audio.play(this.$audio.ui)
       this.showRuleModal = true
+      let ajaxParams = this.$sign({})
+      this.$store.dispatch('qtRuleAjax', ajaxParams)
+      this.$store.dispatch('htRuleAjax', ajaxParams)
+      this.$store.dispatch('djRuleAjax', ajaxParams)
     },
     closeRuleModal () {
       this.showRuleModal = false
@@ -332,6 +377,7 @@ export default {
     createRoom () {
       this.$audio.play(this.$audio.btn)
       this.showCreateRoom = true
+      this.createRoomData.substitute = false
     },
     closeCreateRoom () {
       this.showCreateRoom = false
@@ -398,11 +444,13 @@ export default {
       })
       this.selectRoom = index
     },
-    selectTime1 () {
+    selectTime1 (data) {
       this.$audio.play(this.$audio.ui)
+      this.createRoomData.round = data
     },
-    selectScore1 () {
+    selectScore1 (data) {
       this.$audio.play(this.$audio.ui)
+      this.createRoomData.score = data
     },
     selectTime2 () {
       this.$audio.play(this.$audio.ui)
@@ -418,9 +466,18 @@ export default {
     },
     createGameRoom () {
       this.$audio.play(this.$audio.btn)
+      let params = {
+        userId: this.userInfo.id,
+        baseScore: this.createRoomData.score,
+        baseRound: this.createRoomData.round,
+        substitute: this.createRoomData.substitute
+      }
+      let paramsAjax = this.$sign(params)
+      this.$store.dispatch('createRoom', paramsAjax)
     },
     invoiceGameRoom () {
       this.$audio.play(this.$audio.btn)
+      this.createRoomData.substitute = true
     }
   }
 }

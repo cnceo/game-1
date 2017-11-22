@@ -4,7 +4,10 @@ import * as types from '../../mutation-types'
 const state = {
   wxUser: {}, // 用户微信信息
   music: {}, // 音量数据
-  public: {} // 首页公告
+  public: {}, // 首页公告
+  qtRules: [], // 清推规则
+  htRules: [], // 混推规则
+  djRules: [] // 大九规则
 }
 
 const mutations = {
@@ -16,6 +19,15 @@ const mutations = {
   },
   [types.INDEX_PUBLIC] (state, { data }) {
     state.public = data
+  },
+  [types.QT_RULE] (state, { data }) {
+    state.qtRules = data
+  },
+  [types.HT_RULE] (state, { data }) {
+    state.htRules = data
+  },
+  [types.DJ_RULE] (state, { data }) {
+    state.djRules = data
   }
 }
 
@@ -29,18 +41,46 @@ const actions = {
     commit(types.MUSIC_VOID, { data })
   },
   // 首页公告
-  indexPublic ({ commit }, params) {
+  publicAjax ({ commit }, params) {
     api.indexPublic(data => {
-      console.log(data)
       commit(types.INDEX_PUBLIC, { data })
     }, params)
+  },
+  // 清推规则
+  qtRuleAjax ({ commit }, params) {
+    api.qtRuleAjax(data => {
+      commit(types.QT_RULE, { data })
+    }, params)
+  },
+  // 混推规则
+  htRuleAjax ({ commit }, params) {
+    api.htRuleAjax(data => {
+      commit(types.HT_RULE, { data })
+    }, params)
+  },
+  // 大九规则
+  djRuleAjax ({ commit }, params) {
+    api.djRuleAjax(data => {
+      commit(types.DJ_RULE, { data })
+    }, params)
+  },
+  // 创建房间
+  createRoom ({ commit }, params) {
+    return new Promise((resolve, reject) => {
+      api.createRoom(data => {
+        resolve(data)
+      }, params)
+    })
   }
 }
 
 const getters = {
   listenWxUser: state => state.wxUser,
   listenMusic: state => state.music,
-  listenPublic: state => state.public
+  listenPublic: state => state.public,
+  listenQtRule: state => state.qtRules,
+  listenHtRule: state => state.htRules,
+  listenDjRule: state => state.djRules
 }
 
 export default {
