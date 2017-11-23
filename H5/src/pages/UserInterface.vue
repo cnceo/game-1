@@ -289,6 +289,7 @@ export default {
   },
   computed: mapGetters({
     userMsg: 'listenWxUser',
+    users: 'listenUser',
     indexPublic: 'listenPublic',
     qtRule: 'listenQtRule',
     htRule: 'listenHtRule',
@@ -307,21 +308,30 @@ export default {
         // headimgurl: 'http://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83eqevDmfhVRfeibjyianWrRWYlCSkjOAhgOiaDkAnHQkib6DVSsl8u8wSLPo5FEYCr0triauYl7DqkbiaKyg/0'
       }
       let ajaxParams = this.$sign(params)
-      let vm = this
-      window.android.read(window.JSON.stringify(ajaxParams))
-      this.$axios.get('/user/login?' + ajaxParams)
-      .then(function (res) {
-        Object.keys(vm.userInfo).forEach((key) => {
-          vm.userInfo[key] = res.data.model[key]
-        })
-        vm.userInfo.headimgurl = params.headimgurl
-        console.log(vm.userInfo)
-        window.android.read(window.JSON.stringify(res))
+      // let vm = this
+      // this.$axios.get('/user/login?' + ajaxParams)
+      // .then(function (res) {
+      //   Object.keys(vm.userInfo).forEach((key) => {
+      //     vm.userInfo[key] = res.data.model[key]
+      //   })
+      //   vm.userInfo.headimgurl = params.headimgurl
+      //   console.log(vm.userInfo)
+      //   window.android.read(window.JSON.stringify(res))
+      // })
+      // .catch(function (error) {
+      //   console.log(error)
+      //   window.android.read('出错了')
+      //   window.android.read(window.JSON.stringify(error))
+      // })
+      this.$store.dispatch('userInfo', ajaxParams)
+    },
+    users (val) {
+      Object.keys(this.userInfo).forEach((key) => {
+        this.userInfo[key] = val.data.model[key]
       })
-      .catch(function (error) {
-        console.log(error)
-        window.android.read(window.JSON.stringify(error))
-      })
+      this.userInfo.headimgurl = this.userMsg.headimgurl
+      console.log(this.userInfo)
+      window.android.read(window.JSON.stringify(val))
     },
     indexPublic (val) {
       this.public = val.model

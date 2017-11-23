@@ -2,6 +2,7 @@ import api from '../../../api/interface'
 import * as types from '../../mutation-types'
 
 const state = {
+  users: {}, // 用户信息
   wxUser: {}, // 用户微信信息
   music: {}, // 音量数据
   public: {}, // 首页公告
@@ -11,6 +12,9 @@ const state = {
 }
 
 const mutations = {
+  [types.USER_INFO] (state, { data }) {
+    state.users = data
+  },
   [types.WX_USER_INFO] (state, { data }) {
     state.wxUser = data
   },
@@ -35,6 +39,10 @@ const actions = {
   // 获取用户微信信息
   getWxUserInfo ({ commit }, data) {
     commit(types.WX_USER_INFO, { data })
+  },
+  // 用户信息
+  userInfo ({ commit }, data) {
+    commit(types.USER_INFO, { data })
   },
   // 获取音量数据
   getMusic ({ commit }, data) {
@@ -76,6 +84,7 @@ const actions = {
 
 const getters = {
   listenWxUser: state => state.wxUser,
+  listenUser: state => state.users,
   listenMusic: state => state.music,
   listenPublic: state => state.public,
   listenQtRule: state => state.qtRules,

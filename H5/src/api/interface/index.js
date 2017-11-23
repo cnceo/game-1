@@ -5,6 +5,7 @@ function fetch (url, cb) {
   .then(res => {
     return cb(res.data)
   }).catch(err => {
+    window.android.read(window.JSON.stringify(err))
     if (err.response) {
       // 请求已经发出，但是服务器响应返回的状态吗不在2xx的范围内
       console.log(err.response.data)
@@ -22,9 +23,13 @@ function fetch (url, cb) {
  * @Description: 数据请求方法
  * @Date: 2017-07-05 08:13:38
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2017-11-22 23:10:07
+ * @Last Modified time: 2017-11-23 17:50:50
  */
 export default {
+  // 用户信息
+  userInfo (cb, params) {
+    return fetch('/user/login?' + params, cb)
+  },
   // 首页公告
   publicAjax (cb, params) {
     return fetch('/get/notice?' + params, cb)
