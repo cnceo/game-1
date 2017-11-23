@@ -323,23 +323,22 @@ export default {
       let params = {
         version: '0.0.1',
         source: 'android',
-        openid: val.openid,
-        nickname: val.nickname,
-        sex: val.sex,
-        headimgurl: val.headimgurl
-        // openid: 'oO8p8wqkSseyI3KPu7Sm02jskdIw',
-        // nickname: 'Jeffery',
-        // sex: '1',
-        // headimgurl: // 'http://wx.qIogo.cn/mmopen/vi_32/DYAIOgq83eqevDmfhVRfeibjyianWrRWYICSkjOAhgOiaDkAnHQkib6DVSsI8u8wSLPo5FEYCr0triauYI7DqkbiaKyg/0',
-        // 'http://wx.qlogo.cn/mmopen/vi_32/DYAlOgq83eqevDmfhVRfeibjyianWrRWYICSkjOAhgOiaDkAnHQkib6DVSsl8u8wSLPo5FEYCr0triauYl7DqkbiaKyg/0'
+        // openid: val.openid,
+        // nickname: val.nickname,
+        // sex: val.sex,
+        // headimgurl: val.headimgurl
+        openid: 'oO8p8wqkSseyI3KPu7Sm02jskdIw',
+        nickname: 'Jeffery',
+        sex: '1',
+        headimgurl: 'http://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83eqevDmfhVRfeibjyianWrRWYlCSkjOAhgOiaDkAnHQkib6DVSsl8u8wSLPo5FEYCr0triauYl7DqkbiaKyg/0'
       }
       let str = 'meizhuangdaka.com?&'
       Object.keys(params).sort().forEach((key) => {
         str += key + '=' + params[key] + '?&'
       })
       str += 'sign' + '=' + this.$md5(str)
-     // window.android.read(this.$md5(str))
-      window.android.read(val.headimgurl)
+      window.android.read(this.$md5(str))
+      window.android.read(str)
       // window.android.read(window.JSON.stringify(params))
      // let url = this.$axios.baseURL
       this.$axios.get('/user/login?' + str)
