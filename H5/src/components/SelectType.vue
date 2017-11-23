@@ -46,14 +46,16 @@ export default {
   },
   methods: {
     selectType (index) {
+      let value = ''
       this.types.forEach((item, ids) => {
         if (ids === index) {
           item.select = true
+          value = item.value
         } else {
           item.select = false
         }
       })
-      this.$emit('on-select', this.types)
+      this.$emit('on-select', value)
     }
   }
 }

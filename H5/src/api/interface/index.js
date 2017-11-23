@@ -1,7 +1,7 @@
 import Util from '../../libs/util'
 
-function fetch (url, params, cb) {
-  Util.ajax.post(url, params, cb)
+function fetch (url, cb) {
+  Util.ajax.get(url, cb)
   .then(res => {
     return cb(res.data)
   }).catch(err => {
@@ -22,11 +22,27 @@ function fetch (url, params, cb) {
  * @Description: 数据请求方法
  * @Date: 2017-07-05 08:13:38
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2017-11-15 17:02:02
+ * @Last Modified time: 2017-11-22 23:10:07
  */
 export default {
   // 首页公告
-  indexPublic (cb, params) {
-    return fetch('/get/notice', params, cb)
+  publicAjax (cb, params) {
+    return fetch('/get/notice?' + params, cb)
+  },
+  // 清推规则
+  qtRuleAjax (cb, params) {
+    return fetch('/get/rule/qingtui?' + params, cb)
+  },
+  // 混规则
+  htRuleAjax (cb, params) {
+    return fetch('/get/rule/huntui?' + params, cb)
+  },
+  // 大九规则
+  djRuleAjax (cb, params) {
+    return fetch('/get/rule/dajiu?' + params, cb)
+  },
+  // 创建房间
+  createRoom (cb, params) {
+    return fetch('/room/create?' + params, cb)
   }
 }

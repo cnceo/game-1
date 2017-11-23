@@ -7,16 +7,16 @@
           <div class="user-avatar">
             <img src="../assets/imgs/Avatarframe.png" width="100%"  height="100%"/>
             <div class="user-img">
-              <img src="../assets/imgs/head_img.jpg" width="100%" />
+              <img :src="userInfo.headimgurl" width="100%" />
             </div>
           </div>
           <div class="user-id-card">
-            <div class="user-name f-relative">{{userInfo.name}}</div></br>
+            <div class="user-name f-relative">{{userInfo.nickname}}</div></br>
             <div class="user-id f-relative">{{userInfo.id}}</div>
           </div>
           <div class="user-room-card">
             <div class="user-black f-relative"></div></br>
-            <div class="user-card f-relative">{{userInfo.card}}</div>
+            <div class="user-card f-relative">{{userInfo.roomNum}}</div>
           </div>
         </div>
         <!--基本设置-->
@@ -69,9 +69,9 @@
           </span>
         </div>
         <div class="game-box">
-          <div v-show="selectGame === 0">清推内容</div>
-          <div v-show="selectGame === 1">混推内容</div>
-          <div v-show="selectGame === 2">大九</div>
+          <div v-show="selectGame === 0" v-html="qtRules"></div>
+          <div v-show="selectGame === 1" v-html="htRules">混推内容</div>
+          <div v-show="selectGame === 2" v-html="djRules">大九</div>
         </div>
       </div>
     </Modal>
@@ -83,7 +83,7 @@
       <div slot="title" class="msg-title title-active">
          <img src="../assets/imgs/img_Message_message.png" alt=""  width="100%">
       </div>
-      <div slot="body" class="msg-body">这里是公告信息</div>
+      <div slot="body" class="msg-body">{{public}}</div>
     </Modal>
 
     <!--设置-->
@@ -188,6 +188,7 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
 import tabImgs from './tabImgs'
 const MAX_ROOM_NUM = 4
 
@@ -196,11 +197,11 @@ export default {
   data () {
     return {
       userInfo: {
-        name: '',
         id: '',
-        card: ''
+        nickname: '',
+        roomNum: '',
+        headimgurl: ''
       },
-      music: null,
       showRuleModal: false,
       showMsgModal: false,
       showCreateRoom: false,
@@ -224,29 +225,35 @@ export default {
       ds1: [
         {
           img: tabImgs.tables[0],
-          select: true
+          select: true,
+          value: 10
         },
         {
           img: tabImgs.tables[1],
-          select: false
+          select: false,
+          value: 30
         }
       ],
       ds2: [
         {
           img: tabImgs.scores[0],
-          select: true
+          select: true,
+          value: 20
         },
         {
           img: tabImgs.scores[1],
-          select: false
+          select: false,
+          value: 50
         },
         {
           img: tabImgs.scores[2],
-          select: false
+          select: false,
+          value: 100
         },
         {
           img: tabImgs.scores[3],
-          select: false
+          select: false,
+          value: 200
         }
       ],
       ds0_1: [],
@@ -263,7 +270,15 @@ export default {
       createRoomTabs: [],
       selectRoom: 0,
       bigImg: false,
-      timer: null
+      public: '',
+      qtRules: '',
+      htRules: '',
+      djRules: '',
+      createRoomData: {
+        round: 10,
+        score: 20,
+        substitute: false
+      }
     }
   },
   created () {
@@ -271,84 +286,54 @@ export default {
     this.handleArray([this.gameTabs, this.createRoomTabs], this.tabs)
     this.handleArray([this.ds1_1, this.ds2_1, this.ds3_1], this.ds1)
     this.handleArray([this.ds1_2, this.ds2_2, this.ds3_2], this.ds2)
-    // 获取Android传来的数据
-   // window.music = '{max: 31, cur: 15}'
-    let total = 0
-    this.timer = setInterval(() => {
-      if (total >= 2) {
-        clearInterval(this.timer)
-        this.timer = null
-      }
-      if (window.user) { // object类型
-        total++
-        this.userInfo = window.JSON.parse(window.user)
-        this.$store.dispatch('getWxUserInfo', this.userInfo)
-      }
-      if (window.music) {
-        total++
-        this.music = Object.assign({}, this.handleJSON(window.music))
-        this.$store.dispatch('getMusic', {
-          sound: {
-            max: this.$audio.max,
-            cur: this.$audio.volume
-          },
-          music: this.music
-        })
-      }
-    }, 500)
-    // 获取消息信息
-    // this.$store.dispatch('indexPublic', {})
-    // function createCORS (method, url) {
-    //   var xhr = new XMLHttpRequest()
-    //   if ('withCredentials' in xhr) {
-    //     xhr.open(method, url, true)
-    //   } else if (typeof XDomainRequest !== 'undefined') {
-    //     xhr = new XDomainRequest()
-    //     xhr.open(method, url)
-    //   } else {
-    //     xhr = null
-    //   }
-    //   return xhr
-    // }
-    // var request = createCORS('post', 'http://www.syhpgkj.com:8080/app/get/notice')
-    // if (request) {
-    //   request.onload = function (data) {
-    //     console.log(request.responseText)
-    //   }
-    //   request.send()
-    // }
   },
+  computed: mapGetters({
+    userMsg: 'listenWxUser',
+    indexPublic: 'listenPublic',
+    qtRule: 'listenQtRule',
+    htRule: 'listenHtRule',
+    djRule: 'listenDjRule'
+  }),
   watch: {
-    userInfo (val) {
+    userMsg (val) {
       let params = {
-        version: '0.0.1',
-        source: 'android',
-        // openid: val.openid,
-        // nickname: val.nickname,
-        // sex: val.sex,
-        // headimgurl: val.headimgurl
-        openid: 'oO8p8wqkSseyI3KPu7Sm02jskdIw',
-        nickname: 'Jeffery',
-        sex: '1',
-        headimgurl: 'http://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83eqevDmfhVRfeibjyianWrRWYlCSkjOAhgOiaDkAnHQkib6DVSsl8u8wSLPo5FEYCr0triauYl7DqkbiaKyg/0'
+        openid: val.openid,
+        nickname: val.nickname,
+        sex: val.sex,
+        headimgurl: val.headimgurl
+        // openid: 'oO8p8wqkSseyl3KPu7Sm02jskdlw',
+        // nickname: 'Jeffery',
+        // sex: '1',
+        // headimgurl: 'http://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83eqevDmfhVRfeibjyianWrRWYlCSkjOAhgOiaDkAnHQkib6DVSsl8u8wSLPo5FEYCr0triauYl7DqkbiaKyg/0'
       }
-      let str = 'meizhuangdaka.com?&'
-      Object.keys(params).sort().forEach((key) => {
-        str += key + '=' + params[key] + '?&'
-      })
-      str += 'sign' + '=' + this.$md5(str)
-      window.android.read(this.$md5(str))
-      window.android.read(str)
-      // window.android.read(window.JSON.stringify(params))
-     // let url = this.$axios.baseURL
-      this.$axios.get('/user/login?' + str)
+      let ajaxParams = this.$sign(params)
+      let vm = this
+      window.android.read(window.JSON.stringify(ajaxParams))
+      this.$axios.get('/user/login?' + ajaxParams)
       .then(function (res) {
-       // window.android.read(window.JSON.stringify(res))
+        Object.keys(vm.userInfo).forEach((key) => {
+          vm.userInfo[key] = res.data.model[key]
+        })
+        vm.userInfo.headimgurl = params.headimgurl
+        console.log(vm.userInfo)
+        window.android.read(window.JSON.stringify(res))
       })
       .catch(function (error) {
         console.log(error)
-       // window.android.read(window.JSON.stringify(error))
+        window.android.read(window.JSON.stringify(error))
       })
+    },
+    indexPublic (val) {
+      this.public = val.model
+    },
+    qtRule (val) {
+      this.qtRules = val.model
+    },
+    htRule (val) {
+      this.htRules = val.model
+    },
+    djRule (val) {
+      this.djRules = val.model
     }
   },
   methods: {
@@ -365,17 +350,11 @@ export default {
         })
       })
     },
-    handleJSON (json) {
-      let reg = /[0-9a-zA-Z_]+/g
-      let data = json.replace(reg, function (str) {
-        return "'" + str + "'"
-      })
-      return window.JSON.parse(data)
-    },
     message () {
       this.$audio.play(this.$audio.ui)
       this.showMsgModal = true
-      console.log(this.showMsgModal)
+      let ajaxParams = this.$sign({})
+      this.$store.dispatch('publicAjax', ajaxParams)
     },
     closeMsgModal () {
       this.showMsgModal = false
@@ -383,6 +362,10 @@ export default {
     help () {
       this.$audio.play(this.$audio.ui)
       this.showRuleModal = true
+      let ajaxParams = this.$sign({})
+      this.$store.dispatch('qtRuleAjax', ajaxParams)
+      this.$store.dispatch('htRuleAjax', ajaxParams)
+      this.$store.dispatch('djRuleAjax', ajaxParams)
     },
     closeRuleModal () {
       this.showRuleModal = false
@@ -394,6 +377,7 @@ export default {
     createRoom () {
       this.$audio.play(this.$audio.btn)
       this.showCreateRoom = true
+      this.createRoomData.substitute = false
     },
     closeCreateRoom () {
       this.showCreateRoom = false
@@ -460,11 +444,13 @@ export default {
       })
       this.selectRoom = index
     },
-    selectTime1 () {
+    selectTime1 (data) {
       this.$audio.play(this.$audio.ui)
+      this.createRoomData.round = data
     },
-    selectScore1 () {
+    selectScore1 (data) {
       this.$audio.play(this.$audio.ui)
+      this.createRoomData.score = data
     },
     selectTime2 () {
       this.$audio.play(this.$audio.ui)
@@ -480,9 +466,18 @@ export default {
     },
     createGameRoom () {
       this.$audio.play(this.$audio.btn)
+      let params = {
+        userId: this.userInfo.id,
+        baseScore: this.createRoomData.score,
+        baseRound: this.createRoomData.round,
+        substitute: this.createRoomData.substitute
+      }
+      let paramsAjax = this.$sign(params)
+      this.$store.dispatch('createRoom', paramsAjax)
     },
     invoiceGameRoom () {
       this.$audio.play(this.$audio.btn)
+      this.createRoomData.substitute = true
     }
   }
 }
