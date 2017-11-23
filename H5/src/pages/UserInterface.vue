@@ -298,14 +298,14 @@ export default {
   watch: {
     userMsg (val) {
       let params = {
-        openid: val.openid,
-        nickname: val.nickname,
-        sex: val.sex,
-        headimgurl: val.headimgurl
-        // openid: 'oO8p8wqkSseyl3KPu7Sm02jskdlw',
-        // nickname: 'Jeffery',
-        // sex: '1',
-        // headimgurl: 'http://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83eqevDmfhVRfeibjyianWrRWYlCSkjOAhgOiaDkAnHQkib6DVSsl8u8wSLPo5FEYCr0triauYl7DqkbiaKyg/0'
+        // openid: val.openid,
+        // nickname: val.nickname,
+        // sex: val.sex,
+        // headimgurl: val.headimgurl
+        openid: 'oO8p8wqkSseyl3KPu7Sm02jskdlw',
+        nickname: 'Jeffery',
+        sex: '1',
+        headimgurl: 'http://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83eqevDmfhVRfeibjyianWrRWYlCSkjOAhgOiaDkAnHQkib6DVSsl8u8wSLPo5FEYCr0triauYl7DqkbiaKyg/0'
       }
       let ajaxParams = this.$sign(params)
       // let vm = this
@@ -327,11 +327,11 @@ export default {
     },
     users (val) {
       Object.keys(this.userInfo).forEach((key) => {
-        this.userInfo[key] = val.data.model[key]
+        this.userInfo[key] = val.model[key]
       })
-      this.userInfo.headimgurl = this.userMsg.headimgurl
+      this.userInfo.headimgurl = this.userInfo.headimgurl
       console.log(this.userInfo)
-      window.android.read(window.JSON.stringify(val))
+     // window.android.read(window.JSON.stringify(val))
     },
     indexPublic (val) {
       this.public = val.model

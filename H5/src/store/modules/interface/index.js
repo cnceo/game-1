@@ -12,7 +12,7 @@ const state = {
 }
 
 const mutations = {
-  [types.USER_INFO] (state, { data }) {
+  [types.USER_MSG] (state, { data }) {
     state.users = data
   },
   [types.WX_USER_INFO] (state, { data }) {
@@ -41,8 +41,10 @@ const actions = {
     commit(types.WX_USER_INFO, { data })
   },
   // 用户信息
-  userInfo ({ commit }, data) {
-    commit(types.USER_INFO, { data })
+  userInfo ({ commit }, params) {
+    api.userInfo(data => {
+      commit(types.USER_MSG, { data })
+    }, params)
   },
   // 获取音量数据
   getMusic ({ commit }, data) {

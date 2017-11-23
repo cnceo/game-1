@@ -27,8 +27,8 @@ export default {
     //   responseCallback(data)
     // })
     // 获取Android传来的数据
-    // window.user = '{"max": "31", "cur": "15"}'
-    // window.music = '{"max": "31", "cur": "15"}'
+    window.user = '{"max": "31", "cur": "15"}'
+    window.music = '{"max": "31", "cur": "15"}'
     let total = 0
     this.timer = setInterval(() => {
       if (total >= 2) {
