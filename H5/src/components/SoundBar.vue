@@ -1,5 +1,5 @@
 <template>
-    <div class="bar-box" name="bar" style="width: 250px" 
+    <div class="bar-box" name="bar" style="width: 450px" 
     @click="setVoice($event)" ref="soundbox">
       <div class="bar-dot" name="dot" draggable="true" style="width: 40px;" 
       @touchmove="moveDot($event)" ref="soundbar">

@@ -1,28 +1,42 @@
 <template>
   <div class="game-face">
     <!-- <img src="../assets/game.png" width="100%"/> -->
+    <div class="z-bg" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1">
+      <img src="../assets/imgs/img_Room_announcement-background.png" alt=""  width="100%">
+    </div>
     <!-- 用户位置 -->
     <div class="user-site" v-show="users.length >= 2 && users.length <= 5">
       <div class="user-item" v-for="(item, index) in users" :key="index"
       :class="{'site0': index === 0, 'site1': index === 1, 'site2': index === 2,
       'site3': index === 3, 'site4': index === 4}">
         <div class="avater">
-          <img :src="item.avatar" alt="" width="100%" style="border-radius: 50%">
+          <div class="head">
+            <img :src="item.avatar" alt="" width="100%" height="100%">
+          </div>
           <div class="master" :class="{'l-site': (index === 0) || (index % 2 !== 0),
-           'r-site': (index !== 0) && (index % 2 === 0)}" v-show="item.master">房主</div>
+           'r-site': (index !== 0) && (index % 2 === 0)}" v-show="item.master"></div>
           <div class="result" :class="{'cur-user': index === 0}">
             <span v-show="item.status === 0">输</span>
             <span v-show="item.status === 1">和</span>
             <span v-show="item.status === 2">赢</span>
           </div>
         </div>
-        <div class="name">{{item.name}}</div>
-        <div class="money">{{item.money}}</div>
+        <div class="msg" :class="{'g-inline': index === 0,'l-msg': (index !== 0) && (index % 2 !== 0),
+         'r-msg': (index === 0) || (index % 2 === 0)}">
+          <div class="name">{{item.name}}</div>
+          <div class="money">{{item.money}}</div>
+        </div>
         <div class="status"  :class="{'l-site': (index !== 0) && (index % 2 !== 0),
-         'r-site': (index === 0) || (index % 2 === 0)}" v-show="item.status">
-            <span v-show="item.status === 0">准备</span>
-            <span v-show="item.status === 1">已准备</span>
-            <span v-show="item.status === 2">开始</span>
+         'r-site': (index === 0) || (index % 2 === 0)}">
+            <span v-show="item.status === 0">
+              <img src="../assets/imgs/img_Room_ready.png" alt="" width="100%" height="100%">
+            </span>
+            <span v-show="item.status === 1">
+              <img src="../assets/imgs/img_Room_readying.png" alt="" width="100%" height="100%">
+            </span>
+            <span v-show="item.status === 2 && index === 0">
+              <img src="../assets/imgs/img_Setup_Exchangeaccount.png" alt="" width="100%" height="100%">
+            </span>
          </div>
         <div class="card">{{item.card}}</div>
         
@@ -32,26 +46,28 @@
     <div class="game-table">
       <div class="all-operate g-flex-row">
         <div class="host g-flex">
-          <span>抢庄</span><span>不抢庄</span>
-          <p class="tip">抢庄后不可操作</p>
+          <div class="host-bg">
+            <span></span><span></span>
+          </div>
+          <p class="tip"></p>
         </div>
-        <div class="message g-flex">
+        <div class="message">
           <span class="rate">10/20</span>
           <span class="time">{{date}}</span>
           <span class="power"></span>
         </div>
         <div class="blank g-flex">
         </div>
-        <div class="games g-flex">
-          <div class="rate">局数：10/20</div>
-          <div class="room-num">房间号：11111</div>
+        <div class="games">
+          <div class="rate">10/20</div>
+          <div class="room-num">11111</div>
         </div>
-        <div class="setting" @click="setting">设置</div>
-        <div class="setting">解散房间</div>
+        <div class="setting" @click="setting"></div>
+        <div class="js-room"></div>
       </div>
       <div class="intro g-flex">
-        <div class="help">帮助？？？</div>
-        <div class="play-info">玩法介绍</div>
+        <div class="help"></div>
+        <div class="play-info"></div>
       </div>
     </div>
     <!-- 游戏信息 -->
@@ -66,6 +82,15 @@
       <div class="chu g-flex">出</div>
       <div class="tian g-flex">天</div>
       <div class="kan g-flex">坎</div>
+    </div>
+    <!-- 邀请好友 -->
+    <div class="yq-friend g-flex-row">
+      
+    </div>
+    <!-- 交流 -->
+    <div class="talk">
+      <div class="txt-msg"></div>
+      <div class="voice"></div>
     </div>
     <!-- 设置 -->
     <Setting :account="showAccount" ref="setting"></Setting>
@@ -163,25 +188,45 @@ export default {
 .g-flex{
   flex: 1;
 }
+
 .game-face{
+  padding: 2px;
   background: url('../assets/imgs/img_Room_announcement-background.png') 0 0 no-repeat;
   background-size: 100% 100%;
   .user-site{
+    position: relative;
     .user-item{
       position: fixed;
       .avater{
         position: relative;
-        width: 120px;
+        width: 125px;
+        height: 95px;
+        background: url('../assets/imgs/img_Room_avatarframe.png') 0 0 no-repeat;
+        background-size: 100% 100%;
+        .head{
+          width: 100px;
+          height: 70px;
+          padding: 11px 16px 15px 14px;
+          overflow: hidden;
+          img{
+            border-radius: 12px;
+            box-shadow: 0 0 10px #000;
+          }
+        }
         .master{
           position: absolute;
-          top: 20px;
-          width: 120px;
+          top: 12px;
+          width: 116px;
+          height: 32px;
+          background: url('../assets/imgs/img_Room_owner.png') 0 0 no-repeat;
+          background-size: 100% 100%;
+          z-index: -1;
         }
         .master.l-site{
-          left: -120px; 
+          left: -110px; 
         }
         .master.r-site{
-          right: -120px; 
+          right: -90px; 
         }
         .result{
           position: absolute;
@@ -193,54 +238,177 @@ export default {
           left: 150px;
         }
       }
+      .msg{
+        position: relative;
+        width: 180px;
+        color: #fff;
+        font-size: 28px;
+        font-weight: bold;
+        .money{
+          width: 180px;
+          height: 50px;
+          line-height: 50px;
+          background: url('../assets/imgs/img_Room_goldcoin.png') 0 0 no-repeat;
+          background-size: 100% 100%;
+        }
+        .name{
+          width: 180px;
+          height: 50px;
+          line-height: 50px;
+          background: url('../assets/imgs/img_Room_name.png') 0 0 no-repeat;
+          background-size: 100% 100%;
+        }
+      }
+      .g-inline{ 
+        left: -50px;
+        bottom: 20px;
+        margin-top: 20px;
+        .money,.name{
+          display: inline-block;
+        }
+      }
+      .msg.r-msg{
+        left: -30px;
+      }
+      .msg.l-msg{
+        left: -30px;
+      }
       .status{
         position: absolute;
-        top: 90px;
-        width: 120px;
+        top: 40px;
+        width: 180px;
       }
       .status.l-site{
-          left: -180px; 
+          left: -280px; 
         }
       .status.r-site{
-          right: -180px; 
+          right: -220px; 
       }
     }
     .site0{
-      left: 50%;
+      left: 40%;
       bottom: 0;
-      transform: translateX(-50%)
+      transform: translateX(-50%);
+      .status{
+        top: 20px;
+      }
     }
     .site1{
-      right: 0;
-      bottom: 30%;
+      right: 20px;
+      bottom: 26vh;
     }
     .site2{
-      left: 0;
-      bottom: 30%;
+      left: 50px;
+      bottom: 26vh;
     }
     .site3{
-      right: 0;
-      bottom: 60%;
+      right: 20px;
+      top: 15vh;
     }
     .site4{
-      left: 0;
-      bottom: 60%;
+      left: 50px;
+      top: 15vh;
     }
   }
   .game-table{
     position: relative;
     height: 100vh;
+    .all-operate{
+      .host{
+        .host-bg{
+          width: 68%;
+          height: 6vh;
+          background: url('../assets/imgs/img_Room_scramblefor.png') 0 0 no-repeat;
+          background-size: 100% 100%;
+        }
+      }
+      .tip{
+        width: 65%;
+        height: 2vh;
+        margin: 10px 0 0 10px;
+        background: url('../assets/imgs/img_Room_nooperation.png') 0 0 no-repeat;
+        background-size: 100% 100%;
+      }
+    }
     .intro{
       position: absolute;
-      bottom: 0;
-      left: 0;
+      bottom: 20px;
+      left: 20px;
+      .help{
+         width: 110px;
+        height: 80px;
+        background: url('../assets/imgs/img_Room_lntroduction.png') 0 0 no-repeat;
+        background-size: 100% 100%;
+      }
+      .play-info{
+         width: 110px;
+        height: 80px;
+        margin-top: 12px;
+        background: url('../assets/imgs/img_Room_play.png') 0 0 no-repeat;
+        background-size: 100% 100%;
+      }
+    }
+    .message{
+      position: relative;
+      left: -5%;
+      color: #fff;
+      line-height: 7vh;
+      font-family: 'microsoft yahei';
+      font-size: 22px;
+      .time{
+        margin-left: 30px;
+      }
+    }
+    .games{
+      position: relative;
+      width: 15%;
+      height: 6vh;
+      margin-right: 40px;
+      font-size: 14px;
+      color: #fff;
+      font-family: 'microsoft yahei';
+      background: url('../assets/imgs/img_Room_roomnumber.png') 0 0 no-repeat;
+      background-size: 100% 100%;
+      .rate,.room-num{
+        position: absolute;
+        left: 50%;
+      }
+      .rate{
+        bottom: 6%;
+      }
+      .room-num{
+        top: 5%;
+      }
+    }
+    .setting{
+      width: 5%;
+      height: 6vh;
+      margin-right: 30px;
+      background: url('../assets/imgs/img_Room_setup.png') 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+    .js-room{
+      width: 15%;
+      height: 6vh;
+      background: url('../assets/imgs/img_Room_dissolvetheroom.png') 0 0 no-repeat;
+      background-size: 100% 100%;
     }
   }
   .game-info{
     position: absolute;
-    top: 100px;
+    top: 90px;
     left: 50%;
-    transform: translateX(-50%)
+    transform: translateX(-50%);
+    color: #fff;
+    font-family: 'microsoft yahei';
+    font-size: 24px;
+    .geme-type{
+      margin-top: 12px;
+      span{
+        display: inline-block;
+        margin: 0 30px;
+      }
+    }
   }
   .card-table{
     position: absolute;
@@ -251,6 +419,34 @@ export default {
       width: 120px;
       height: 320px;
       border: 3px solid #000;
+    }
+  }
+  .yq-friend{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 22%;
+    height: 12vh;
+    background: url('../assets/imgs/img_Room_lnvitefriends.png') 0 0 no-repeat;
+    background-size: 100% 100%;
+  }
+  .talk{
+    position: fixed;
+    bottom: 13%;
+    right: 18%;
+    .voice{
+      width: 110px;
+      height: 80px;
+      background: url('../assets/imgs/img_Room_yuyin.png') 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+    .txt-msg{
+      width: 110px;
+      height: 80px;
+      margin-bottom: 15px;
+      background: url('../assets/imgs/img_Room_biaoqing.png') 0 0 no-repeat;
+      background-size: 100% 100%;
     }
   }
 }

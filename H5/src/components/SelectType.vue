@@ -1,7 +1,7 @@
 <template>
   <div class="select-type">
     <ul>
-      <li v-for="(item, index) in types" :key="index" class="row">
+      <li v-for="(item, index) in types" :key="index" class="row" v-show="index <= 2">
         <span class="label" @click="selectType(index)" style="border-color: #f00">
           <img src="../assets/imgs/img_Create_yes.png" alt=""  v-if="item.select" width="100%">
         </span>
@@ -13,8 +13,22 @@
           <img :src="item.img" v-show="!!item.img" height="100%"/>
           <span v-show="!!item.label" class="text">{{item.label}}</span>
         </div>
-      </li>
-      
+      </li> 
+    </ul>
+    <ul class="g-top">
+      <li v-for="(item, index) in types" :key="index" class="row" v-show="index > 2">
+        <span class="label" @click="selectType(index)" style="border-color: #f00">
+          <img src="../assets/imgs/img_Create_yes.png" alt=""  v-if="item.select" width="100%">
+        </span>
+        <div class="select-info1" v-if="bigImg">
+          <img :src="item.img" v-show="!!item.img" width="100%"/>
+          <span v-show="!!item.label" class="text">{{item.label}}</span>
+        </div>
+         <div class="select-info2" v-else>
+          <img :src="item.img" v-show="!!item.img" height="100%"/>
+          <span v-show="!!item.label" class="text">{{item.label}}</span>
+        </div>
+      </li> 
     </ul>
   </div>
 </template>
@@ -92,6 +106,9 @@ export default {
       }
     }
   }
-  
+  .g-top{
+    margin-top: 40px;
+  }
 }
+
 </style>

@@ -106,6 +106,7 @@ export default {
 }
 h1, h2 {
   font-weight: normal;
+  margin: 20px 0;
 }
 
 ul {

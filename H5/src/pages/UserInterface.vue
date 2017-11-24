@@ -178,7 +178,7 @@
         <div class="select-num">
           <div class="num-row" v-for="(item, index) in nums" :key="index">
             <span class="num-cell" v-for="(its, i) in item" :key="i" @click="selectNum(its.num, i)">
-              <img :src="its.img" alt="" width="100%">
+              <img :src="its.img" alt="" width="100%" height="100%">
             </span>
           </div>
         </div>
@@ -657,8 +657,12 @@ export default {
   display: inline-block;
 }
 
-.msg-body, .rule-body, .create-body{
+.rule-body, .create-body{
   margin-top: 30px;
+  color: #fff;
+}
+.msg-body{
+  margin: 60px 40px 30px 40px;
   color: #fff;
 }
 .rule-body, .create-content{
@@ -678,45 +682,67 @@ export default {
       }
     }
   }
+  
+}
+.rule-body{
   .game-box{
-    flex: 1;
+    flex: 0 0 60%;
+    padding: 0 3% 0 2%;
+    height: 44vh;
+    margin: 2vh 0;
+    overflow: auto;
   }
 }
-.join-modal{
-  .fill-room-card{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: 20px 120px;
-    background: url('../assets/imgs/img_Join_input.png') 0 0 no-repeat;
-    background-size: 100% 100%;
-    .num-item{
-      flex: 0 0 150px;
-      width: 150px;
-      height: 80px;
-      line-height: 80px;
-      text-align: center;
-      font-size: 72px;
-      color: #fff;
-    }
+ .create-content{
+   .game-box{
+    flex: 0 0 70%;
+    padding: 0 1% 0 1%;
+    height: 35vh;
+    margin: 2vh 0;
+    overflow: auto;
   }
-  .select-num{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    .num-row{
-      display: flex;
-      flex-direction: row;
-      flex: 1;  
-      .num-cell{
-        flex: 1;
-        width: 245px;
-        height: 90px;
-        margin-top: 20px;
-        color: pink;
+ }
+.join-modal{
+  .modal-content{
+    .join-body{
+      margin-top: 15px;
+      .fill-room-card{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        height: 70px;
+        padding: 10px 120px;
+        background: url('../assets/imgs/img_Join_input.png') 0 0 no-repeat;
+        background-size: 100% 100%;
+        .num-item{
+          flex: 0 0 150px;
+          width: 150px;
+          height: 70px;
+          line-height: 70px;
+          text-align: center;
+          font-size: 72px;
+          color: #fff;
+        }
       }
-      .num-cell:not(:last-child) {
-        margin-right: 50px;
+      .select-num{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        .num-row{
+          display: flex;
+          flex-direction: row;
+          flex: 1;  
+          .num-cell{
+            flex: 1;
+            width: 245px;
+            height: 70px;
+            margin-top: 20px;
+            color: pink;
+          }
+          .num-cell:not(:last-child) {
+            margin-right: 50px;
+          }
+        }
       }
     }
   }
@@ -740,7 +766,7 @@ export default {
 }
 .create-modal{
   .row{
-    margin: 40px 0;
+    margin: 25px 0 40px 0;
   }
 }
 .foot-change{

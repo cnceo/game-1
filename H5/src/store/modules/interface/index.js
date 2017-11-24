@@ -52,7 +52,7 @@ const actions = {
   },
   // 首页公告
   publicAjax ({ commit }, params) {
-    api.indexPublic(data => {
+    api.publicAjax(data => {
       commit(types.INDEX_PUBLIC, { data })
     }, params)
   },
