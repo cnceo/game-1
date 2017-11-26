@@ -41,10 +41,8 @@ const actions = {
     commit(types.WX_USER_INFO, { data })
   },
   // 用户信息
-  userInfo ({ commit }, params) {
-    api.userInfo(data => {
-      commit(types.USER_MSG, { data })
-    }, params)
+  userInfo ({ commit }, data) {
+    commit(types.USER_MSG, { data })
   },
   // 获取音量数据
   getMusic ({ commit }, data) {

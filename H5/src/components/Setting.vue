@@ -210,8 +210,9 @@ export default {
             align-items: center;
             margin: 30px 0;
             .label{
-             flex: 0 0 180px;
-             width: 180px;
+            // flex: 0 0 180px;
+             width: 150px;
+             vertical-align: middle;
             }
           }
       }
@@ -229,8 +230,8 @@ export default {
         .row{
           margin: 80px auto;
           .label{
-            flex: 0 0 180px;
-            width: 180px;
+            flex: 0 0 150px;
+            width: 150px;
             margin-right: 30px;
           }
         }

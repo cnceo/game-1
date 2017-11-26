@@ -58,6 +58,9 @@
     <Modal :showModal="showRuleModal"
     @on-close="closeRuleModal"
     class="rule-modal">
+    <div slot="modal-bg" class="modal-bg">
+      <img src="../assets/imgs/img_Rules_Rulebackground.png" alt=""  width="100%" height="100%">
+    </div>
       <div slot="title" class="rule-title title-active">
         <img src="../assets/imgs/img_Rules_rule.png" alt=""  width="100%">
       </div>
@@ -93,6 +96,9 @@
     <Modal :showModal="showCreateRoom"
     @on-close="closeCreateRoom"
     class="create-modal">
+    <div slot="modal-bg" class="modal-bg">
+      <img src="../assets/imgs/img_Message_messagebackground.png" alt=""  width="100%" height="100%">
+    </div>
       <div slot="title" class="create-title title-active">创建房间</div>
       <div slot="body" class="create-body">
         <div class="create-content">
@@ -297,17 +303,18 @@ export default {
   }),
   watch: {
     userMsg (val) {
+      let vm = this
       let params = {
-        // openid: val.openid,
-        // nickname: val.nickname,
-        // sex: val.sex,
-        // headimgurl: val.headimgurl
-        openid: 'oO8p8wqkSseyl3KPu7Sm02jskdlw',
-        nickname: 'Jeffery',
-        sex: '1',
-        headimgurl: 'http://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83eqevDmfhVRfeibjyianWrRWYlCSkjOAhgOiaDkAnHQkib6DVSsl8u8wSLPo5FEYCr0triauYl7DqkbiaKyg/0'
+        openid: val.openid,
+        nickname: val.nickname,
+        sex: val.sex,
+        headimgurl: val.headimgurl
+        // openid: 'oO8p8wqkSseyl3KPu7Sm02jskdlw',
+        // nickname: 'Jeffery',
+        // sex: '1',
+        // headimgurl: 'http://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83eqevDmfhVRfeibjyianWrRWYlCSkjOAhgOiaDkAnHQkib6DVSsl8u8wSLPo5FEYCr0triauYl7DqkbiaKyg/0'
       }
-      let ajaxParams = this.$sign(params)
+      let ajaxParams = window.JSON.stringify(this.$url + '/user/login?' + this.$sign(params))
       // let vm = this
       // this.$axios.get('/user/login?' + ajaxParams)
       // .then(function (res) {
@@ -323,7 +330,14 @@ export default {
       //   window.android.read('出错了')
       //   window.android.read(window.JSON.stringify(error))
       // })
-      this.$store.dispatch('userInfo', ajaxParams)
+     // this.$store.dispatch('userInfo', ajaxParams)
+      this.$JsBridge.callHandler(
+        'getUserMsg' // 原生的方法名
+        , {'param': ajaxParams} // 带个原生方法的参数
+        , function (responseData) { // 响应原生回调方法
+          vm.$store.dispatch('userInfo', window.JSON.parse(responseData))
+        }
+      )
     },
     users (val) {
       Object.keys(this.userInfo).forEach((key) => {
@@ -331,7 +345,6 @@ export default {
       })
       this.userInfo.headimgurl = this.userInfo.headimgurl
       console.log(this.userInfo)
-     // window.android.read(window.JSON.stringify(val))
     },
     indexPublic (val) {
       this.public = val.model
@@ -364,7 +377,9 @@ export default {
       this.$audio.play(this.$audio.ui)
       this.showMsgModal = true
       let ajaxParams = this.$sign({})
-      this.$store.dispatch('publicAjax', ajaxParams)
+      window.android.getPublic(window.JSON.stringify(ajaxParams))
+     // window.android.read(window.JSON.stringify(window.publics))
+     // this.$store.dispatch('publicAjax', ajaxParams)
     },
     closeMsgModal () {
       this.showMsgModal = false
@@ -413,6 +428,8 @@ export default {
       this.numIndex++
       // 进入房间
       if (this.numIndex === MAX_ROOM_NUM) {
+        // this.$store.dispatch('getRoom', this.roomNums.join(''))
+        // window.android.saveRoom(this.roomNums.join(''))
         this.$router.push({path: '/game', params: {}})
       }
     },
@@ -715,13 +732,16 @@ export default {
         background: url('../assets/imgs/img_Join_input.png') 0 0 no-repeat;
         background-size: 100% 100%;
         .num-item{
-          flex: 0 0 150px;
-          width: 150px;
+          flex: 0 0 140px;
+          width: 140px;
           height: 70px;
           line-height: 70px;
           text-align: center;
           font-size: 72px;
           color: #fff;
+        }
+        .num-item:first-child{
+           margin-left: 15px;
         }
       }
       .select-num{
@@ -747,17 +767,30 @@ export default {
     }
   }
 }
+.create-body{
+  font-size: 0;
 .row{
-  display: flex;
+  // display: flex;
   flex-direction: row;
   align-items: center;
   .label{
-    flex: 0 0 100px;
+    display: inline-block;
+    //flex: 0 0 100px;
     width: 100px;
+    vertical-align: top;
   }
+  
   .bar{
-    flex: 1;
+    //flex: 1;
+     display: inline-block;
+     width: 80%;
   }
+}
+.row:nth-child(2){
+.label{
+    vertical-align: top;
+  }
+}
 }
 .set-modal{
   .row{
@@ -766,13 +799,13 @@ export default {
 }
 .create-modal{
   .row{
-    margin: 25px 0 40px 0;
+    margin: 25px 0 50px 0;
   }
 }
 .foot-change{
   font-size: 0;
   width: 80%;
-  margin: 30px auto;
+  margin: 24px auto;
   .toggle{
     display: inline-block;
     width: 50%;

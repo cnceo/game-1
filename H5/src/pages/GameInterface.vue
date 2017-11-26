@@ -10,11 +10,14 @@
       :class="{'site0': index === 0, 'site1': index === 1, 'site2': index === 2,
       'site3': index === 3, 'site4': index === 4}">
         <div class="avater">
+          <img src="../assets/imgs/img_Room_avatarframe.png" alt="" width="100%" height="100%">
           <div class="head">
             <img :src="item.avatar" alt="" width="100%" height="100%">
           </div>
           <div class="master" :class="{'l-site': (index === 0) || (index % 2 !== 0),
-           'r-site': (index !== 0) && (index % 2 === 0)}" v-show="item.master"></div>
+           'r-site': (index !== 0) && (index % 2 === 0)}" v-show="item.master">
+            <img src="../assets/imgs/img_Room_owner.png" alt="" width="100%" height="100%">
+           </div>
           <div class="result" :class="{'cur-user': index === 0}">
             <span v-show="item.status === 0">输</span>
             <span v-show="item.status === 1">和</span>
@@ -23,8 +26,18 @@
         </div>
         <div class="msg" :class="{'g-inline': index === 0,'l-msg': (index !== 0) && (index % 2 !== 0),
          'r-msg': (index === 0) || (index % 2 === 0)}">
-          <div class="name">{{item.name}}</div>
-          <div class="money">{{item.money}}</div>
+          <div class="name">
+            <img src="../assets/imgs/img_Room_name.png" alt="" width="100%" height="100%">
+            <div class="text">
+              {{item.name}}
+            </div>
+          </div>
+          <div class="money">
+            <img src="../assets/imgs/img_Room_goldcoin.png" alt="" width="100%" height="100%">
+            <div class="text">
+              {{item.money}}
+            </div>
+          </div>
         </div>
         <div class="status"  :class="{'l-site': (index !== 0) && (index % 2 !== 0),
          'r-site': (index === 0) || (index % 2 === 0)}">
@@ -47,6 +60,7 @@
       <div class="all-operate g-flex-row">
         <div class="host g-flex">
           <div class="host-bg">
+            <img src="../assets/imgs/img_Room_scramblefor.png" alt="" width= "100%">
             <span></span><span></span>
           </div>
           <p class="tip"></p>
@@ -59,15 +73,26 @@
         <div class="blank g-flex">
         </div>
         <div class="games">
-          <div class="rate">10/20</div>
-          <div class="room-num">11111</div>
+          <img src="../assets/imgs/img_Room_roomnumber.png" alt="" width= "100%">
+          <div class="box">
+            <div class="rate">10/20</div>
+            <div class="room-num">11111</div>
+          </div>
         </div>
-        <div class="setting" @click="setting"></div>
-        <div class="js-room"></div>
+        <div class="setting" @click="setting">
+          <img src="../assets/imgs/img_Room_setup.png" alt="" width= "100%">
+        </div>
+        <div class="js-room" @click="jsRoom">
+          <img src="../assets/imgs/img_Room_dissolvetheroom.png" alt="" width= "100%">
+        </div>
       </div>
       <div class="intro g-flex">
-        <div class="help"></div>
-        <div class="play-info"></div>
+        <div class="help">
+          <img src="../assets/imgs/img_Room_lntroduction.png" alt="" width= "100%">
+        </div>
+        <div class="play-info">
+          <img src="../assets/imgs/img_Room_play.png" alt="" width= "100%">
+        </div>
       </div>
     </div>
     <!-- 游戏信息 -->
@@ -85,7 +110,7 @@
     </div>
     <!-- 邀请好友 -->
     <div class="yq-friend g-flex-row">
-      
+      <img src="../assets/imgs/img_Room_lnvitefriends.png" alt="" width= "100%">
     </div>
     <!-- 交流 -->
     <div class="talk">
@@ -169,6 +194,9 @@ export default {
     setting () {
       this.$refs.setting.openSetModal()
     },
+    jsRoom () {
+      this.$router.push({path: '/', query: {}})
+    },
     closeSetModal () {
       this.showSetModal = false
     }
@@ -201,9 +229,12 @@ export default {
         position: relative;
         width: 125px;
         height: 95px;
-        background: url('../assets/imgs/img_Room_avatarframe.png') 0 0 no-repeat;
-        background-size: 100% 100%;
+        // background: url('../assets/imgs/img_Room_avatarframe.png') 0 0 no-repeat;
+        // background-size: 100% 100%;
         .head{
+          position: absolute;
+          top: 0;
+          left: 0;
           width: 100px;
           height: 70px;
           padding: 11px 16px 15px 14px;
@@ -218,8 +249,8 @@ export default {
           top: 12px;
           width: 116px;
           height: 32px;
-          background: url('../assets/imgs/img_Room_owner.png') 0 0 no-repeat;
-          background-size: 100% 100%;
+          // background: url('../assets/imgs/img_Room_owner.png') 0 0 no-repeat;
+          // background-size: 100% 100%;
           z-index: -1;
         }
         .master.l-site{
@@ -245,18 +276,25 @@ export default {
         font-size: 28px;
         font-weight: bold;
         .money{
+          position: relative;
           width: 180px;
           height: 50px;
           line-height: 50px;
-          background: url('../assets/imgs/img_Room_goldcoin.png') 0 0 no-repeat;
-          background-size: 100% 100%;
+          // background: url('../assets/imgs/img_Room_goldcoin.png') 0 0 no-repeat;
+          // background-size: 100% 100%;
         }
         .name{
+          position: relative;
           width: 180px;
           height: 50px;
           line-height: 50px;
-          background: url('../assets/imgs/img_Room_name.png') 0 0 no-repeat;
-          background-size: 100% 100%;
+          // background: url('../assets/imgs/img_Room_name.png') 0 0 no-repeat;
+          // background-size: 100% 100%;
+        }
+        .text{
+          position: absolute;
+          top: 0;
+          left: 30%;
         }
       }
       .g-inline{ 
@@ -318,14 +356,14 @@ export default {
         .host-bg{
           width: 68%;
           height: 6vh;
-          background: url('../assets/imgs/img_Room_scramblefor.png') 0 0 no-repeat;
-          background-size: 100% 100%;
+          // background: url('../assets/imgs/img_Room_scramblefor.png') 0 0 no-repeat;
+          // background-size: 100% 100%;
         }
       }
       .tip{
         width: 65%;
-        height: 2vh;
-        margin: 10px 0 0 10px;
+        height: 3vh;
+        margin: 20px 0 0 10px;
         background: url('../assets/imgs/img_Room_nooperation.png') 0 0 no-repeat;
         background-size: 100% 100%;
       }
@@ -337,15 +375,15 @@ export default {
       .help{
          width: 110px;
         height: 80px;
-        background: url('../assets/imgs/img_Room_lntroduction.png') 0 0 no-repeat;
-        background-size: 100% 100%;
+        // background: url('../assets/imgs/img_Room_lntroduction.png') 0 0 no-repeat;
+        // background-size: 100% 100%;
       }
       .play-info{
          width: 110px;
         height: 80px;
         margin-top: 12px;
-        background: url('../assets/imgs/img_Room_play.png') 0 0 no-repeat;
-        background-size: 100% 100%;
+        // background: url('../assets/imgs/img_Room_play.png') 0 0 no-repeat;
+        // background-size: 100% 100%;
       }
     }
     .message{
@@ -367,8 +405,8 @@ export default {
       font-size: 14px;
       color: #fff;
       font-family: 'microsoft yahei';
-      background: url('../assets/imgs/img_Room_roomnumber.png') 0 0 no-repeat;
-      background-size: 100% 100%;
+      // background: url('../assets/imgs/img_Room_roomnumber.png') 0 0 no-repeat;
+      // background-size: 100% 100%;
       .rate,.room-num{
         position: absolute;
         left: 50%;
@@ -384,14 +422,14 @@ export default {
       width: 5%;
       height: 6vh;
       margin-right: 30px;
-      background: url('../assets/imgs/img_Room_setup.png') 0 0 no-repeat;
-      background-size: 100% 100%;
+      // background: url('../assets/imgs/img_Room_setup.png') 0 0 no-repeat;
+      // background-size: 100% 100%;
     }
     .js-room{
       width: 15%;
       height: 6vh;
-      background: url('../assets/imgs/img_Room_dissolvetheroom.png') 0 0 no-repeat;
-      background-size: 100% 100%;
+      // background: url('../assets/imgs/img_Room_dissolvetheroom.png') 0 0 no-repeat;
+      // background-size: 100% 100%;
     }
   }
   .game-info{
@@ -428,8 +466,8 @@ export default {
     transform: translate(-50%, -50%);
     width: 22%;
     height: 12vh;
-    background: url('../assets/imgs/img_Room_lnvitefriends.png') 0 0 no-repeat;
-    background-size: 100% 100%;
+    // background: url('../assets/imgs/img_Room_lnvitefriends.png') 0 0 no-repeat;
+    // background-size: 100% 100%;
   }
   .talk{
     position: fixed;

@@ -15,8 +15,8 @@
         </div>
       </li> 
     </ul>
-    <ul class="g-top">
-      <li v-for="(item, index) in types" :key="index" class="row" v-show="index > 2">
+    <ul>
+      <li v-for="(item, index) in types" :key="index" class="row" v-show="index > 2"  :class="{'g-top': index > 2}">
         <span class="label" @click="selectType(index)" style="border-color: #f00">
           <img src="../assets/imgs/img_Create_yes.png" alt=""  v-if="item.select" width="100%">
         </span>
@@ -87,10 +87,10 @@ export default {
       align-items: center;
       margin-left: 30px;
       .label{
-        flex: 0 0 60px;
-        width: 60px;
-        height: 60px;
-        margin-right: 20px;
+        flex: 0 0 50px;
+        width: 50px;
+        height: 50px;
+        margin-right: 15px;
         background: url('../assets/imgs/img_Create_Marquee.png') 0 0 no-repeat;
         background-size: 100% 100%;
         img{
@@ -105,10 +105,11 @@ export default {
        height: 50px;
       }
     }
+    .g-top{
+        margin-top: 50px;
+    }
   }
-  .g-top{
-    margin-top: 40px;
-  }
+  
 }
 
 </style>
