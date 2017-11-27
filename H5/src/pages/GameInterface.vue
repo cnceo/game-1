@@ -196,7 +196,7 @@ export default {
     }
   },
   mounted () {
-    this.$socket.emit('sendToServer', 'aaa') // 在这里触发connect事件
+    this.$socket.emit('sendToServer', '我来自客户端') // 在这里触发connect事件
   },
   created () {
     let data = window.music.replace(/[0-9a-zA-Z_]+/g, function (str) {

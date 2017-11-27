@@ -47,7 +47,7 @@ app.use(function(err, req, res, next) {
 
 server.listen(80);
 io.on('connection', function (socket) {
-  socket.emit('sendToClient', { hello: 'world world cxy' });
+  socket.emit('sendToClient', { hello: '你好，我是一个程序员，来自服务器' });
   socket.on('sendToServer', function (data) {
     console.log(data);
   });
