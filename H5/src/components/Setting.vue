@@ -241,8 +241,8 @@ export default {
         .row{
           margin: 90px auto 0;
           .label{
-            flex: 0 0 140px;
-            width: 140px;
+            flex: 0 0 130px;
+            width: 130px;
             margin-right: 30px;
           }
         }

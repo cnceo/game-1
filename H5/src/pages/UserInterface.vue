@@ -180,9 +180,11 @@
       </div>
       <div slot="body" class="join-body">
         <div class="fill-room-card">
-          <span class="num-item" v-for="(item, index) in roomNums" :key="index">
-            {{item}}
-          </span>
+          <div class="box">
+            <span class="num-item" v-for="(item, index) in roomNums" :key="index">
+              {{item}}
+            </span>
+          </div>
         </div>
         <div class="select-num">
           <div class="num-row" v-for="(item, index) in nums" :key="index">
@@ -516,6 +518,7 @@ export default {
         this.roomNums.forEach((item, index) => {
           this.$set(this.roomNums, index, '')
         })
+        this.numIndex = 0
       } else if (index === 2) {
         // 删除
         if (this.numIndex < 0) {
@@ -785,11 +788,11 @@ export default {
 }
 .rule-body{
   .game-box{
-    flex: 0 0 60%;
-    padding: 0 3% 0 2%;
-    width: 95%;;
+    flex: 0 0 58%;
+    padding: 0 3% 0 3%;
+    width: 84%;
     height: 44vh;
-    margin: 2vh 0;
+    margin: 5vh 0 5vh 3%;
     overflow: auto;
   }
 }
@@ -810,24 +813,34 @@ export default {
         display: flex;
         flex-direction: row;
         align-items: center;
-        width: 72%;
-        padding: 0 20%;
-        height: 70px;
-        padding: 10px 14%;
+        flex: 1;
+        width: 100%;
+        height: 60px;
+        // padding: 10px 14%;
         background: url('../assets/imgs/img_Join_input.png') 0 0 no-repeat;
         background-size: 100% 100%;
-        .num-item{
-          display: inline-block;
-          flex: 0 0 24%;
-          width: 24%;
-          height: 70px;
-          line-height: 70px;
-          text-align: center;
-          font-size: 72px;
-          color: #fff;
-        }
-        .num-item:first-child{
-           margin-left: 15px;
+        .box{
+          display: flex;
+          flex-direction: row;
+          width: 100%;
+          margin: 0 14%;
+          height: 60px;
+          font-size: 0;
+          .num-item{
+            display: inline-block;
+            flex: 0 0 24%;
+            width: 24%;
+            height: 60px;
+            line-height: 60px;
+            text-align: center;
+            font-size: 72px;
+            color: #fff;
+          }
+          .num-item:first-child{
+            flex: 0 0 23%;
+            width: 23%;
+            margin-left: 15px;
+          }
         }
       }
       .select-num{
@@ -841,7 +854,7 @@ export default {
           .num-cell{
             flex: 1;
             width: 245px;
-            height: 70px;
+            height: 60px;
             margin-top: 20px;
             color: pink;
           }
