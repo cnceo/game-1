@@ -45,7 +45,7 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-server.listen(80);
+server.listen(9000);
 io.on('connection', function (socket) {
   socket.emit('sendToClient', { hello: '你好，我是一个程序员，来自服务器' });
   socket.on('sendToServer', function (data) {
