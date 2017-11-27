@@ -24,7 +24,7 @@ function fetch (url, cb) {
  * @Description: 数据请求方法
  * @Date: 2017-07-05 08:13:38
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2017-11-24 21:50:31
+ * @Last Modified time: 2017-11-27 10:25:41
  */
 export default {
   // 用户信息

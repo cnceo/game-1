@@ -11,6 +11,7 @@ import Util from './libs/util'
 import Sign from './libs/sign'
 import md5 from 'js-md5'
 import './assets/less/modal.less'
+import Interface from './libs/interface'
 var JSBridge = require('./libs/JsBridge')
 
 Vue.use(Vuex)
@@ -42,6 +43,7 @@ Vue.prototype.$JsBridge = JSBridge.JsBridge
 Vue.prototype.$axios = Util.ajax
 Vue.prototype.$url = Util.ajax.defaults.baseURL
 Vue.prototype.$md5 = md5
+Vue.prototype.$interface = Interface
 // import JsBridge from 'JsBridge'
 // window.getUserInfo = function (user) {
 //   window.user = user

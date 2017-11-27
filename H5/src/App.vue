@@ -27,7 +27,7 @@ export default {
       // 将原生带来的参数，显示在show标签位置
       vm.userInfo = window.JSON.parse(data)
       vm.$store.dispatch('getWxUserInfo', vm.userInfo)
-      var responseData = '微信用户信息' + window.JSON.stringify(vm.userInfo)
+      var responseData = '微信用户信息：' + window.JSON.stringify(vm.userInfo)
       // 调用responseCallback方法可以带传参数到原生
       responseCallback(responseData)
     })
@@ -80,7 +80,7 @@ export default {
         },
         music: vm.music
       })
-      var responseData = '当前音量' + window.JSON.stringify(vm.music)
+      var responseData = '当前音量：' + window.JSON.stringify(vm.music)
       // 调用responseCallback方法可以带传参数到原生
       responseCallback(responseData)
     })

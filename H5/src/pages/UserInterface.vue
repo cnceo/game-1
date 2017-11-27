@@ -197,6 +197,7 @@
 import {mapGetters} from 'vuex'
 import tabImgs from './tabImgs'
 const MAX_ROOM_NUM = 4
+const HEAD_IMG_SIZE = 0
 
 export default {
   name: 'HelloWorld',
@@ -314,7 +315,7 @@ export default {
         // sex: '1',
         // headimgurl: 'http://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83eqevDmfhVRfeibjyianWrRWYlCSkjOAhgOiaDkAnHQkib6DVSsl8u8wSLPo5FEYCr0triauYl7DqkbiaKyg/0'
       }
-      let ajaxParams = window.JSON.stringify(this.$url + '/user/login?' + this.$sign(params))
+      let ajaxParams = window.JSON.stringify(this.$url + this.$interface['/user/login'] + this.$sign(params))
       // let vm = this
       // this.$axios.get('/user/login?' + ajaxParams)
       // .then(function (res) {
@@ -335,7 +336,9 @@ export default {
         'getUserMsg' // 原生的方法名
         , {'param': ajaxParams} // 带个原生方法的参数
         , function (responseData) { // 响应原生回调方法
-          vm.$store.dispatch('userInfo', window.JSON.parse(responseData))
+          let data = window.JSON.parse(responseData)
+          data.model.headimgurl = data.model.headimgurl + HEAD_IMG_SIZE
+          vm.$store.dispatch('userInfo', data)
         }
       )
     },
@@ -344,7 +347,6 @@ export default {
         this.userInfo[key] = val.model[key]
       })
       this.userInfo.headimgurl = this.userInfo.headimgurl
-      console.log(this.userInfo)
     },
     indexPublic (val) {
       this.public = val.model
@@ -376,9 +378,18 @@ export default {
     message () {
       this.$audio.play(this.$audio.ui)
       this.showMsgModal = true
-      let ajaxParams = this.$sign({})
-      window.android.getPublic(window.JSON.stringify(ajaxParams))
-     // window.android.read(window.JSON.stringify(window.publics))
+      let vm = this
+      let ajaxParams = window.JSON.stringify(this.$url + this.$interface['/get/notice'] + this.$sign({}))
+      // 调用android原生内部方法
+      this.$JsBridge.callHandler(
+        'getPublic' // 原生的方法名
+        , {'param': ajaxParams} // 带个原生方法的参数
+        , function (responseData) { // 响应原生回调方法
+          let data = window.JSON.parse(responseData)
+          vm.public = data.model
+          vm.$store.dispatch('publicAjax', data)
+        }
+      )
      // this.$store.dispatch('publicAjax', ajaxParams)
     },
     closeMsgModal () {
@@ -387,10 +398,47 @@ export default {
     help () {
       this.$audio.play(this.$audio.ui)
       this.showRuleModal = true
-      let ajaxParams = this.$sign({})
-      this.$store.dispatch('qtRuleAjax', ajaxParams)
-      this.$store.dispatch('htRuleAjax', ajaxParams)
-      this.$store.dispatch('djRuleAjax', ajaxParams)
+      let vm = this
+      let ajaxParams1 = window.JSON.stringify(this.$url + this.$interface['/get/rule/qingtui'] + this.$sign({}))
+      let ajaxParams2 = window.JSON.stringify(this.$url + this.$interface['/get/rule/huntui'] + this.$sign({}))
+      let ajaxParams3 = window.JSON.stringify(this.$url + this.$interface['/get/rule/dajiu'] + this.$sign({}))
+      if (!this.qtRules) {
+        // 调用android原生内部方法
+        this.$JsBridge.callHandler(
+          'getQtMsg' // 原生的方法名
+          , {'param': ajaxParams1} // 带个原生方法的参数
+          , function (responseData) { // 响应原生回调方法
+            let data = window.JSON.parse(responseData)
+            vm.qtRules = data.model
+            vm.$store.dispatch('qtRuleAjax', data)
+          }
+        )
+      }
+      if (!this.htRules) {
+        this.$JsBridge.callHandler(
+          'getHtMsg' // 原生的方法名
+          , {'param': ajaxParams2} // 带个原生方法的参数
+          , function (responseData) { // 响应原生回调方法
+            let data = window.JSON.parse(responseData)
+            vm.htRules = data.model
+            vm.$store.dispatch('htRuleAjax', data)
+          }
+        )
+      }
+      if (!this.djRules) {
+        this.$JsBridge.callHandler(
+          'getDjMsg' // 原生的方法名
+          , {'param': ajaxParams3} // 带个原生方法的参数
+          , function (responseData) { // 响应原生回调方法
+            let data = window.JSON.parse(responseData)
+            vm.djRules = data.model
+            vm.$store.dispatch('djRuleAjax', data)
+          }
+        )
+      }
+      // this.$store.dispatch('qtRuleAjax', ajaxParams)
+      // this.$store.dispatch('htRuleAjax', ajaxParams)
+      // this.$store.dispatch('djRuleAjax', ajaxParams)
     },
     closeRuleModal () {
       this.showRuleModal = false
@@ -499,8 +547,14 @@ export default {
         baseRound: this.createRoomData.round,
         substitute: this.createRoomData.substitute
       }
-      let paramsAjax = this.$sign(params)
-      this.$store.dispatch('createRoom', paramsAjax)
+      let ajaxParams = window.JSON.stringify(this.$url + this.$interface['/room/create'] + this.$sign(params))
+      // 调用android原生内部方法
+      this.$JsBridge.callHandler(
+        'createRoom' // 原生的方法名
+        , {'param': ajaxParams} // 带个原生方法的参数
+        , function (responseData) { // 响应原生回调方法
+        }
+      )
     },
     invoiceGameRoom () {
       this.$audio.play(this.$audio.btn)

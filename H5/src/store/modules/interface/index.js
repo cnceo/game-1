@@ -42,35 +42,37 @@ const actions = {
   },
   // 用户信息
   userInfo ({ commit }, data) {
+    // api.publicAjax(data => {
     commit(types.USER_MSG, { data })
+    //  }, params)
   },
   // 获取音量数据
   getMusic ({ commit }, data) {
     commit(types.MUSIC_VOID, { data })
   },
   // 首页公告
-  publicAjax ({ commit }, params) {
-    api.publicAjax(data => {
-      commit(types.INDEX_PUBLIC, { data })
-    }, params)
+  publicAjax ({ commit }, data) {
+   // api.publicAjax(data => {
+    commit(types.INDEX_PUBLIC, { data })
+  //  }, params)
   },
   // 清推规则
-  qtRuleAjax ({ commit }, params) {
-    api.qtRuleAjax(data => {
-      commit(types.QT_RULE, { data })
-    }, params)
+  qtRuleAjax ({ commit }, data) {
+  //  api.qtRuleAjax(data => {
+    commit(types.QT_RULE, { data })
+  //  }, params)
   },
   // 混推规则
-  htRuleAjax ({ commit }, params) {
-    api.htRuleAjax(data => {
-      commit(types.HT_RULE, { data })
-    }, params)
+  htRuleAjax ({ commit }, data) {
+   // api.htRuleAjax(data => {
+    commit(types.HT_RULE, { data })
+   // }, params)
   },
   // 大九规则
-  djRuleAjax ({ commit }, params) {
-    api.djRuleAjax(data => {
-      commit(types.DJ_RULE, { data })
-    }, params)
+  djRuleAjax ({ commit }, data) {
+   // api.djRuleAjax(data => {
+    commit(types.DJ_RULE, { data })
+   // }, params)
   },
   // 创建房间
   createRoom ({ commit }, params) {

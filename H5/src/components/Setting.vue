@@ -166,12 +166,17 @@ export default {
           cur: val
         }
       })
-     // window.android.setSound(val)
     },
     // 音乐设置
     changeMusic (val) {
-      // 调用android原生内部方法
-      window.android.setSound(val)
+       // 调用android原生内部方法
+      this.$JsBridge.callHandler(
+        'setSound' // 原生的方法名
+        , {'param': val} // 带个原生方法的参数
+        , function (responseData) { // 响应原生回调方法
+
+        }
+      )
        // 保存设置的音效
       this.$store.dispatch('getMusic', {
         music: {
@@ -184,7 +189,13 @@ export default {
     changeAccount () {
       this.$audio.play(this.$audio.btn)
       // 调用android原生内部方法
-      window.android.changeAccount('正在返回')
+      this.$JsBridge.callHandler(
+        'changeAccount' // 原生的方法名
+        , {'param': '返回登陆页'} // 带个原生方法的参数
+        , function (responseData) { // 响应原生回调方法
+
+        }
+      )
     }
   }
 }
