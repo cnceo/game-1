@@ -1,5 +1,5 @@
 <template>
-  <div id="app" style="display: none">
+  <div id="app">
     <router-view/>
     
   </div>
@@ -125,6 +125,7 @@ export default {
 h1, h2 {
   font-weight: normal;
   margin: 20px 0;
+  line-height: 48px;
 }
 
 ul {
@@ -140,6 +141,7 @@ li{
 
 p{
   margin: 0;
+  line-height: 56px;
 }
 
 a {

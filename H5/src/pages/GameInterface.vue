@@ -186,17 +186,17 @@ export default {
       id: ''
     }
   },
-  sockets: {
-    connect: function () {  // 这里是监听connect事件
-      this.id = this.$socket.id
-      console.log(this.id)
-    },
-    sendToClient: function (val) {
-      console.log(val)
-    }
-  },
+  // sockets: {
+  //   connect: function () {  // 这里是监听connect事件
+  //     this.id = this.$socket.id
+  //     console.log(this.id)
+  //   },
+  //   sendToClient: function (val) {
+  //     console.log(val)
+  //   }
+  // },
   mounted () {
-    this.$socket.emit('sendToServer', '我来自客户端') // 在这里触发connect事件
+  //  this.$socket.emit('sendToServer', '我来自客户端') // 在这里触发connect事件
   },
   created () {
     let data = window.music.replace(/[0-9a-zA-Z_]+/g, function (str) {
@@ -204,7 +204,7 @@ export default {
     })
     window.music = window.JSON.parse(data)
     // 即时通讯
-    this.doSocket()
+   // this.doSocket()
   },
   methods: {
     setting () {
@@ -303,7 +303,7 @@ export default {
           position: relative;
           width: 180px;
           height: 50px;
-          line-height: 50px;
+          line-height: 55px;
           // background: url('../assets/imgs/img_Room_goldcoin.png') 0 0 no-repeat;
           // background-size: 100% 100%;
         }
@@ -311,7 +311,7 @@ export default {
           position: relative;
           width: 180px;
           height: 50px;
-          line-height: 50px;
+          line-height: 52px;
           // background: url('../assets/imgs/img_Room_name.png') 0 0 no-repeat;
           // background-size: 100% 100%;
         }
@@ -356,7 +356,7 @@ export default {
       }
     }
     .site1{
-      right: 20px;
+      right: 0px;
       bottom: 26vh;
     }
     .site2{
@@ -364,7 +364,7 @@ export default {
       bottom: 26vh;
     }
     .site3{
-      right: 20px;
+      right: 0px;
       top: 15vh;
     }
     .site4{
@@ -394,7 +394,7 @@ export default {
     }
     .intro{
       position: absolute;
-      bottom: 20px;
+      bottom: 12px;
       left: 20px;
       .help{
          width: 110px;
@@ -439,7 +439,7 @@ export default {
         bottom: 6%;
       }
       .room-num{
-        top: 5%;
+        top: 6%;
       }
     }
     .setting{

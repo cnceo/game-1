@@ -172,6 +172,9 @@
     <Modal :showModal="showJoinRoom"
     @on-close="closeJoinRoom"
     class="join-modal">
+    <div slot="modal-bg" class="modal-bg">
+      <img src="../assets/imgs/img_Join_background.png" alt=""  width="100%" height="100%">
+    </div>
       <div slot="title" class="join-title title-active">
         <img src="../assets/imgs/img_Join_joinyourroom.png" alt=""  width="100%">
       </div>
@@ -294,28 +297,28 @@ export default {
     this.handleArray([this.ds1_1, this.ds2_1, this.ds3_1], this.ds1)
     this.handleArray([this.ds1_2, this.ds2_2, this.ds3_2], this.ds2)
     // 防止切换路由用户数据丢失
-    if (this.userMsg) {
-      let vm = this
-      let params = {
-        openid: this.userMsg.openid,
-        nickname: this.userMsg.nickname,
-        sex: this.userMsg.sex,
-        headimgurl: this.userMsg.headimgurl
-      }
-      let ajaxParams = window.JSON.stringify(this.$url + this.$interface['/user/login'] + this.$sign(params))
-      this.$JsBridge.callHandler(
-        'getUserMsg' // 原生的方法名
-        , {'param': ajaxParams} // 带个原生方法的参数
-        , function (responseData) { // 响应原生回调方法
-          let data = window.JSON.parse(responseData)
-          data.model.headimgurl = data.model.headimgurl + HEAD_IMG_SIZE
-          Object.keys(vm.userInfo).forEach((key) => {
-            vm.userInfo[key] = data.model[key]
-          })
-          vm.$store.dispatch('userInfo', vm.userInfo)
-        }
-      )
+    // if (this.userMsg) {
+    let vm = this
+    let params = {
+      openid: this.userMsg.openid,
+      nickname: this.userMsg.nickname,
+      sex: this.userMsg.sex,
+      headimgurl: this.userMsg.headimgurl
     }
+    let ajaxParams = window.JSON.stringify(this.$url + this.$interface['/user/login'] + this.$sign(params))
+    this.$JsBridge.callHandler(
+      'getUserMsg' // 原生的方法名
+      , {'param': ajaxParams} // 带个原生方法的参数
+      , function (responseData) { // 响应原生回调方法
+        let data = window.JSON.parse(responseData)
+        data.model.headimgurl = data.model.headimgurl + HEAD_IMG_SIZE
+        Object.keys(vm.userInfo).forEach((key) => {
+          vm.userInfo[key] = data.model[key]
+        })
+        vm.$store.dispatch('userInfo', vm.userInfo)
+      }
+    )
+   // }
   },
   computed: mapGetters({
     userMsg: 'listenWxUser',
@@ -605,8 +608,8 @@ export default {
   // background: url('../assets/imgs/background.png') 0 0 no-repeat;
   // background-size: 100% 100%;
   .face-bar{
-    flex: 0 0 200px;
-    height: 200px;
+    flex: 0 0 210px;
+    height: 210px;
     padding: 0 60px;
     background: url('../assets/imgs/bar.png') 0 0 no-repeat;
     background-size: 100% 100%;
@@ -714,7 +717,7 @@ export default {
       top: 5px;
       left: 60px;
       width: 80px;
-      height: 56px;
+      height: 50px;
       background: url('../assets/imgs/Announcement.png') 0 0 no-repeat;
       background-size: 100% 100%;
     }
@@ -784,6 +787,7 @@ export default {
   .game-box{
     flex: 0 0 60%;
     padding: 0 3% 0 2%;
+    width: 95%;;
     height: 44vh;
     margin: 2vh 0;
     overflow: auto;
@@ -806,13 +810,16 @@ export default {
         display: flex;
         flex-direction: row;
         align-items: center;
+        width: 72%;
+        padding: 0 20%;
         height: 70px;
-        padding: 10px 120px;
+        padding: 10px 14%;
         background: url('../assets/imgs/img_Join_input.png') 0 0 no-repeat;
         background-size: 100% 100%;
         .num-item{
-          flex: 0 0 140px;
-          width: 140px;
+          display: inline-block;
+          flex: 0 0 24%;
+          width: 24%;
           height: 70px;
           line-height: 70px;
           text-align: center;
@@ -877,8 +884,13 @@ export default {
   }
 }
 .create-modal{
-  .row{
-    margin: 25px 0 50px 0;
+  .create-content{
+    .game-box{
+      height: 100%;
+      .row{
+        padding: 25px 0 25px 0;
+      }
+    }
   }
 }
 .foot-change{

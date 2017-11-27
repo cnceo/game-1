@@ -1,5 +1,6 @@
 /*规则*/
 #app .rule-modal .modal-content {
+  width: 62%;
   background-size: 100% 100%;
 }
 #app .rule-modal .rule-title {
@@ -43,13 +44,12 @@
   right: 0;
 }
 #app .create-modal .modal-content {
-  width: 70%;
+  width: 75%;
+  height: 70%;
   background-size: 100% 100%;
 }
 #app .join-modal .modal-content {
   padding: 30px;
-  background: url('../imgs/img_Join_background.png') 0 0 no-repeat;
-  background-size: 100% 100%;
 }
 #app .join-modal .join-title {
   width: 50%;

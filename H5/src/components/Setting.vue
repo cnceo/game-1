@@ -239,14 +239,17 @@ export default {
     .set-body{
       .sound-bar{
         .row{
-          margin: 80px auto;
+          margin: 90px auto 0;
           .label{
-            flex: 0 0 150px;
-            width: 150px;
+            flex: 0 0 140px;
+            width: 140px;
             margin-right: 30px;
           }
         }
       }
+    }
+    .toggle{
+      margin-top: 50px;
     }
   }  
   

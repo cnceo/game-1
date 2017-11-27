@@ -12,7 +12,7 @@ import Sign from './libs/sign'
 import md5 from 'js-md5'
 import './assets/less/modal.less'
 import Interface from './libs/interface'
-import VueSocketio from 'vue-socket.io'
+// import VueSocketio from 'vue-socket.io'
 // import socketio from 'socket.io-client'
 var JSBridge = require('./libs/JsBridge')
 
@@ -20,7 +20,7 @@ Vue.use(Vuex)
 Vue.use(Install)
 Vue.use(Audio)
 Vue.use(Sign)
-Vue.use(VueSocketio, 'http://localhost:80')
+// Vue.use(VueSocketio, 'http://localhost:9000')
 // Vue.use(VueSocketio, socketio('http://172.16.20.148:3000/'), store);
 
 // const store = new Vuex.Store({
