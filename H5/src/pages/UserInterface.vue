@@ -293,6 +293,29 @@ export default {
     this.handleArray([this.gameTabs, this.createRoomTabs], this.tabs)
     this.handleArray([this.ds1_1, this.ds2_1, this.ds3_1], this.ds1)
     this.handleArray([this.ds1_2, this.ds2_2, this.ds3_2], this.ds2)
+    // 防止切换路由用户数据丢失
+    if (this.userMsg) {
+      let vm = this
+      let params = {
+        openid: this.userMsg.openid,
+        nickname: this.userMsg.nickname,
+        sex: this.userMsg.sex,
+        headimgurl: this.userMsg.headimgurl
+      }
+      let ajaxParams = window.JSON.stringify(this.$url + this.$interface['/user/login'] + this.$sign(params))
+      this.$JsBridge.callHandler(
+        'getUserMsg' // 原生的方法名
+        , {'param': ajaxParams} // 带个原生方法的参数
+        , function (responseData) { // 响应原生回调方法
+          let data = window.JSON.parse(responseData)
+          data.model.headimgurl = data.model.headimgurl + HEAD_IMG_SIZE
+          Object.keys(vm.userInfo).forEach((key) => {
+            vm.userInfo[key] = data.model[key]
+          })
+          vm.$store.dispatch('userInfo', vm.userInfo)
+        }
+      )
+    }
   },
   computed: mapGetters({
     userMsg: 'listenWxUser',
@@ -338,15 +361,17 @@ export default {
         , function (responseData) { // 响应原生回调方法
           let data = window.JSON.parse(responseData)
           data.model.headimgurl = data.model.headimgurl + HEAD_IMG_SIZE
-          vm.$store.dispatch('userInfo', data)
+          Object.keys(vm.userInfo).forEach((key) => {
+            vm.userInfo[key] = data.model[key]
+          })
+          vm.$store.dispatch('userInfo', vm.userInfo)
         }
       )
     },
     users (val) {
       Object.keys(this.userInfo).forEach((key) => {
-        this.userInfo[key] = val.model[key]
+        this.userInfo[key] = val[key]
       })
-      this.userInfo.headimgurl = this.userInfo.headimgurl
     },
     indexPublic (val) {
       this.public = val.model

@@ -181,14 +181,30 @@ export default {
           card: null
         }
       ],
-      showSetModal: false
+      showSetModal: false,
+      socket: null,
+      id: ''
     }
+  },
+  sockets: {
+    connect: function () {  // 这里是监听connect事件
+      this.id = this.$socket.id
+      console.log(this.id)
+    },
+    sendToClient: function (val) {
+      console.log(val)
+    }
+  },
+  mounted () {
+    this.$socket.emit('sendToServer', 'aaa') // 在这里触发connect事件
   },
   created () {
     let data = window.music.replace(/[0-9a-zA-Z_]+/g, function (str) {
       return '"' + str + '"'
     })
     window.music = window.JSON.parse(data)
+    // 即时通讯
+    this.doSocket()
   },
   methods: {
     setting () {
@@ -199,6 +215,14 @@ export default {
     },
     closeSetModal () {
       this.showSetModal = false
+    },
+    doSocket () {
+     // let vm = this
+      console.log(this)
+      // this.socket = io.connect(this.$url)
+      // this.socket.on('message', function (obj) {
+      //   console.log(obj)
+      // })
     }
   }
 }
