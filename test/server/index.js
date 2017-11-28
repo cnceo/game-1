@@ -10,7 +10,7 @@ var server = http.createServer(function (req, res) {
   res.writeHead(200, headers)
   res.end()
 })
-server.listen(1337, '192.168.50.161')
+server.listen(1337, 'localhost')
 console.log('Server running at http://192.168.50.161:1337/')
 
 var rooms = {}
