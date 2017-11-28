@@ -45,12 +45,36 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-server.listen(80);
+server.listen(3030,{origins:'*'});
+
+var rooms = {};
+var onlineUsers = {};
+var onlineCount = 0;
+var isJoin = false;
 io.on('connection', function (socket) {
+  console.log('客户端链接成功....');
   socket.emit('sendToClient', { hello: '你好，我是一个程序员，来自服务器' });
-  socket.on('sendToServer', function (data) {
-    console.log(data);
+  socket.on('join', function (user) {
+    console.log(user);
+    let roomId = user.roomNum
+    if (!rooms[roomId]) {
+      rooms[roomId] = [];
+    }
+    for (let i = 0, len = rooms[roomId].length; i < len; i++) {
+      if (rooms[roomId][i].hasOwnProperty(user.id)) {
+        isJoin = true;
+      }
+    }
+    if (!isJoin) {
+      rooms[roomId].push(user);
+      onlineCount++;
+    }
+    socket.emit('join', {onlineUsers: rooms[roomId], onlineCount: onlineCount, user: user})
+    console.log(rooms)
   });
+  socket.on("disconnect",() => {
+    console.log("有一用户退出连接");
+   });
 });
 
 module.exports = app;
