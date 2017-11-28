@@ -34,7 +34,7 @@
      </div>
     </div>
     <div class="voice-info">
-      <p class="text">这里是公告信息</p>
+      <div class="text">{{dtMsg}}</div>
       <span class="s-icon"></span>
     </div>
     <div class="face-body g-flex-row">
@@ -290,7 +290,8 @@ export default {
         round: 10,
         score: 20,
         substitute: false
-      }
+      },
+      dtMsg: ''
     }
   },
   created () {
@@ -307,10 +308,10 @@ export default {
       sex: this.userMsg.sex,
       headimgurl: this.userMsg.headimgurl
     }
-    let ajaxParams = window.JSON.stringify(this.$url + this.$interface['/user/login'] + this.$sign(params))
+    let ajaxParams1 = window.JSON.stringify(this.$url + this.$interface['/user/login'] + this.$sign(params))
     this.$JsBridge.callHandler(
       'getUserMsg' // 原生的方法名
-      , {'param': ajaxParams} // 带个原生方法的参数
+      , {'param': ajaxParams1} // 带个原生方法的参数
       , function (responseData) { // 响应原生回调方法
         let data = window.JSON.parse(responseData)
         data.model.headimgurl = data.model.headimgurl + HEAD_IMG_SIZE
@@ -321,6 +322,20 @@ export default {
       }
     )
    // }
+  },
+  mounted () {
+    let vm = this
+    let ajaxParams2 = window.JSON.stringify(this.$url + this.$interface['/get/notice'] + this.$sign({}))
+    // 调用android原生内部方法
+    this.$JsBridge.callHandler(
+      'getPublic' // 原生的方法名
+      , {'param': ajaxParams2} // 带个原生方法的参数
+      , function (responseData) { // 响应原生回调方法
+        let data = window.JSON.parse(responseData)
+        vm.djMsg = data.model
+        vm.$store.dispatch('publicAjax', data)
+      }
+    )
   },
   computed: mapGetters({
     userMsg: 'listenWxUser',
@@ -580,10 +595,14 @@ export default {
       }
       let ajaxParams = window.JSON.stringify(this.$url + this.$interface['/room/create'] + this.$sign(params))
       // 调用android原生内部方法
+      let vm = this
       this.$JsBridge.callHandler(
         'createRoom' // 原生的方法名
         , {'param': ajaxParams} // 带个原生方法的参数
         , function (responseData) { // 响应原生回调方法
+          if (Number(window.JSON.parse(responseData)) === 200) {
+            vm.$router.push({path: '/game', params: {}})
+          }
         }
       )
     },
@@ -712,7 +731,7 @@ export default {
     color: #fff;
     background: url('../assets/imgs/Announcement_background.png') 0 0 no-repeat;
     background-size: 100% 100%;
-    p.text{
+    .text{
       margin-left: 180px;
     }
     .s-icon{
@@ -790,9 +809,9 @@ export default {
   .game-box{
     flex: 0 0 58%;
     padding: 0 3% 0 3%;
-    width: 84%;
+    width: 82%;
     height: 44vh;
-    margin: 5vh 0 5vh 3%;
+    margin: 5vh 0 5vh 5%;
     overflow: auto;
   }
 }
@@ -815,7 +834,7 @@ export default {
         align-items: center;
         flex: 1;
         width: 100%;
-        height: 60px;
+        height: 64px;
         // padding: 10px 14%;
         background: url('../assets/imgs/img_Join_input.png') 0 0 no-repeat;
         background-size: 100% 100%;
@@ -824,16 +843,16 @@ export default {
           flex-direction: row;
           width: 100%;
           margin: 0 14%;
-          height: 60px;
+          height: 64px;
           font-size: 0;
           .num-item{
             display: inline-block;
             flex: 0 0 24%;
             width: 24%;
-            height: 60px;
-            line-height: 60px;
+            height: 64px;
+            line-height: 64px;
             text-align: center;
-            font-size: 72px;
+            font-size: 52px;
             color: #fff;
           }
           .num-item:first-child{
@@ -853,13 +872,13 @@ export default {
           flex: 1;  
           .num-cell{
             flex: 1;
-            width: 245px;
-            height: 60px;
+            width: 24%;
+            height: 64px;
             margin-top: 20px;
             color: pink;
           }
           .num-cell:not(:last-child) {
-            margin-right: 50px;
+            margin-right: 4%;
           }
         }
       }
@@ -909,7 +928,7 @@ export default {
 .foot-change{
   font-size: 0;
   width: 80%;
-  margin: 24px auto;
+  margin: 0 auto 24px;
   .toggle{
     display: inline-block;
     width: 50%;

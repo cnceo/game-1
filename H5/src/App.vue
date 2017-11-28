@@ -139,9 +139,9 @@ li{
   margin: 0;
 }
 
-p, div{
-  margin: 0;
-  line-height: 48px;
+p{
+  margin: 0 0 15px 0;
+  line-height: 42px;
 }
 
 a {

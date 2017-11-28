@@ -114,6 +114,8 @@ export default {
   created () {
     // 初始化数据
     this.handleArray([this.ds0_1, this.ds0_2], this.ds0)
+    this.music = this.sounds.music
+    this.sound = this.sounds.sound
   },
   methods: {
     handleArray (arr, data) {
@@ -142,7 +144,11 @@ export default {
         if (ids === index) {
           item.img = tabImgs.hoverTabs[index]
         } else {
-          item.img = tabImgs.tabs[index]
+          if (index === 0) {
+            item.img = tabImgs.tabs[1]
+          } else {
+            item.img = tabImgs.tabs[0]
+          }
         }
       })
       this.selectSet = index
@@ -222,7 +228,8 @@ export default {
             margin: 30px 0;
             .label{
             // flex: 0 0 180px;
-             width: 150px;
+             width: 20%;
+             margin-top: 10px;
              vertical-align: middle;
             }
           }
@@ -241,8 +248,8 @@ export default {
         .row{
           margin: 90px auto 0;
           .label{
-            flex: 0 0 130px;
-            width: 130px;
+            flex: 0 0 16%;
+            width: 16%;
             margin-right: 30px;
           }
         }

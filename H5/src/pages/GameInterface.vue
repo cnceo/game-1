@@ -196,7 +196,7 @@ export default {
   //   }
   // },
   mounted () {
-  //  this.$socket.emit('sendToServer', '我来自客户端') // 在这里触发connect事件
+   // this.$socket.emit('sendToServer', '我来自客户端') // 在这里触发connect事件
   },
   created () {
     let data = window.music.replace(/[0-9a-zA-Z_]+/g, function (str) {
@@ -204,7 +204,7 @@ export default {
     })
     window.music = window.JSON.parse(data)
     // 即时通讯
-   // this.doSocket()
+    this.startSocket()
   },
   methods: {
     setting () {
@@ -216,13 +216,8 @@ export default {
     closeSetModal () {
       this.showSetModal = false
     },
-    doSocket () {
-     // let vm = this
-      console.log(this)
-      // this.socket = io.connect(this.$url)
-      // this.socket.on('message', function (obj) {
-      //   console.log(obj)
-      // })
+    startSocket () {
+      //
     }
   }
 }

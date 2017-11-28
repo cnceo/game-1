@@ -20,7 +20,7 @@ Vue.use(Vuex)
 Vue.use(Install)
 Vue.use(Audio)
 Vue.use(Sign)
-// Vue.use(VueSocketio, 'http://localhost:9000')
+// Vue.use(VueSocketio, socketio('http://192.168.50.161:3030'))
 // Vue.use(VueSocketio, socketio('http://172.16.20.148:3000/'), store);
 
 // const store = new Vuex.Store({
@@ -48,6 +48,8 @@ Vue.prototype.$axios = Util.ajax
 Vue.prototype.$url = Util.ajax.defaults.baseURL
 Vue.prototype.$md5 = md5
 Vue.prototype.$interface = Interface
+// Vue.prototype.$vueIo = VueSocketio
+// Vue.prototype.$io = socketio
 // import JsBridge from 'JsBridge'
 // window.getUserInfo = function (user) {
 //   window.user = user

@@ -78,7 +78,7 @@ export default {
       // 获取当前的位置
       // let curSite = site <= 0 ? 0 : (site >= barWidth) ? barWidth : site
       let curSite = site
-      console.log(curSite)
+      console.log(this.sound)
       // 计算此时的音量
       let maxSound = this.sound.max
       let rate = (curSite / barWidth)
