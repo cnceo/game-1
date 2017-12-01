@@ -194,6 +194,7 @@
 </template>
 
 <script>
+import CHAT from '../api/client'
 import {mapGetters} from 'vuex'
 import tabImgs from './tabImgs'
 const MAX_ROOM_NUM = 4
@@ -504,6 +505,7 @@ export default {
         // this.$store.dispatch('getRoom', this.roomNums.join(''))
         // window.android.saveRoom(this.roomNums.join(''))
         this.$router.push({path: '/game', params: {}})
+      //  CHAT.init('http://192.168.50.161:1337', { id: 123, name: this.userName, roomNum: this.roomNum })
       }
     },
     handleSelect (index) {
