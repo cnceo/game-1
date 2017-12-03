@@ -954,7 +954,7 @@ export default {
   }
 }
  .create-content{
-   padding-left: 36px;
+   padding-left: 32px;
    .game-box{
     flex: 0 0 70%;
     padding: 0 1% 0 1%;
@@ -1082,7 +1082,7 @@ export default {
     position: relative;  
     width:100%;  
     white-space:nowrap;
-    animation:horse 8s linear infinite;  
+    animation:horse 10s linear infinite;  
 } 
 #horse .box{
   display: inline-block;

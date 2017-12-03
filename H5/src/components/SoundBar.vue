@@ -46,7 +46,7 @@ export default {
       let rate = this.sound.cur / this.sound.max
       let [dotElem, barWidth, dotWidth] = this.initSound()
       dotElem.style.left = barWidth * rate - (dotWidth / 2) + 'px'
-      this.$refs.cur.style.width = barWidth * rate + 'px'
+      this.$refs.cur.style.width = barWidth * rate - 18 + 'px'
       console.log(this.$refs.cur)
     })
   },
@@ -157,10 +157,11 @@ export default {
   top: -50%;
   left: 31px;
   width: 40px;
-  height: 40px;
+  height: 30px;
+  padding: 5px;
   border-radius: 50%;
   background: #eed23a;
-  background: -webkit-linear-gradient(#eed23a, #996600);
+  background: -webkit-linear-gradient(#cc9900, #996600);
   cursor: pointer;
 }
 
@@ -172,7 +173,7 @@ export default {
   height: 30px;
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  background: #c78c29;
-  background: -webkit-linear-gradient(#996600, #eed23a);
+  background: #c78c29; //eed23a
+  background: -webkit-linear-gradient(#996600, #cc9900);
 }
 </style>
