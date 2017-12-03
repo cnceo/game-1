@@ -30,13 +30,13 @@
           <div v-show="selectSet === 1">
             <ul class="sound-bar">
               <li class="row">
-                <span class="label">
+                <span class="label" style="width: 100px">
                   <img src="../assets/imgs/img_Setup_Sound.png" alt="" width="100%">
                 </span>
                 <SoundBar :sound="sound" class="bar" @on-change="changeSound"></SoundBar>
               </li>
               <li class="row">
-                <span class="label">
+                <span class="label" style="width: 100px">
                   <img src="../assets/imgs/img_Setup_Music.png" alt="" width="100%">
                 </span>
                 <SoundBar :sound="music" class="bar" @on-change="changeMusic"></SoundBar>
@@ -178,7 +178,7 @@ export default {
        // 调用android原生内部方法
       this.$JsBridge.callHandler(
         'setSound' // 原生的方法名
-        , {'param': val} // 带个原生方法的参数
+        , {'param': val.toString()} // 带个原生方法的参数
         , function (responseData) { // 响应原生回调方法
 
         }

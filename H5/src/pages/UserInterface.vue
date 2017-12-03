@@ -34,7 +34,12 @@
      </div>
     </div>
     <div class="voice-info">
-      <div class="text">{{dtMsg}}</div>
+      <div class="text">
+        <div id="horse">
+          <div class="box">{{dtMsg}}</div>
+          <div class="box">{{dtMsg}}</div>
+        </div>
+      </div>
       <span class="s-icon"></span>
     </div>
     <div class="face-body g-flex-row">
@@ -72,9 +77,9 @@
           </span>
         </div>
         <div class="game-box">
-          <div v-show="selectGame === 0" v-html="qtRules"></div>
-          <div v-show="selectGame === 1" v-html="htRules">混推内容</div>
-          <div v-show="selectGame === 2" v-html="djRules">大九</div>
+          <div v-show="selectGame === 0" v-html="qtRules" class="item"></div>
+          <div v-show="selectGame === 1" v-html="htRules" class="item"></div>
+          <div v-show="selectGame === 2" v-html="djRules" class="item"></div>
         </div>
       </div>
     </Modal>
@@ -199,6 +204,7 @@
 </template>
 
 <script>
+import CHAT from '../api/client'
 import {mapGetters} from 'vuex'
 import tabImgs from './tabImgs'
 const MAX_ROOM_NUM = 4
@@ -286,19 +292,42 @@ export default {
       qtRules: '',
       htRules: '',
       djRules: '',
-      createRoomData: {
+      createRoomData1: {
         round: 10,
         score: 20,
         substitute: false
       },
-      dtMsg: ''
+      createRoomData2: {
+        round: 10,
+        score: 20,
+        substitute: false
+      },
+      createRoomData3: {
+        round: 10,
+        score: 20,
+        substitute: false
+      },
+      selectTypes: 0,
+      dtMsg: '',
+      CHAT
     }
   },
+  beforeCreate () {
+    let vm = this
+    let ajaxParams2 = window.JSON.stringify(this.$url + this.$interface['/get/notice'] + this.$sign({}))
+    // 调用android原生内部方法
+    this.$JsBridge.callHandler(
+      'getPublic' // 原生的方法名
+      , {'param': ajaxParams2} // 带个原生方法的参数
+      , function (responseData) { // 响应原生回调方法
+        let data = window.JSON.parse(responseData)
+        vm.dtMsg = data.model
+        document.getElementById('horse').style.width = vm.dtMsg.toString().length * 50 + 'px'
+        vm.$store.dispatch('publicAjax', data)
+      }
+    )
+  },
   created () {
-    // 初始化数据
-    this.handleArray([this.gameTabs, this.createRoomTabs], this.tabs)
-    this.handleArray([this.ds1_1, this.ds2_1, this.ds3_1], this.ds1)
-    this.handleArray([this.ds1_2, this.ds2_2, this.ds3_2], this.ds2)
     // 防止切换路由用户数据丢失
     // if (this.userMsg) {
     let vm = this
@@ -322,20 +351,43 @@ export default {
       }
     )
    // }
+    // 初始化数据
+    this.handleArray([this.gameTabs, this.createRoomTabs], this.tabs)
+    this.handleArray([this.ds1_1, this.ds2_1, this.ds3_1], this.ds1)
+    this.handleArray([this.ds1_2, this.ds2_2, this.ds3_2], this.ds2)
+    // let params3 = {
+    //   openid: 'oO8p8wqkSseyl3KPu7Sm02jskdlw',
+    //   nickname: 'Jeffery',
+    //   sex: '1',
+    //   headimgurl: 'http://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83eqevDmfhVRfeibjyianWrRWYlCSkjOAhgOiaDkAnHQkib6DVSsl8u8wSLPo5FEYCr0triauYl7DqkbiaKyg/0'
+    // }
+    // let ajaxParams3 = this.$sign(params3)
+    // this.$axios.get('/user/login?' + ajaxParams3)
+    // .then(function (res) {
+    //   console.log(res)
+    //   vm.userInfo = res.data.model
+    // })
+    // let ajaxParams4 = this.$sign({})
+    // this.$axios.get('/get/notice?' + ajaxParams4)
+    // .then(function (res) {
+    //   console.log(res)
+    //   vm.dtMsg = res.data.model
+    //   document.getElementById('horse').style.width = vm.dtMsg.toString().length * 50 + 'px'
+    // })
   },
   mounted () {
-    let vm = this
-    let ajaxParams2 = window.JSON.stringify(this.$url + this.$interface['/get/notice'] + this.$sign({}))
-    // 调用android原生内部方法
-    this.$JsBridge.callHandler(
-      'getPublic' // 原生的方法名
-      , {'param': ajaxParams2} // 带个原生方法的参数
-      , function (responseData) { // 响应原生回调方法
-        let data = window.JSON.parse(responseData)
-        vm.djMsg = data.model
-        vm.$store.dispatch('publicAjax', data)
-      }
-    )
+    // let vm = this
+    // let ajaxParams2 = window.JSON.stringify(this.$url + this.$interface['/get/notice'] + this.$sign({}))
+    // // 调用android原生内部方法
+    // this.$JsBridge.callHandler(
+    //   'getPublic' // 原生的方法名
+    //   , {'param': ajaxParams2} // 带个原生方法的参数
+    //   , function (responseData) { // 响应原生回调方法
+    //     let data = window.JSON.parse(responseData)
+    //     vm.dtMsg = data.model
+    //     vm.$store.dispatch('publicAjax', data)
+    //   }
+    // )
   },
   computed: mapGetters({
     userMsg: 'listenWxUser',
@@ -424,18 +476,18 @@ export default {
       this.$audio.play(this.$audio.ui)
       this.showMsgModal = true
       let vm = this
-      let ajaxParams = window.JSON.stringify(this.$url + this.$interface['/get/notice'] + this.$sign({}))
+      let ajaxParams = window.JSON.stringify(this.$url + this.$interface['/get/news'] + this.$sign({}))
       // 调用android原生内部方法
       this.$JsBridge.callHandler(
-        'getPublic' // 原生的方法名
+        'getNews' // 原生的方法名
         , {'param': ajaxParams} // 带个原生方法的参数
         , function (responseData) { // 响应原生回调方法
           let data = window.JSON.parse(responseData)
           vm.public = data.model
-          vm.$store.dispatch('publicAjax', data)
+          vm.$store.dispatch('newsAjax', data)
         }
       )
-     // this.$store.dispatch('publicAjax', ajaxParams)
+     // this.$store.dispatch('newsAjax', ajaxParams)
     },
     closeMsgModal () {
       this.showMsgModal = false
@@ -495,7 +547,7 @@ export default {
     createRoom () {
       this.$audio.play(this.$audio.btn)
       this.showCreateRoom = true
-      this.createRoomData.substitute = false
+     // this.createRoomData.substitute = false
     },
     closeCreateRoom () {
       this.showCreateRoom = false
@@ -523,7 +575,18 @@ export default {
       if (this.numIndex === MAX_ROOM_NUM) {
         // this.$store.dispatch('getRoom', this.roomNums.join(''))
         // window.android.saveRoom(this.roomNums.join(''))
-        this.$router.push({path: '/game', params: {}})
+        if (this.selectTypes === 0) {
+          this.$router.push({path: '/qt', params: {}})
+        } else if (this.selectTypes === 1) {
+          this.$router.push({path: '/ht', params: {}})
+        } else {
+          this.$router.push({path: '/dj', params: {}})
+        }
+       //  CHAT.init(,)
+        // {
+        //  'command':1001,
+        //  'data':'{'roomId":"9892b069-222b-48f8-b0bb-3234929d19ac","userId":254526 }"
+        // })
       }
     },
     handleSelect (index) {
@@ -563,35 +626,60 @@ export default {
           item.img = tabImgs.imgs[ids]
         }
       })
+      // 保存选择的游戏类型
+      this.selectTypes = index
       this.selectRoom = index
     },
     selectTime1 (data) {
       this.$audio.play(this.$audio.ui)
-      this.createRoomData.round = data
+      this.createRoomData1.round = data
     },
     selectScore1 (data) {
       this.$audio.play(this.$audio.ui)
-      this.createRoomData.score = data
+      this.createRoomData1.score = data
     },
-    selectTime2 () {
+    selectTime2 (data) {
       this.$audio.play(this.$audio.ui)
+      this.createRoomData2.round = data
     },
-    selectScore2 () {
+    selectScore2 (data) {
       this.$audio.play(this.$audio.ui)
+      this.createRoomData2.score = data
     },
-    selectTime3 () {
+    selectTime3 (data) {
       this.$audio.play(this.$audio.ui)
+      this.createRoomData3.round = data
     },
-    selectScore3 () {
+    selectScore3 (data) {
       this.$audio.play(this.$audio.ui)
+      this.createRoomData3.score = data
     },
     createGameRoom () {
       this.$audio.play(this.$audio.btn)
+      let selectData = {}
+      let type = null
+      let router = ''
+      // 获取选择的游戏类型
+      if (this.selectTypes === 0) {
+        selectData = this.createRoomData1
+        type = 1
+        router = '/qt'
+      } else if (this.selectTypes === 1) {
+        selectData = this.createRoomData2
+        type = 2
+        router = '/ht'
+      } else {
+        selectData = this.createRoomData3
+        type = 3
+        router = '/dj'
+      }
+      console.log(selectData)
       let params = {
         userId: this.userInfo.id,
-        baseScore: this.createRoomData.score,
-        baseRound: this.createRoomData.round,
-        substitute: this.createRoomData.substitute
+        baseScore: selectData.score,
+        baseRound: selectData.round,
+        substitute: selectData.substitute,
+        gameType: type
       }
       let ajaxParams = window.JSON.stringify(this.$url + this.$interface['/room/create'] + this.$sign(params))
       // 调用android原生内部方法
@@ -601,14 +689,52 @@ export default {
         , {'param': ajaxParams} // 带个原生方法的参数
         , function (responseData) { // 响应原生回调方法
           if (Number(window.JSON.parse(responseData)) === 200) {
-            vm.$router.push({path: '/game', params: {}})
+            vm.$router.push({path: router, params: {}})
           }
         }
       )
+          // let params3 = {
+    //   openid: 'oO8p8wqkSseyl3KPu7Sm02jskdlw',
+    //   nickname: 'Jeffery',
+    //   sex: '1',
+    //   headimgurl: 'http://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83eqevDmfhVRfeibjyianWrRWYlCSkjOAhgOiaDkAnHQkib6DVSsl8u8wSLPo5FEYCr0triauYl7DqkbiaKyg/0'
+    // }
+      // console.log(this.userInfo)
+    //   let params3 = {
+    //     userId: this.userInfo.id,
+    //     baseScore: selectData.score,
+    //     baseRound: selectData.round,
+    //     substitute: selectData.substitute,
+    //     gameType: type,
+    //     version: '0.0.2',
+    //     source: 'android'
+    //   }
+    //   let str = 'meizhuangdaka.com?&'
+    //   Object.keys(params).sort().forEach((key) => {
+    //     str += key + '=' + params[key] + '?&'
+    //   })
+    //   params3.sign = this.$md5(str)
+    // //  let ajaxParams3 = this.$sign(params3)
+    //   console.log(params3)
+    //   var obj = new XMLHttpRequest()
+    //   obj.open('POST', 'http://www.syhpgkj.com:8080/app/room/create', true)
+    //   obj.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')  // 添加http头，发送信息至服务器时内容编码类型
+    //   obj.onreadystatechange = function () {
+    //     if (obj.readyState === 4 && (obj.status === 200 || obj.status === 304)) {  // 304未修改
+    //        // fn.call(this, obj.responseText);
+    //     }
+    //   }
+    //   obj.send(JSON.stringify(params3))
     },
     invoiceGameRoom () {
       this.$audio.play(this.$audio.btn)
-      this.createRoomData.substitute = true
+      if (this.selectTypes === 0) {
+        this.createRoomData1.substitute = true
+      } else if (this.selectTypes === 1) {
+        this.createRoomData2.substitute = true
+      } else {
+        this.createRoomData3.substitute = true
+      }
     }
   }
 }
@@ -732,12 +858,13 @@ export default {
     background: url('../assets/imgs/Announcement_background.png') 0 0 no-repeat;
     background-size: 100% 100%;
     .text{
-      margin-left: 180px;
+      margin: 0 40px  0 140px;
+      overflow: hidden;
     }
     .s-icon{
       position: absolute;
       top: 5px;
-      left: 60px;
+      left: 30px;
       width: 80px;
       height: 50px;
       background: url('../assets/imgs/Announcement.png') 0 0 no-repeat;
@@ -791,7 +918,7 @@ export default {
   .game-tabs{
     flex: 0 0 230px;
     width: 230px;
-    padding: 0 15px;
+    padding: 0 5px 0 25px;
     span{
       display: block;
       width: 100%;
@@ -810,12 +937,24 @@ export default {
     flex: 0 0 58%;
     padding: 0 3% 0 3%;
     width: 82%;
-    height: 44vh;
-    margin: 5vh 0 5vh 5%;
+    height: 42vh;
+    margin: 3vh 0 5vh 3%;
     overflow: auto;
+    .item{
+      div{
+        line-height: 45px;
+      }
+      p{
+        line-height: 45px;
+      }
+      h1, h2{
+        line-height: 48px;
+      }
+    }
   }
 }
  .create-content{
+   padding-left: 40px;
    .game-box{
     flex: 0 0 70%;
     padding: 0 1% 0 1%;
@@ -827,7 +966,7 @@ export default {
 .join-modal{
   .modal-content{
     .join-body{
-      margin-top: 15px;
+      margin-top: 30px;
       .fill-room-card{
         display: flex;
         flex-direction: row;
@@ -928,7 +1067,7 @@ export default {
 .foot-change{
   font-size: 0;
   width: 80%;
-  margin: 0 auto 24px;
+  margin: 20px auto 24px;
   .toggle{
     display: inline-block;
     width: 50%;
@@ -939,5 +1078,18 @@ export default {
     }
   }
 }
-
+#horse {  
+    position: relative;  
+    width:100%;  
+    white-space:nowrap;
+    animation:horse 8s linear infinite;  
+} 
+#horse .box{
+  display: inline-block;
+} 
+@keyframes horse  
+{  
+    0%   {left:0px;}   
+    100% {left:-150%;}  
+}
 </style>

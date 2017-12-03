@@ -35,6 +35,10 @@ import numr from '../assets/imgs/img_Join_heavycount.png'
 import num0 from '../assets/imgs/img_Join_0.png'
 import numd from '../assets/imgs/img_Join_Delete.png'
 
+import cm from '../assets/imgs/img-Stoppingdoor-goout.png'
+import tm from '../assets/imgs/img-Stoppingdoor-tianmen.png'
+import km from '../assets/imgs/img-Stoppingdoor-kanmen.png'
+
 const tabsImgs = {
   imgs: [img1, img2, img3],
   hoverImgs: [img1Hover, img2Hover, img3Hover],
@@ -48,7 +52,8 @@ const tabsImgs = {
     [{img: num4, num: 4}, {img: num5, num: 5}, {img: num6, num: 6}],
     [{img: num7, num: 7}, {img: num8, num: 8}, {img: num9, num: 9}],
     [{img: numr, num: '重输'}, {img: num0, num: 0}, {img: numd, num: '删除'}]
-  ]
+  ],
+  mtype: [cm, tm, km]
 }
 
 export default tabsImgs

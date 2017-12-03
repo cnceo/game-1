@@ -114,15 +114,42 @@
     </div>
     <!-- 交流 -->
     <div class="talk">
+       <div class="voice"></div>
       <div class="txt-msg"></div>
-      <div class="voice"></div>
     </div>
     <!-- 设置 -->
     <Setting :account="showAccount" ref="setting"></Setting>
+    <!-- 拦门弹窗 -->
+    <Modal :showModal="showLmModal"
+    :showClose="showClose"
+    class="lm-modal">
+    <div slot="modal-bg" class="modal-bg">
+      <img src="../assets/imgs/img-Stoppingdoor-background.png" alt=""  width="100%" height="100%">
+    </div>
+      <div slot="title" class="lm-title title-active">
+         <img src="../assets/imgs/img-Stoppingdoor-title.png" alt=""  width="100%">
+      </div>
+      <div slot="body" class="lm-body">
+        <ul>
+          <li class="item" v-for="(item, index) in mType" :key="index">
+            <img :src="item.img" alt=""  width="100%">
+          </li>
+        </ul>
+      </div>
+      <div slot="foot" class="lm-foot">
+        <div class="ok lm-btn" @click="lmOk">
+           <img src="../assets/imgs/img-Stoppingdoor-confirm.png" alt=""  width="100%">
+        </div>
+        <div class="cancel lm-btn" @click="lmCancel">
+           <img src="../assets/imgs/img-Stoppingdoor-nostoppingdoor.png" alt=""  width="100%">
+        </div>
+      </div>
+    </Modal>
   </div>
 </template>
 
 <script>
+import tabImgs from './tabImgs'
 import avatar from '../assets/imgs/head_img.jpg'
 export default {
   name: 'app',
@@ -183,7 +210,23 @@ export default {
       ],
       showSetModal: false,
       socket: null,
-      id: ''
+      id: '',
+      showLmModal: true,
+      showClose: false,
+      mType: [
+        {
+          img: tabImgs.mtype[0],
+          select: false
+        },
+        {
+          img: tabImgs.mtype[1],
+          select: false
+        },
+        {
+          img: tabImgs.mtype[2],
+          select: false
+        }
+      ]
     }
   },
   // sockets: {
@@ -215,6 +258,12 @@ export default {
     },
     closeSetModal () {
       this.showSetModal = false
+    },
+    lmOk () {
+      this.showLmModal = false
+    },
+    lmCancel () {
+      this.showLmModal = false
     },
     startSocket () {
       //
@@ -292,36 +341,47 @@ export default {
         position: relative;
         width: 180px;
         color: #fff;
-        font-size: 28px;
+        font-size: 24px;
         font-weight: bold;
+        margin-top: 5px;
         .money{
           position: relative;
           width: 180px;
-          height: 50px;
-          line-height: 55px;
+           height: 40px;
+          line-height: 42px;
+          margin-top: 5px;
           // background: url('../assets/imgs/img_Room_goldcoin.png') 0 0 no-repeat;
           // background-size: 100% 100%;
         }
         .name{
           position: relative;
           width: 180px;
-          height: 50px;
-          line-height: 52px;
+           height: 40px;
+          line-height: 42px;
           // background: url('../assets/imgs/img_Room_name.png') 0 0 no-repeat;
           // background-size: 100% 100%;
         }
         .text{
           position: absolute;
           top: 0;
-          left: 30%;
+          left: 36%;
         }
       }
       .g-inline{ 
         left: -50px;
         bottom: 20px;
         margin-top: 20px;
+        font-size: 0;
         .money,.name{
           display: inline-block;
+          vertical-align: middle;
+          font-size: 24px;
+        }
+        .money{
+          margin-top: 0;
+        }
+        .name{
+          margin-right: 8px;
         }
       }
       .msg.r-msg{
@@ -348,6 +408,10 @@ export default {
       transform: translateX(-50%);
       .status{
         top: 20px;
+         left: 240px;
+      }
+      .msg{
+        width: 370px;
       }
     }
     .site1{
@@ -360,11 +424,11 @@ export default {
     }
     .site3{
       right: 0px;
-      top: 15vh;
+      top: 16vh;
     }
     .site4{
       left: 50px;
-      top: 15vh;
+      top: 16vh;
     }
   }
   .game-table{
@@ -374,7 +438,7 @@ export default {
       .host{
         .host-bg{
           width: 68%;
-          height: 6vh;
+          height: 8vh;
           // background: url('../assets/imgs/img_Room_scramblefor.png') 0 0 no-repeat;
           // background-size: 100% 100%;
         }
@@ -382,14 +446,14 @@ export default {
       .tip{
         width: 65%;
         height: 3vh;
-        margin: 20px 0 0 10px;
+        margin: 5px 0 0 10px;
         background: url('../assets/imgs/img_Room_nooperation.png') 0 0 no-repeat;
         background-size: 100% 100%;
       }
     }
     .intro{
       position: absolute;
-      bottom: 12px;
+      bottom: 16px;
       left: 20px;
       .help{
          width: 110px;
@@ -409,7 +473,7 @@ export default {
       position: relative;
       left: -5%;
       color: #fff;
-      line-height: 7vh;
+      line-height: 8vh;
       font-family: 'microsoft yahei';
       font-size: 22px;
       .time{
@@ -419,7 +483,7 @@ export default {
     .games{
       position: relative;
       width: 15%;
-      height: 6vh;
+      height: 8vh;
       margin-right: 40px;
       font-size: 14px;
       color: #fff;
@@ -431,7 +495,7 @@ export default {
         left: 50%;
       }
       .rate{
-        bottom: 6%;
+        top: 31%;
       }
       .room-num{
         top: 6%;
@@ -439,14 +503,17 @@ export default {
     }
     .setting{
       width: 5%;
-      height: 6vh;
+      height: 8vh;
       margin-right: 30px;
+      img{
+        height: 8vh;
+      }
       // background: url('../assets/imgs/img_Room_setup.png') 0 0 no-repeat;
       // background-size: 100% 100%;
     }
     .js-room{
       width: 15%;
-      height: 6vh;
+      height: 8vh;
       // background: url('../assets/imgs/img_Room_dissolvetheroom.png') 0 0 no-repeat;
       // background-size: 100% 100%;
     }
@@ -490,20 +557,45 @@ export default {
   }
   .talk{
     position: fixed;
-    bottom: 13%;
-    right: 18%;
+     bottom: 10%;
+    right: 17%;
     .voice{
       width: 110px;
       height: 80px;
+       margin-bottom: 15px;
       background: url('../assets/imgs/img_Room_yuyin.png') 0 0 no-repeat;
       background-size: 100% 100%;
     }
     .txt-msg{
       width: 110px;
       height: 80px;
-      margin-bottom: 15px;
       background: url('../assets/imgs/img_Room_biaoqing.png') 0 0 no-repeat;
       background-size: 100% 100%;
+    }
+  }
+}
+.lm-modal{
+  .lm-body{
+    ul{
+      display: flex;
+      flex-direction: row;
+      padding: 9% 8% 0 8%;
+      li{
+        flex: 1;
+        margin-right: 10%;
+      }
+      li:last-child{
+        margin-right: 0;
+      }
+    }
+  }
+  .lm-foot{
+     display: flex;
+     flex-direction: row;
+     padding: 0 10%;
+     justify-content: space-between;
+    .lm-btn{
+      flex: 0 0 32%;
     }
   }
 }

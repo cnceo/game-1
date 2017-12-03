@@ -1,4 +1,5 @@
 export const INDEX_PUBLIC = 'INDEX_PUBLIC'
+export const NEWS_MSG = 'NEWS_MSG'
 export const MUSIC_VOID = 'MUSIC_VOID'
 export const WX_USER_INFO = 'WX_USER_INFO'
 export const QT_RULE = 'QT_RULE'

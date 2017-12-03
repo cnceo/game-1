@@ -3,6 +3,46 @@
   <head>
     <meta charset="utf-8">
     <title>game</title>
+    <style>
+      @media screen and (orientation: portrait) {  
+		      html{  
+		         width : 100% ;  
+		         height : 100vh ;  
+		          overflow : hidden;  
+		      }  
+		      body{  
+		          width : 100% ;  
+		         height : 100vh ;  
+		          overflow : hidden;  
+		      }  
+		      #app{  
+		        position : absolute ;  
+            top : 0 ;  
+            left : 0 ;  
+            width : 100% ;  
+            height : 100vh ;  
+		      }  
+		} 
+    	@media screen and (orientation: landscape) {  
+		      html{  
+		         width : 100% ;  
+		         height : 100vh ;  
+		          overflow : hidden;  
+		      }  
+		      body{  
+		          width : 100% ;  
+		         height : 100vh ;  
+		          overflow : hidden;  
+		      }  
+		      #app{  
+		        position : absolute ;  
+            top : 0 ;   
+            left : 0 ;  
+            width : 100% ;  
+            height : 100vh ;  
+		      }  
+		} 
+    </style>
     <script type="text/javascript" src="static/js/flex.js"></script>
     <!-- <script src="/socket.io/socket.io.js"></script> -->
   </head>
@@ -16,7 +56,53 @@
         var docEl = doc.documentElement,
             resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
             recalc = function () {
+                // 重置横竖屏
+                let sql = window.matchMedia('(orientation: portrait)').matches
+                if(window.orientation == 90 || window.orientation == -90 || sql === false){
+                  console.log('横屏');
+                  setTimeout (() => {
+                    var clientWidth = docEl.clientWidth;
+                    var clientHeight = docEl.clientHeight;
+                    
+                    // doc.body.style.width = docEl.clientHeight
+                    // doc.body.style.height = docEl.clientWidth
+                  }, 0)
+                } else {
+                  console.log('竖屏');
+                  setTimeout (() => {
+                    var clientWidth = docEl.clientWidth;
+                    var clientHeight = docEl.clientHeight;
+                    
+                    // doc.body.style.width = docEl.clientWidth
+                    // doc.body.style.height = docEl.clientHeight
+                  //  doc.body.style.width = docEl.clientWidth
+                  }, 0)
+                }
+                setTimeout (() => {
+                  var width = docEl.clientWidth;
+                var height = docEl.clientHeight;
+                console.log(width)
+                console.log(width)
+                if (width < height) {
+                  console.log('竖屏...')
+                  document.getElementById('app').style.width = height + 'px';  
+                  document.getElementById('app').style.height = width + 'px';
+                  document.getElementById('app').style.top = (height-width)/2 + 'px';
+                  document.getElementById('app').style.left = 0-(height-width)/2 + 'px';
+                  document.getElementById('app').style.transform = 'rotate(90deg)'
+                  document.getElementById('app').style.transformOrigin = '50% 50%'
+                  // document.getElementById('app').style.width = clientHeight + 'px'
+                  // document.getElementById('app').style.height = clientWidth + 'px'
+                  // document.getElementById('app').style.transform = 'rotate(-90deg)'
+                } else {
+                  // document.getElementById('app').style.width = clientWidth + 'px'
+                  // document.getElementById('app').style.height = clientHeight + 'px'
+                   document.getElementById('app').style.transform = 'rotate(0deg)'
+                }
+                }, 800)
+                // 设置字体
                 var clientWidth = docEl.clientWidth;
+                
                 if (!clientWidth) return;
                 // if(clientWidth>=640){
                 //     docEl.style.fontSize = '100px';

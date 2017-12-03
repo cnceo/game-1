@@ -17,6 +17,9 @@
 #app .msg-modal .msg-title {
   width: 50%;
 }
+#app .msg-modal .msg-body {
+  line-height: 24px;
+}
 #app .set-modal .modal-content {
   padding: 20px;
   background: url('../imgs/img_Setup_Settingbackground.png') 0 0 no-repeat;
@@ -60,6 +63,10 @@
 }
 #app .join-modal .join-title {
   width: 50%;
+}
+#app .lm-modal .lm-title {
+  width: 50%;
+  margin: 0 auto;
 }
 #app .modal-bg {
   height: 100%;

@@ -1,5 +1,5 @@
 var Sign = {}
-const VERSION = '0.0.1' // APP版本
+const VERSION = '0.0.2' // APP版本
 const SOURCE = 'android' // APP来源（ios或android）
 Sign.install = function (Vue, options) {
   Vue.prototype.$sign = function (params) {
