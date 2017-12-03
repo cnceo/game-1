@@ -954,7 +954,7 @@ export default {
   }
 }
  .create-content{
-   padding-left: 40px;
+   padding-left: 36px;
    .game-box{
     flex: 0 0 70%;
     padding: 0 1% 0 1%;
@@ -1089,7 +1089,8 @@ export default {
 } 
 @keyframes horse  
 {  
-    0%   {left:0px;}   
+    0%   {left:0px;} 
+    50% {left:-75%;}  
     100% {left:-150%;}  
 }
 </style>

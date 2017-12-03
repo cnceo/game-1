@@ -31,17 +31,24 @@ export default {
     }
   },
   created () {
-    this.$nextTick(() => {
-      let rate = this.sound.cur / this.sound.max
-      let [dotElem, barWidth, dotWidth] = this.initSound()
-      dotElem.style.left = barWidth * rate - (dotWidth / 2) + 'px'
-      this.$refs.cur.style.width = barWidth * rate - (dotWidth / 2) + 'px'
-      console.log(this.$refs.cur)
-    })
+    // this.$nextTick(() => {
+    //   let rate = this.sound.cur / this.sound.max
+    //   let [dotElem, barWidth, dotWidth] = this.initSound()
+    //   dotElem.style.left = barWidth * rate - (dotWidth / 2) + 'px'
+    //   this.$refs.cur.style.width = barWidth * rate - (dotWidth / 2) + 'px'
+    //   console.log(this.$refs.cur)
+    // })
   },
   mounted () {
     let width = document.documentElement.clientWidth * 0.6 - 80
     this.$refs.soundbox.style.width = width + 'px'
+    this.$nextTick(() => {
+      let rate = this.sound.cur / this.sound.max
+      let [dotElem, barWidth, dotWidth] = this.initSound()
+      dotElem.style.left = barWidth * rate - (dotWidth / 2) + 'px'
+      this.$refs.cur.style.width = barWidth * rate + 'px'
+      console.log(this.$refs.cur)
+    })
   },
   methods: {
     initSound () {
@@ -81,8 +88,8 @@ export default {
       }, 5)
     },
     calcVolume (site) {
-      this.$refs.cur.style.width = site + 'px'
       let [dotElem, barWidth, dotWidth] = this.initSound()
+      this.$refs.cur.style.width = site + 'px'
       // 进度条对应显示
       if (site <= (dotWidth)) {
        // return
@@ -100,8 +107,6 @@ export default {
       // 计算此时的音量
       let maxSound = this.sound.max
       let rate = (curSite / barWidth)
-      console.log(this.$refs.soundbox.style.width)
-      console.log(rate)
      // console.log(rate)
       let curSound = 0
       if (maxSound === 1) {
@@ -155,7 +160,7 @@ export default {
   height: 40px;
   border-radius: 50%;
   background: #eed23a;
-  background: -webkit-linear-gradient(#eed23a, #c78c29);
+  background: -webkit-linear-gradient(#eed23a, #996600);
   cursor: pointer;
 }
 
@@ -168,6 +173,6 @@ export default {
   border-radius: 50%;
   transform: translate(-50%, -50%);
   background: #c78c29;
-  background: -webkit-linear-gradient(#c78c29, #eed23a);
+  background: -webkit-linear-gradient(#996600, #eed23a);
 }
 </style>
