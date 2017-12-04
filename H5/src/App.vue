@@ -1,5 +1,5 @@
 <template>
-  <div id="app" style="display: none">
+  <div id="app">
     <router-view/>
     
   </div>
@@ -12,7 +12,7 @@ export default {
   data () {
     return {
       userInfo: {},
-      music: null,
+      music: {},
       timer: null,
       room: '',
       screenWidth: '',
@@ -40,7 +40,14 @@ export default {
     //     }
     //   )
     // window.user = '{"max": "31", "cur": "15"}'
-    // window.music = '{"max": "31", "cur": "15"}'
+    window.music = '{"max": "31", "cur": "15"}'
+    vm.$store.dispatch('getMusic', {
+      sound: {
+        max: vm.$audio.max,
+        cur: vm.$audio.volume
+      },
+      music: JSON.parse(window.music)
+    })
     // let total = 0
     // this.timer = setInterval(() => {
     //   if (total >= 2) {
@@ -72,7 +79,10 @@ export default {
     // 获取系统音量信息
     this.$JsBridge.registerHandler('getSound', function (data, responseCallback) {
       // 将原生带来的参数，显示在show标签位置
-      vm.music = Object.assign({}, vm.handleJSON(data))
+      let max = data.split('&')[0].split('=')[1]
+      let cur = data.split('&')[1].split('=')[1]
+      vm.music.cur = cur
+      vm.music.max = max
       vm.$store.dispatch('getMusic', {
         sound: {
           max: vm.$audio.max,
@@ -80,15 +90,10 @@ export default {
         },
         music: vm.music
       })
-      var responseData = '当前音量：' + window.JSON.stringify(vm.music)
+      var responseData = '当前音量：' + max + '&' + cur
       // 调用responseCallback方法可以带传参数到原生
       responseCallback(responseData)
     })
-    this.screenWidth = document.documentElement.clientWidth + 'px'
-    this.screenHeight = document.documentElement.clientHeight + 'px'
-    document.getElementById('app').style.width = this.screenWidth
-    document.getElementById('app').style.height = this.screenHeight
-    document.getElementById('app').style.overflow = 'hidden'
   },
   // computed: mapGetters({
   //   roomId: 'listenRoom'
@@ -105,7 +110,7 @@ export default {
       let data = json.replace(reg, function (str) {
         return "'" + str + "'"
       })
-      return window.JSON.parse(data)
+      return data
     }
   }
 }
@@ -121,10 +126,13 @@ export default {
   color: #2c3e50;
   margin: 0;
   padding: 0;
+  height: 100vh;
+  overflow: hidden;
 }
 h1, h2 {
   font-weight: normal;
   margin: 20px 0;
+  line-height: 48px;
 }
 
 ul {
@@ -139,7 +147,8 @@ li{
 }
 
 p{
-  margin: 0;
+  margin: 0 0 15px 0;
+  line-height: 45px;
 }
 
 a {

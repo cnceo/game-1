@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import UserInterface from '@/pages/UserInterface'
-import GameInterface from '@/pages/GameInterface'
+import QtGame from '@/pages/QtGame'
+import HtGame from '@/pages/HtGame'
+import DjGame from '@/pages/DjGame'
 
 Vue.use(Router)
 
@@ -13,9 +15,19 @@ export default new Router({
       component: UserInterface
     },
     {
-      path: '/game',
-      name: 'GameInterface',
-      component: GameInterface
+      path: '/qt',
+      name: 'QtGame',
+      component: QtGame
+    },
+    {
+      path: '/ht',
+      name: 'HtGame',
+      component: HtGame
+    },
+    {
+      path: '/dj',
+      name: 'DjGame',
+      component: DjGame
     }
   ]
 })

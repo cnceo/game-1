@@ -30,13 +30,13 @@
           <div v-show="selectSet === 1">
             <ul class="sound-bar">
               <li class="row">
-                <span class="label">
+                <span class="label" style="width: 100px">
                   <img src="../assets/imgs/img_Setup_Sound.png" alt="" width="100%">
                 </span>
                 <SoundBar :sound="sound" class="bar" @on-change="changeSound"></SoundBar>
               </li>
               <li class="row">
-                <span class="label">
+                <span class="label" style="width: 100px">
                   <img src="../assets/imgs/img_Setup_Music.png" alt="" width="100%">
                 </span>
                 <SoundBar :sound="music" class="bar" @on-change="changeMusic"></SoundBar>
@@ -114,6 +114,8 @@ export default {
   created () {
     // 初始化数据
     this.handleArray([this.ds0_1, this.ds0_2], this.ds0)
+    this.music = this.sounds.music
+    this.sound = this.sounds.sound
   },
   methods: {
     handleArray (arr, data) {
@@ -142,7 +144,11 @@ export default {
         if (ids === index) {
           item.img = tabImgs.hoverTabs[index]
         } else {
-          item.img = tabImgs.tabs[index]
+          if (index === 0) {
+            item.img = tabImgs.tabs[1]
+          } else {
+            item.img = tabImgs.tabs[0]
+          }
         }
       })
       this.selectSet = index
@@ -172,7 +178,7 @@ export default {
        // 调用android原生内部方法
       this.$JsBridge.callHandler(
         'setSound' // 原生的方法名
-        , {'param': val} // 带个原生方法的参数
+        , {'param': val.toString()} // 带个原生方法的参数
         , function (responseData) { // 响应原生回调方法
 
         }
@@ -222,7 +228,8 @@ export default {
             margin: 30px 0;
             .label{
             // flex: 0 0 180px;
-             width: 150px;
+             width: 20%;
+             margin-top: 10px;
              vertical-align: middle;
             }
           }
@@ -239,14 +246,17 @@ export default {
     .set-body{
       .sound-bar{
         .row{
-          margin: 80px auto;
+          margin: 90px auto 0;
           .label{
-            flex: 0 0 150px;
-            width: 150px;
+            flex: 0 0 16%;
+            width: 16%;
             margin-right: 30px;
           }
         }
       }
+    }
+    .toggle{
+      margin-top: 50px;
     }
   }  
   

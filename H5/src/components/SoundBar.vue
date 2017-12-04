@@ -1,9 +1,11 @@
 <template>
-    <div class="bar-box" name="bar" style="width: 450px" 
+    <div class="bar-box" name="bar" style="" 
     @click="setVoice($event)" ref="soundbox">
-      <div class="bar-dot" name="dot" draggable="true" style="width: 40px;" 
+      <div class="cur-box" ref="cur" name="bar" @click="setVoice($event)">
+        <div class="bar-dot" name="dot" draggable="true" style="width: 40px;" 
       @touchmove="moveDot($event)" ref="soundbar">
         <div class="inner-dot"></div>
+      </div>
       </div>
     </div>
 </template>
@@ -27,6 +29,26 @@ export default {
       let [dotElem, barWidth, dotWidth] = this.initSound()
       dotElem.style.left = barWidth * rate - (dotWidth / 2) + 'px'
     }
+  },
+  created () {
+    // this.$nextTick(() => {
+    //   let rate = this.sound.cur / this.sound.max
+    //   let [dotElem, barWidth, dotWidth] = this.initSound()
+    //   dotElem.style.left = barWidth * rate - (dotWidth / 2) + 'px'
+    //   this.$refs.cur.style.width = barWidth * rate - (dotWidth / 2) + 'px'
+    //   console.log(this.$refs.cur)
+    // })
+  },
+  mounted () {
+    let width = document.documentElement.clientWidth * 0.6 - 80
+    this.$refs.soundbox.style.width = width + 'px'
+    this.$nextTick(() => {
+      let rate = this.sound.cur / this.sound.max
+      let [dotElem, barWidth, dotWidth] = this.initSound()
+      dotElem.style.left = barWidth * rate - (dotWidth / 2) + 'px'
+      this.$refs.cur.style.width = barWidth * rate - 18 + 'px'
+      console.log(this.$refs.cur)
+    })
   },
   methods: {
     initSound () {
@@ -52,33 +74,36 @@ export default {
       let dotSite = event.changedTouches[0].screenX
       // let startSite = this.getBodyOffset(barElem)
       let clientWidth = document.documentElement.clientWidth
-      let startSite = (clientWidth - (barWidth + 60)) / 2 + 60
+      let startSite = (clientWidth - (barWidth + 100)) / 2 + 100
       let site = ''
       if (dotSite < startSite) {
         site = 0
       } else if (dotSite > (startSite + barWidth)) {
-        site = startSite + barWidth
+        site = barWidth
       } else {
         site = dotSite - startSite
       }
-      this.calcVolume(site)
+      setTimeout(() => {
+        this.calcVolume(site)
+      }, 5)
     },
     calcVolume (site) {
       let [dotElem, barWidth, dotWidth] = this.initSound()
+      this.$refs.cur.style.width = site + 'px'
       // 进度条对应显示
-      if (site < (dotWidth / 2)) {
-        return
-        // dotElem.style.left = 0
-      } else if (site > (barWidth - (dotWidth / 2))) {
-        return
-       // dotElem.style.left = (barWidth - dotWidth) + 'px'
+      if (site <= (dotWidth)) {
+       // return
+        dotElem.style.left = '0px'
+      } else if (site >= (barWidth - (dotWidth))) {
+       // return
+        dotElem.style.left = (barWidth - dotWidth) + 'px'
       } else {
         dotElem.style.left = site - (dotWidth / 2) + 'px'
       }
       // 获取当前的位置
       // let curSite = site <= 0 ? 0 : (site >= barWidth) ? barWidth : site
       let curSite = site
-      console.log(curSite)
+     // console.log(this.sound)
       // 计算此时的音量
       let maxSound = this.sound.max
       let rate = (curSite / barWidth)
@@ -113,6 +138,16 @@ export default {
 <style scoped lang="less">
 .bar-box{
   position: relative;
+  width: 76%;
+  height: 20px;
+  border-radius: 12px;
+  background: #FFF;
+}
+.cur-box{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
   height: 20px;
   border-radius: 12px;
   background: #ace93c;
@@ -124,14 +159,21 @@ export default {
   width: 40px;
   height: 30px;
   padding: 5px;
-  border-radius: 20px 20px 20px 20px;
+  border-radius: 50%;
   background: #eed23a;
+  background: -webkit-linear-gradient(#cc9900, #996600);
   cursor: pointer;
 }
+
 .inner-dot{
+  position: absolute;
+  top: 50%;
+  left: 50%;
   width: 40px;
   height: 30px;
-  border-radius: 20px 20px 20px 20px;
-  background: #c78c29;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: #c78c29; //eed23a
+  background: -webkit-linear-gradient(#996600, #cc9900);
 }
 </style>

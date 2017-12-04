@@ -13,7 +13,10 @@
       <div class="game-body">
         <slot name="body"></slot>
       </div>
-      <span class="close" @click="closeModal">X</span>
+      <div class="game-foot">
+        <slot name="foot"></slot>
+      </div>
+      <span class="close" @click="closeModal" v-show="showX">X</span>
     </div>
     <div class="modal-mask"></div>
   </div>
@@ -26,17 +29,29 @@ export default {
     showModal: {
       type: Boolean,
       default: false
+    },
+    showClose: {
+      type: Boolean,
+      default: true
     }
   },
   watch: {
     showModal (val) {
       this.show = val
+    },
+    showClose (val) {
+      this.showX = val
     }
   },
   data () {
     return {
-      show: false
+      show: false,
+      showX: true
     }
+  },
+  created () {
+    this.show = this.showModal
+    this.showX = this.showClose
   },
   methods: {
     closeModal () {
@@ -57,7 +72,7 @@ export default {
     width: 60%;
     height: 60%;
     transform: translate(-50%, -50%);
-    background: rgba(0, 0, 0, .8);
+   // background: rgba(0, 0, 0, .8);
     z-index: 1000;
     .game-title{
       position: absolute;

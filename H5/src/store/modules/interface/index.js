@@ -6,9 +6,11 @@ const state = {
   wxUser: {}, // 用户微信信息
   music: {}, // 音量数据
   public: {}, // 首页公告
+  news: {}, // 新闻消息
   qtRules: [], // 清推规则
   htRules: [], // 混推规则
-  djRules: [] // 大九规则
+  djRules: [], // 大九规则
+  ids: {} // 房间号和用户id
 }
 
 const mutations = {
@@ -24,6 +26,9 @@ const mutations = {
   [types.INDEX_PUBLIC] (state, { data }) {
     state.public = data
   },
+  [types.NEWS_MSG] (state, { data }) {
+    state.news = data
+  },
   [types.QT_RULE] (state, { data }) {
     state.qtRules = data
   },
@@ -32,6 +37,9 @@ const mutations = {
   },
   [types.DJ_RULE] (state, { data }) {
     state.djRules = data
+  },
+  [types.SAVE_ID] (state, { data }) {
+    state.ids = data
   }
 }
 
@@ -42,7 +50,7 @@ const actions = {
   },
   // 用户信息
   userInfo ({ commit }, data) {
-    // api.publicAjax(data => {
+    // api.userAjax(data => {
     commit(types.USER_MSG, { data })
     //  }, params)
   },
@@ -55,6 +63,12 @@ const actions = {
    // api.publicAjax(data => {
     commit(types.INDEX_PUBLIC, { data })
   //  }, params)
+  },
+  // 新闻消息
+  newsAjax ({ commit }, data) {
+    // api.newsAjax(data => {
+    commit(types.NEWS_MSG, { data })
+   //  }, params)
   },
   // 清推规则
   qtRuleAjax ({ commit }, data) {
@@ -74,6 +88,12 @@ const actions = {
     commit(types.DJ_RULE, { data })
    // }, params)
   },
+  // 保存房间号和用户id
+  saveId ({ commit }, data) {
+    // api.djRuleAjax(data => {
+    commit(types.SAVE_ID, { data })
+    // }, params)
+  },
   // 创建房间
   createRoom ({ commit }, params) {
     return new Promise((resolve, reject) => {
@@ -89,9 +109,11 @@ const getters = {
   listenUser: state => state.users,
   listenMusic: state => state.music,
   listenPublic: state => state.public,
+  listenNews: state => state.news,
   listenQtRule: state => state.qtRules,
   listenHtRule: state => state.htRules,
-  listenDjRule: state => state.djRules
+  listenDjRule: state => state.djRules,
+  listenIds: state => state.ids
 }
 
 export default {
