@@ -288,7 +288,7 @@ export default {
       createRoomTabs: [],
       selectRoom: 0,
       bigImg: false,
-      public: '',
+      publics: '',
       qtRules: '',
       htRules: '',
       djRules: '',
@@ -584,11 +584,10 @@ export default {
         } else {
           this.$router.push({path: '/dj', params: {}})
         }
-       //  CHAT.init(,)
-        // {
-        //  'command':1001,
-        //  'data':'{'roomId":"9892b069-222b-48f8-b0bb-3234929d19ac","userId":254526 }"
-        // })
+        CHAT.init(this.$url, {
+          'command': 1001,
+          'data': {'roomId': 'd4359e0b-ecb0-4d65-9a59-560fe76995b6', 'userId': 905372}
+        })
       }
     },
     handleSelect (index) {

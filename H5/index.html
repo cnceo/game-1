@@ -60,10 +60,10 @@
                 let sql = window.matchMedia('(orientation: portrait)').matches
                 if(window.orientation == 90 || window.orientation == -90 || sql === false){
                   // 横屏
-                  widow.android.toastMessage("横屏")
+                  window.android.toastMessage("横屏")
                 } else {
                    // 竖屏
-                   widow.android.toastMessage("竖屏")
+                   window.android.toastMessage("竖屏")
                 }
                 setTimeout (() => {
                   var width = docEl.clientWidth;

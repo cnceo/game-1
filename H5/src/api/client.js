@@ -1,12 +1,15 @@
 import io from 'socket.io-client'
+import util from '../libs/bytesLen'
 const CHAT = {
   socket: null,
   systemMsg: '',
   roomNum: '',
   init: (url, data) => {
     this.socket = io.connect(url)
-    console.log('start socket connect...')
-    this.socket.emit('join', data)
+    let params = window.JSON.stringify(data)
+    let bytes = util.getBytesLength(params)
+    console.log(bytes + params)
+    this.socket.emit('LOGIN', bytes + params)
     setInterval(() => {
       this.socket.emit('heartbeat', 1)
     }, 10000)

@@ -12,6 +12,7 @@ import Sign from './libs/sign'
 import md5 from 'js-md5'
 import './assets/less/modal.less'
 import Interface from './libs/interface'
+import Fn from './libs/bytesLen'
 // import VueSocketio from 'vue-socket.io'
 // import socketio from 'socket.io-client'
 var JSBridge = require('./libs/JsBridge')
@@ -48,6 +49,7 @@ Vue.prototype.$axios = Util.ajax
 Vue.prototype.$url = Util.ajax.defaults.baseURL
 Vue.prototype.$md5 = md5
 Vue.prototype.$interface = Interface
+Vue.prototype.$fn = Fn
 // Vue.prototype.$vueIo = VueSocketio
 // Vue.prototype.$io = socketio
 // import JsBridge from 'JsBridge'
