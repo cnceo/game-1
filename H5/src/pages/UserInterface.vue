@@ -311,6 +311,7 @@ export default {
       dtMsg: '',
       userId: '',
       roomId: '',
+      router: '',
       CHAT
     }
   },
@@ -584,10 +585,34 @@ export default {
         } else {
           this.$router.push({path: '/dj', params: {}})
         }
-        CHAT.init(this.$url, {
-          'command': 1001,
-          'data': {'roomId': 'd4359e0b-ecb0-4d65-9a59-560fe76995b6', 'userId': 905372}
+        // CHAT.init(this.$url, {
+        //   'command': 1001,
+        //   'data': {'roomId': 'd4359e0b-ecb0-4d65-9a59-560fe76995b6', 'userId': 905372}
+        // })
+        let ajaxParams = window.JSON.stringify({
+          host: this.$url,
+          params: {
+            command: 1001,
+            data: {'roomId': this.roomId, 'userId': this.userId}
+          }
         })
+        // let vm = this
+        this.$JsBridge.callHandler(
+        'joinRoom' // 原生的方法名
+        , {'param': ajaxParams} // 带个原生方法的参数
+        , function (responseData) { // 响应原生回调方法
+          // let data = window.JSON.parse(responseData)
+          // if (Number(data.code) === 200) {
+          //   vm.userId = data.id
+          //   vm.roomId = data.numId
+          //   vm.$store.dispatch('saveId', {
+          //     userId: vm.userId,
+          //     roomId: vm.roomId
+          //   })
+          //   vm.$router.push({path: this.router, params: {userId: vm.userId, roomId: vm.roomId}})
+          // }
+        }
+      )
       }
     },
     handleSelect (index) {
@@ -659,20 +684,19 @@ export default {
       this.$audio.play(this.$audio.btn)
       let selectData = {}
       let type = null
-      let router = ''
       // 获取选择的游戏类型
       if (this.selectTypes === 0) {
         selectData = this.createRoomData1
         type = 1
-        router = '/qt'
+        this.router = '/qt'
       } else if (this.selectTypes === 1) {
         selectData = this.createRoomData2
         type = 2
-        router = '/ht'
+        this.router = '/ht'
       } else {
         selectData = this.createRoomData3
         type = 3
-        router = '/dj'
+        this.router = '/dj'
       }
       console.log(selectData)
       let params = {
@@ -695,13 +719,13 @@ export default {
         , function (responseData) { // 响应原生回调方法
           let data = window.JSON.parse(responseData)
           if (Number(data.code) === 200) {
-            vm.userId = data.id
-            vm.roomId = data.numId
+            vm.userId = data.model.createUserId
+            vm.roomId = data.model.id
             vm.$store.dispatch('saveId', {
               userId: vm.userId,
               roomId: vm.roomId
             })
-            vm.$router.push({path: router, params: {userId: vm.userId, roomId: vm.roomId}})
+           // vm.$router.push({path: vm.router, params: {userId: vm.userId, roomId: vm.roomId}})
           }
         }
       )
