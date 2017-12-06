@@ -42,13 +42,15 @@ export default {
   mounted () {
     let width = document.documentElement.clientWidth * 0.6 - 80
     this.$refs.soundbox.style.width = width + 'px'
-    this.$nextTick(() => {
+   // this.$nextTick(() => {
+    setTimeout(() => {
       let rate = this.sound.cur / this.sound.max
       let [dotElem, barWidth, dotWidth] = this.initSound()
       dotElem.style.left = barWidth * rate - (dotWidth / 2) + 'px'
       this.$refs.cur.style.width = barWidth * rate - 18 + 'px'
       console.log(this.$refs.cur)
-    })
+    }, 1000)
+   // })
   },
   methods: {
     initSound () {
