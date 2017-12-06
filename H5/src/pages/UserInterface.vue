@@ -315,24 +315,7 @@ export default {
       CHAT
     }
   },
-  beforeCreate () {
-    let vm = this
-    let ajaxParams2 = window.JSON.stringify({
-      host: this.$url,
-      path: this.$interface['/get/notice'],
-      params: this.$sign({})
-    })
-    // 调用android原生内部方法
-    this.$JsBridge.callHandler(
-      'getPublic' // 原生的方法名
-      , {'param': ajaxParams2} // 带个原生方法的参数
-      , function (responseData) { // 响应原生回调方法
-        let data = window.JSON.parse(responseData)
-        vm.dtMsg = data.model
-        document.getElementById('horse').style.width = vm.dtMsg.toString().length * 50 + 'px'
-        vm.$store.dispatch('publicAjax', data)
-      }
-    )
+  beforeMounte () {
   },
   created () {
     // 防止切换路由用户数据丢失
@@ -379,7 +362,6 @@ export default {
         vm.$store.dispatch('publicAjax', data)
       }
     )
-   // }
     // 初始化数据
     this.handleArray([this.gameTabs, this.createRoomTabs], this.tabs)
     this.handleArray([this.ds1_1, this.ds2_1, this.ds3_1], this.ds1)

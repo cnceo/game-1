@@ -24,10 +24,13 @@ export default {
   watch: {
     sound (val) {
      // console.log(val)
+      let width = document.documentElement.clientWidth * 0.6 - 80
+      this.$refs.soundbox.style.width = width + 'px'
       // 初始化音量进度条
       let rate = val.cur / val.max
       let [dotElem, barWidth, dotWidth] = this.initSound()
       dotElem.style.left = barWidth * rate - (dotWidth / 2) + 'px'
+      this.$refs.cur.style.width = barWidth * rate - 18 + 'px'
     }
   },
   created () {
@@ -42,15 +45,12 @@ export default {
   mounted () {
     let width = document.documentElement.clientWidth * 0.6 - 80
     this.$refs.soundbox.style.width = width + 'px'
-   // this.$nextTick(() => {
-    setTimeout(() => {
+    this.$nextTick(() => {
       let rate = this.sound.cur / this.sound.max
       let [dotElem, barWidth, dotWidth] = this.initSound()
       dotElem.style.left = barWidth * rate - (dotWidth / 2) + 'px'
       this.$refs.cur.style.width = barWidth * rate - 18 + 'px'
-      console.log(this.$refs.cur)
-    }, 1000)
-   // })
+    })
   },
   methods: {
     initSound () {
