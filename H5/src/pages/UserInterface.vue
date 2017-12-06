@@ -316,24 +316,6 @@ export default {
     }
   },
   beforeCreate () {
-    let vm = this
-   // let ajaxParams2 = window.JSON.stringify(this.$url + this.$interface['/get/notice'] + this.$sign({}))
-    let ajaxParams2 = window.JSON.stringify({
-      host: this.$url,
-      path: this.$interface['/get/notice'],
-      params: this.$sign({})
-    })
-    // 调用android原生内部方法
-    this.$JsBridge.callHandler(
-      'getPublic' // 原生的方法名
-      , {'param': ajaxParams2} // 带个原生方法的参数
-      , function (responseData) { // 响应原生回调方法
-        let data = window.JSON.parse(responseData)
-        vm.dtMsg = data.model
-        document.getElementById('horse').style.width = vm.dtMsg.toString().length * 50 + 'px'
-        vm.$store.dispatch('publicAjax', data)
-      }
-    )
   },
   created () {
     // 防止切换路由用户数据丢失
@@ -361,6 +343,23 @@ export default {
           vm.userInfo[key] = data.model[key]
         })
         vm.$store.dispatch('userInfo', vm.userInfo)
+      }
+    )
+   // let ajaxParams2 = window.JSON.stringify(this.$url + this.$interface['/get/notice'] + this.$sign({}))
+    let ajaxParams2 = window.JSON.stringify({
+      host: this.$url,
+      path: this.$interface['/get/notice'],
+      params: this.$sign({})
+    })
+    // 调用android原生内部方法
+    this.$JsBridge.callHandler(
+      'getPublic' // 原生的方法名
+      , {'param': ajaxParams2} // 带个原生方法的参数
+      , function (responseData) { // 响应原生回调方法
+        let data = window.JSON.parse(responseData)
+        vm.dtMsg = data.model
+        document.getElementById('horse').style.width = vm.dtMsg.toString().length * 50 + 'px'
+        vm.$store.dispatch('publicAjax', data)
       }
     )
    // }
@@ -406,6 +405,7 @@ export default {
     userMsg: 'listenWxUser',
     users: 'listenUser',
     indexPublic: 'listenPublic',
+    news: 'listenNews',
     qtRule: 'listenQtRule',
     htRule: 'listenHtRule',
     djRule: 'listenDjRule'
@@ -464,6 +464,9 @@ export default {
       })
     },
     indexPublic (val) {
+      this.dtMsg = val.model
+    },
+    news (val) {
       this.publics = val.model
     },
     qtRule (val) {
@@ -506,7 +509,7 @@ export default {
         , {'param': ajaxParams} // 带个原生方法的参数
         , function (responseData) { // 响应原生回调方法
           let data = window.JSON.parse(responseData)
-          vm.public = data.model
+          vm.publics = data.model
           vm.$store.dispatch('newsAjax', data)
         }
       )
