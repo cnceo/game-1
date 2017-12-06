@@ -317,7 +317,12 @@ export default {
   },
   beforeCreate () {
     let vm = this
-    let ajaxParams2 = window.JSON.stringify(this.$url + this.$interface['/get/notice'] + this.$sign({}))
+   // let ajaxParams2 = window.JSON.stringify(this.$url + this.$interface['/get/notice'] + this.$sign({}))
+    let ajaxParams2 = window.JSON.stringify({
+      host: this.$url,
+      path: this.$interface['/get/notice'],
+      params: this.$sign({})
+    })
     // 调用android原生内部方法
     this.$JsBridge.callHandler(
       'getPublic' // 原生的方法名
@@ -340,7 +345,12 @@ export default {
       sex: this.userMsg.sex,
       headimgurl: this.userMsg.headimgurl
     }
-    let ajaxParams1 = window.JSON.stringify(this.$url + this.$interface['/user/login'] + this.$sign(params))
+   // let ajaxParams1 = window.JSON.stringify(this.$url + this.$interface['/user/login'] + this.$sign(params))
+    let ajaxParams1 = window.JSON.stringify({
+      host: this.$url,
+      path: this.$interface['/user/login'],
+      params: this.$sign(params)
+    })
     this.$JsBridge.callHandler(
       'getUserMsg' // 原生的方法名
       , {'param': ajaxParams1} // 带个原生方法的参数
@@ -413,7 +423,12 @@ export default {
         // sex: '1',
         // headimgurl: 'http://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83eqevDmfhVRfeibjyianWrRWYlCSkjOAhgOiaDkAnHQkib6DVSsl8u8wSLPo5FEYCr0triauYl7DqkbiaKyg/0'
       }
-      let ajaxParams = window.JSON.stringify(this.$url + this.$interface['/user/login'] + this.$sign(params))
+      // let ajaxParams = window.JSON.stringify(this.$url + this.$interface['/user/login'] + this.$sign(params))
+      let ajaxParams = window.JSON.stringify({
+        host: this.$url,
+        path: this.$interface['/user/login'],
+        params: this.$sign(params)
+      })
       // let vm = this
       // this.$axios.get('/user/login?' + ajaxParams)
       // .then(function (res) {
@@ -479,7 +494,12 @@ export default {
       this.$audio.play(this.$audio.ui)
       this.showMsgModal = true
       let vm = this
-      let ajaxParams = window.JSON.stringify(this.$url + this.$interface['/get/news'] + this.$sign({}))
+      // let ajaxParams = window.JSON.stringify(this.$url + this.$interface['/get/news'] + this.$sign({}))
+      let ajaxParams = window.JSON.stringify({
+        host: this.$url,
+        path: this.$interface['/get/news'],
+        params: this.$sign({})
+      })
       // 调用android原生内部方法
       this.$JsBridge.callHandler(
         'getNews' // 原生的方法名
@@ -499,9 +519,24 @@ export default {
       this.$audio.play(this.$audio.ui)
       this.showRuleModal = true
       let vm = this
-      let ajaxParams1 = window.JSON.stringify(this.$url + this.$interface['/get/rule/qingtui'] + this.$sign({}))
-      let ajaxParams2 = window.JSON.stringify(this.$url + this.$interface['/get/rule/huntui'] + this.$sign({}))
-      let ajaxParams3 = window.JSON.stringify(this.$url + this.$interface['/get/rule/dajiu'] + this.$sign({}))
+      // let ajaxParams1 = window.JSON.stringify(this.$url + this.$interface['/get/rule/qingtui'] + this.$sign({}))
+      // let ajaxParams2 = window.JSON.stringify(this.$url + this.$interface['/get/rule/huntui'] + this.$sign({}))
+      // let ajaxParams3 = window.JSON.stringify(this.$url + this.$interface['/get/rule/dajiu'] + this.$sign({}))
+      let ajaxParams1 = window.JSON.stringify({
+        host: this.$url,
+        path: this.$interface['/get/rule/qingtui'],
+        params: this.$sign({})
+      })
+      let ajaxParams2 = window.JSON.stringify({
+        host: this.$url,
+        path: this.$interface['/get/rule/huntui'],
+        params: this.$sign({})
+      })
+      let ajaxParams3 = window.JSON.stringify({
+        host: this.$url,
+        path: this.$interface['/get/rule/dajiu'],
+        params: this.$sign({})
+      })
       if (!this.qtRules) {
         // 调用android原生内部方法
         this.$JsBridge.callHandler(
@@ -585,12 +620,13 @@ export default {
         } else {
           this.$router.push({path: '/dj', params: {}})
         }
-        // CHAT.init(this.$url, {
-        //   'command': 1001,
-        //   'data': {'roomId': 'd4359e0b-ecb0-4d65-9a59-560fe76995b6', 'userId': 905372}
-        // })
+        CHAT.init(this.$url, {
+          'command': 1001,
+          'data': {'roomId': this.roomId, 'userId': this.userId}
+        })
         let ajaxParams = window.JSON.stringify({
           host: this.$url,
+          path: this.$interface['/app'],
           params: {
             command: 1001,
             data: {'roomId': this.roomId, 'userId': this.userId}
@@ -698,7 +734,6 @@ export default {
         type = 3
         this.router = '/dj'
       }
-      console.log(selectData)
       let params = {
         userId: this.userInfo.id,
         baseScore: selectData.score,
@@ -711,6 +746,33 @@ export default {
         path: this.$interface['/room/create'],
         params: this.$sign(params)
       })
+      // let params1 = {
+      //   userId: 905372,
+      //   baseScore: selectData.score,
+      //   baseRound: selectData.round,
+      //   substitute: selectData.substitute,
+      //   gameType: type,
+      //   version: '0.0.2',
+      //   source: 'android'
+      // }
+      // let str = 'meizhuangdaka.com?&'
+      // Object.keys(params1).sort().forEach((key) => {
+      //   str += key + '=' + params1[key] + '?&'
+      // })
+      // params1.sign = this.$md5(str)
+      // console.log(this.$sign({
+      //   userId: 905372,
+      //   baseScore: selectData.score,
+      //   baseRound: selectData.round,
+      //   substitute: selectData.substitute,
+      //   gameType: type
+      // }))
+      // console.log(params1)
+      // this.$axios.post(this.$interface['/room/create'], params1).then((res) => {
+      //   console.log(res)
+      // }).catch((err) => {
+      //   console.log(err)
+      // })
       // 调用android原生内部方法
       let vm = this
       this.$JsBridge.callHandler(

@@ -11,16 +11,16 @@ const ajaxUrl = process.env.NODE_ENV === 'production' ? 'http://www.syhpgkj.com:
 // 基本配置
 let instanceParams = {
   baseURL: ajaxUrl,
-  headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-  timeout: 10000,
-  data: {
-    token: null
-  },
-  transformRequest: [function (data) {
+  headers: { 'Content-Type': 'application/json' },
+  timeout: 10000
+  // data: {
+  //   token: null
+  // },
+ // transformRequest: [function (data) {
     // 在这里根据自己的需求改变数据
     // data.token = cookie.getCookie('token') == undefined ? '' : cookie.getCookie('token');
     // return JSON.stringify(data)
-  }]
+ // }]
 }
 
 util.ajax = axios.create(instanceParams)

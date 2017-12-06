@@ -40,14 +40,14 @@ export default {
     //     }
     //   )
     // window.user = '{"max": "31", "cur": "15"}'
-    window.music = '{"max": "31", "cur": "15"}'
-    vm.$store.dispatch('getMusic', {
-      sound: {
-        max: vm.$audio.max,
-        cur: vm.$audio.volume
-      },
-      music: JSON.parse(window.music)
-    })
+   // window.music = '{"max": "31", "cur": "15"}'
+    // vm.$store.dispatch('getMusic', {
+    //   sound: {
+    //     max: vm.$audio.max,
+    //     cur: vm.$audio.volume
+    //   },
+    //   music: JSON.parse(window.music)
+    // })
     // let total = 0
     // this.timer = setInterval(() => {
     //   if (total >= 2) {

@@ -43,7 +43,7 @@
 		      }  
 		} 
     </style>
-    <script type="text/javascript" src="static/js/flex.js"></script>
+    <!-- <script type="text/javascript" src="static/js/flex.js"></script> -->
     <!-- <script src="/socket.io/socket.io.js"></script> -->
   </head>
   <body style="margin: 0; padding: 0;">
@@ -60,17 +60,17 @@
                 let sql = window.matchMedia('(orientation: portrait)').matches
                 if(window.orientation == 90 || window.orientation == -90 || sql === false){
                   // 横屏
-                  window.android.toastMessage("横屏")
+                 // window.android.toastMessage("横屏")
                 } else {
                    // 竖屏
-                   window.android.toastMessage("竖屏")
+                 //  window.android.toastMessage("竖屏")
                 }
                 setTimeout (() => {
                   var width = docEl.clientWidth;
                   var height = docEl.clientHeight;
                   if (width < height) {
                     console.log('竖屏...')
-                    window.android.toastMessage(width + '&&&' + height)
+                  //  window.android.toastMessage(width + '&&&' + height)
                     document.getElementById('app').style.width = height + 'px';  
                     document.getElementById('app').style.height = width + 'px';
                     document.getElementById('app').style.top = (height-width)/2 + 'px';
@@ -81,7 +81,7 @@
                     // document.getElementById('app').style.height = clientWidth + 'px'
                     // document.getElementById('app').style.transform = 'rotate(-90deg)'
                   } else {
-                    window.android.toastMessage(width + "???" + height)
+                  //  window.android.toastMessage(width + "???" + height)
                     // document.getElementById('app').style.width = clientWidth + 'px'
                     // document.getElementById('app').style.height = clientHeight + 'px'
                     document.getElementById('app').style.width = height + 'px';  
