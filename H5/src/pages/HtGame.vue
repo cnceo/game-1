@@ -275,7 +275,7 @@ export default {
       this.$refs.setting.openSetModal()
     },
     jsRoom () {
-      this.$router.push({path: '/', query: {}})
+      this.$router.push({path: '/', query: {'id': ''}})
     },
     closeSetModal () {
       this.showSetModal = false

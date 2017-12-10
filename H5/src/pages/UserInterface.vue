@@ -346,22 +346,6 @@ export default {
       }
     )
    // let ajaxParams2 = window.JSON.stringify(this.$url + this.$interface['/get/notice'] + this.$sign({}))
-    let ajaxParams2 = window.JSON.stringify({
-      host: this.$url,
-      path: this.$interface['/get/notice'],
-      params: this.$sign({})
-    })
-    // 调用android原生内部方法
-    this.$JsBridge.callHandler(
-      'getPublic' // 原生的方法名
-      , {'param': ajaxParams2} // 带个原生方法的参数
-      , function (responseData) { // 响应原生回调方法
-        let data = window.JSON.parse(responseData)
-        vm.dtMsg = data.model
-        document.getElementById('horse').style.width = vm.dtMsg.toString().length * 50 + 'px'
-        vm.$store.dispatch('publicAjax', data)
-      }
-    )
     // 初始化数据
     this.handleArray([this.gameTabs, this.createRoomTabs], this.tabs)
     this.handleArray([this.ds1_1, this.ds2_1, this.ds3_1], this.ds1)
@@ -387,18 +371,57 @@ export default {
     // })
   },
   mounted () {
+    let vm = this
+    let ajaxParams2 = window.JSON.stringify({
+      host: this.$url,
+      path: this.$interface['/get/notice'],
+      params: this.$sign({})
+    })
+    // 调用android原生内部方法
+    if (!Object.keys(this.$router.history.current.query).length) {
+      setTimeout(() => {
+        this.$JsBridge.callHandler(
+          'getPublic' // 原生的方法名
+          , {'param': ajaxParams2} // 带个原生方法的参数
+          , function (responseData) { // 响应原生回调方法
+            let data = window.JSON.parse(responseData)
+            vm.dtMsg = data.model
+            document.getElementById('horse').style.width = vm.dtMsg.toString().length * 50 + 'px'
+            vm.$store.dispatch('publicAjax', data)
+          }
+        )
+      }, 1200)
+    } else {
+      this.$JsBridge.callHandler(
+        'getPublic' // 原生的方法名
+        , {'param': ajaxParams2} // 带个原生方法的参数
+        , function (responseData) { // 响应原生回调方法
+          let data = window.JSON.parse(responseData)
+          vm.dtMsg = data.model
+          document.getElementById('horse').style.width = vm.dtMsg.toString().length * 50 + 'px'
+          vm.$store.dispatch('publicAjax', data)
+        }
+      )
+    }
     // let vm = this
-    // let ajaxParams2 = window.JSON.stringify(this.$url + this.$interface['/get/notice'] + this.$sign({}))
+    // let ajaxParams2 = window.JSON.stringify({
+    //   host: this.$url,
+    //   path: this.$interface['/get/notice'],
+    //   params: this.$sign({})
+    // })
     // // 调用android原生内部方法
-    // this.$JsBridge.callHandler(
+    // this.$nextTick(() => {
+    //   this.$JsBridge.callHandler(
     //   'getPublic' // 原生的方法名
     //   , {'param': ajaxParams2} // 带个原生方法的参数
     //   , function (responseData) { // 响应原生回调方法
     //     let data = window.JSON.parse(responseData)
     //     vm.dtMsg = data.model
+    //     document.getElementById('horse').style.width = vm.dtMsg.toString().length * 50 + 'px'
     //     vm.$store.dispatch('publicAjax', data)
     //   }
     // )
+    // })
   },
   computed: mapGetters({
     userMsg: 'listenWxUser',
@@ -622,10 +645,10 @@ export default {
         } else {
           this.$router.push({path: '/dj', params: {}})
         }
-        CHAT.init(this.$url, {
-          'command': 1001,
-          'data': {'roomId': this.roomId, 'userId': this.userId}
-        })
+        // CHAT.init(this.$url, {
+        //   'command': 1001,
+        //   'data': {'roomId': this.roomId, 'userId': this.userId}
+        // })
         let ajaxParams = window.JSON.stringify({
           host: this.$url,
           path: this.$interface['/app'],
