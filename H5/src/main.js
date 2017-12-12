@@ -24,52 +24,46 @@ Vue.use(Sign)
 // Vue.use(VueSocketio, socketio('http://192.168.50.161:3030'))
 // Vue.use(VueSocketio, socketio('http://172.16.20.148:3000/'), store);
 
-// const store = new Vuex.Store({
-//   // 存储状态值
-//   state: {
-//     user: ''
-//   },
-//   // 状态值的改变方法,操作状态值
-//   // 提交mutations是更改Vuex状态的唯一方法
-//   mutations: {
-//     increment (state, params) {
-//       // 变更状态
-//       state.user = state
-//     }
-//   },
-//   actions: {
-//     increment (context, params) {
-//       context.commit('increment', params)
-//     }
-//   }
-// })
-
 Vue.prototype.$JsBridge = JSBridge.JsBridge
 Vue.prototype.$axios = Util.ajax
 Vue.prototype.$url = Util.ajax.defaults.baseURL
 Vue.prototype.$md5 = md5
 Vue.prototype.$interface = Interface
 Vue.prototype.$fn = Fn
-// Vue.prototype.$vueIo = VueSocketio
-// Vue.prototype.$io = socketio
-// import JsBridge from 'JsBridge'
-// window.getUserInfo = function (user) {
-//   window.user = user
-//   // return '返回值'
-// }
-// window.getSound = function (music) {
-//   window.music = music
-//   // return '返回值'
-// }
-// window.getPublic = function (publics) {
-//   window.publics = publics
-//   // return '返回值'
-// }
-// window.getUserInfo("I'm from native6!!!")
 
 Vue.config.productionTip = false
 
-// console.log(JsBridge)
+// Vue.directive('tap', {
+//   bind: function (el, binding) {
+//     console.log(el)
+//     console.log(binding)
+//     el.addEventListener('touchstart', function () {
+//       console.log('开始了')
+//       binding.value('hhhh')
+//     })
+//     el.addEventListener('touchend', function () {
+//       console.log('touch-end')
+//     })
+//   }
+// })
+Vue.component('touch', {
+  template: '<img :src="src" @touchstart="ontouchstart" @touchmove="ontouchmove" @touchend="ontouchend"/>',
+  props: {
+    src: String
+  },
+  methods: {
+    ontouchstart: function (e) {
+      this.$emit('touchstart', e)
+    },
+    ontouchmove: function (e) {
+      this.$emit('touchmove', e)
+    },
+    ontouchend: function (e) {
+      this.$emit('touchend', e)
+    }
+  }
+})
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

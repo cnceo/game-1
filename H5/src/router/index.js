@@ -4,6 +4,7 @@ import UserInterface from '@/pages/UserInterface'
 import QtGame from '@/pages/QtGame'
 import HtGame from '@/pages/HtGame'
 import DjGame from '@/pages/DjGame'
+// import Voice from '@/pages/Voice'
 
 Vue.use(Router)
 
