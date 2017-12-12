@@ -622,10 +622,10 @@ export default {
         } else {
           this.$router.push({path: '/dj', params: {}})
         }
-        CHAT.init(this.$url, {
-          'command': 1001,
-          'data': {'roomId': this.roomId, 'userId': this.userId}
-        })
+        // CHAT.init(this.$url, {
+        //   'command': 1001,
+        //   'data': {'roomId': this.roomId, 'userId': this.userId}
+        // })
         let ajaxParams = window.JSON.stringify({
           host: this.$url,
           path: this.$interface['/app'],
