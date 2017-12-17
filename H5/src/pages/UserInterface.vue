@@ -21,13 +21,13 @@
         </div>
         <!--基本设置-->
         <ul class="base-settting g-flex-row">
-          <li @click="help">
+          <li @touchstart="help">
             <img src="../assets/imgs/rules.png" width="100%"/>
           </li>
-          <li @click="message">
+          <li @touchstart="message">
             <img src="../assets/imgs/message.png" width="100%"/>
           </li>
-          <li @click="setting">
+          <li @touchstart="setting">
             <img src="../assets/imgs/steup.png" width="100%"/>
           </li>
         </ul>
@@ -47,10 +47,10 @@
         <img src="../assets/imgs/beautyGirl.png"  width="100%"/> 
       </div>
       <div class="all-room">
-        <div class="room-item create-room" @click="createRoom">
+        <div class="room-item create-room" @touchstart="createRoom">
           <img src="../assets/imgs/createroom.png"  width="100%"/> 
         </div>
-        <div class="room-item join-room" @click="joinRoom">
+        <div class="room-item join-room" @touchstart="joinRoom">
           <img src="../assets/imgs/joinroom.png"  width="100%"/> 
         </div>
       </div>
@@ -71,7 +71,7 @@
       </div>
       <div slot="body" class="rule-body">
         <div class="game-tabs">
-          <span v-for="(item, index) in gameTabs" @click="changeGame(index)" :key="index"
+          <span v-for="(item, index) in gameTabs" @touchstart="changeGame(index)" :key="index"
           :class="{'game-active': item.select}">
             <img :src="item.img" alt="">
           </span>
@@ -108,7 +108,7 @@
       <div slot="body" class="create-body">
         <div class="create-content">
           <div class="game-tabs">
-            <span v-for="(item, index) in createRoomTabs" @click="changeRoom(index)" :key="index"
+            <span v-for="(item, index) in createRoomTabs" @touchstart="changeRoom(index)" :key="index"
             >
               <img :src="item.img" alt="">
             </span>
@@ -160,12 +160,12 @@
         </div>
         <div class="foot-change">
           <div class="toggle">
-            <span class="box" @click="createGameRoom">
+            <span class="box" @touchstart="createGameRoom">
               <img src="../assets/imgs/img_Create_Createaroom.png" alt="" width="100%">
             </span>
           </div>
           <div class="toggle">
-            <span class="box" @click="invoiceGameRoom">
+            <span class="box" @touchstart="invoiceGameRoom">
               <img src="../assets/imgs/img_Create_Topoenaroom.png" alt="" width="100%">
             </span>  
           </div>    
@@ -193,18 +193,23 @@
         </div>
         <div class="select-num">
           <div class="num-row" v-for="(item, index) in nums" :key="index">
-            <span class="num-cell" v-for="(its, i) in item" :key="i" @click="selectNum(its.num, i)">
+            <span class="num-cell" v-for="(its, i) in item" :key="i" @touchstart="selectNum(its.num, i)">
               <img :src="its.img" alt="" width="100%" height="100%">
             </span>
           </div>
         </div>
       </div>
     </Modal>
+    <!-- 大九 -->
+    <dj-game :dj="showDj" :ds="users" @on-close="closeDj"></dj-game>
+    <!-- 清推 -->
+    <qt-game :qt="showQt" @on-close="closeQt"></qt-game>
+    <!-- 混推 -->
+    <ht-game :ht="showHt" @on-close="closeHt"></ht-game>
   </div>
 </template>
 
 <script>
-import CHAT from '../api/client'
 import {mapGetters} from 'vuex'
 import tabImgs from './tabImgs'
 const MAX_ROOM_NUM = 4
@@ -224,6 +229,9 @@ export default {
       showMsgModal: false,
       showCreateRoom: false,
       showJoinRoom: false,
+      showDj: false,
+      showQt: false,
+      showHt: false,
       tabs: [
         {
           img: tabImgs.hoverImgs[0],
@@ -312,14 +320,10 @@ export default {
       userId: '',
       roomId: '',
       router: '',
-      CHAT
+      users: [] // 进入房间获取游戏中用户信息
     }
   },
-  beforeMounte () {
-  },
   created () {
-    // 防止切换路由用户数据丢失
-    // if (this.userMsg) {
     let vm = this
     let params = {
       openid: this.userMsg.openid,
@@ -345,30 +349,10 @@ export default {
         vm.$store.dispatch('userInfo', vm.userInfo)
       }
     )
-   // let ajaxParams2 = window.JSON.stringify(this.$url + this.$interface['/get/notice'] + this.$sign({}))
     // 初始化数据
     this.handleArray([this.gameTabs, this.createRoomTabs], this.tabs)
     this.handleArray([this.ds1_1, this.ds2_1, this.ds3_1], this.ds1)
     this.handleArray([this.ds1_2, this.ds2_2, this.ds3_2], this.ds2)
-    // let params3 = {
-    //   openid: 'oO8p8wqkSseyl3KPu7Sm02jskdlw',
-    //   nickname: 'Jeffery',
-    //   sex: '1',
-    //   headimgurl: 'http://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83eqevDmfhVRfeibjyianWrRWYlCSkjOAhgOiaDkAnHQkib6DVSsl8u8wSLPo5FEYCr0triauYl7DqkbiaKyg/0'
-    // }
-    // let ajaxParams3 = this.$sign(params3)
-    // this.$axios.get('/user/login?' + ajaxParams3)
-    // .then(function (res) {
-    //   console.log(res)
-    //   vm.userInfo = res.data.model
-    // })
-    // let ajaxParams4 = this.$sign({})
-    // this.$axios.get('/get/notice?' + ajaxParams4)
-    // .then(function (res) {
-    //   console.log(res)
-    //   vm.dtMsg = res.data.model
-    //   document.getElementById('horse').style.width = vm.dtMsg.toString().length * 50 + 'px'
-    // })
   },
   mounted () {
     let vm = this
@@ -378,20 +362,7 @@ export default {
       params: this.$sign({})
     })
     // 调用android原生内部方法
-    if (!Object.keys(this.$router.history.current.query).length) {
-      setTimeout(() => {
-        this.$JsBridge.callHandler(
-          'getPublic' // 原生的方法名
-          , {'param': ajaxParams2} // 带个原生方法的参数
-          , function (responseData) { // 响应原生回调方法
-            let data = window.JSON.parse(responseData)
-            vm.dtMsg = data.model
-            document.getElementById('horse').style.width = vm.dtMsg.toString().length * 50 + 'px'
-            vm.$store.dispatch('publicAjax', data)
-          }
-        )
-      }, 1200)
-    } else {
+    setTimeout(() => {
       this.$JsBridge.callHandler(
         'getPublic' // 原生的方法名
         , {'param': ajaxParams2} // 带个原生方法的参数
@@ -402,30 +373,11 @@ export default {
           vm.$store.dispatch('publicAjax', data)
         }
       )
-    }
-    // let vm = this
-    // let ajaxParams2 = window.JSON.stringify({
-    //   host: this.$url,
-    //   path: this.$interface['/get/notice'],
-    //   params: this.$sign({})
-    // })
-    // // 调用android原生内部方法
-    // this.$nextTick(() => {
-    //   this.$JsBridge.callHandler(
-    //   'getPublic' // 原生的方法名
-    //   , {'param': ajaxParams2} // 带个原生方法的参数
-    //   , function (responseData) { // 响应原生回调方法
-    //     let data = window.JSON.parse(responseData)
-    //     vm.dtMsg = data.model
-    //     document.getElementById('horse').style.width = vm.dtMsg.toString().length * 50 + 'px'
-    //     vm.$store.dispatch('publicAjax', data)
-    //   }
-    // )
-    // })
+    }, 1200)
   },
   computed: mapGetters({
     userMsg: 'listenWxUser',
-    users: 'listenUser',
+    curUser: 'listenUser',
     indexPublic: 'listenPublic',
     news: 'listenNews',
     qtRule: 'listenQtRule',
@@ -445,28 +397,11 @@ export default {
         // sex: '1',
         // headimgurl: 'http://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83eqevDmfhVRfeibjyianWrRWYlCSkjOAhgOiaDkAnHQkib6DVSsl8u8wSLPo5FEYCr0triauYl7DqkbiaKyg/0'
       }
-      // let ajaxParams = window.JSON.stringify(this.$url + this.$interface['/user/login'] + this.$sign(params))
       let ajaxParams = window.JSON.stringify({
         host: this.$url,
         path: this.$interface['/user/login'],
         params: this.$sign(params)
       })
-      // let vm = this
-      // this.$axios.get('/user/login?' + ajaxParams)
-      // .then(function (res) {
-      //   Object.keys(vm.userInfo).forEach((key) => {
-      //     vm.userInfo[key] = res.data.model[key]
-      //   })
-      //   vm.userInfo.headimgurl = params.headimgurl
-      //   console.log(vm.userInfo)
-      //   window.android.read(window.JSON.stringify(res))
-      // })
-      // .catch(function (error) {
-      //   console.log(error)
-      //   window.android.read('出错了')
-      //   window.android.read(window.JSON.stringify(error))
-      // })
-     // this.$store.dispatch('userInfo', ajaxParams)
       this.$JsBridge.callHandler(
         'getUserMsg' // 原生的方法名
         , {'param': ajaxParams} // 带个原生方法的参数
@@ -480,7 +415,7 @@ export default {
         }
       )
     },
-    users (val) {
+    curUser (val) {
       Object.keys(this.userInfo).forEach((key) => {
         this.userInfo[key] = val[key]
       })
@@ -515,11 +450,11 @@ export default {
         })
       })
     },
+    // 新闻消息弹窗
     message () {
       this.$audio.play(this.$audio.ui)
       this.showMsgModal = true
       let vm = this
-      // let ajaxParams = window.JSON.stringify(this.$url + this.$interface['/get/news'] + this.$sign({}))
       let ajaxParams = window.JSON.stringify({
         host: this.$url,
         path: this.$interface['/get/news'],
@@ -535,18 +470,16 @@ export default {
           vm.$store.dispatch('newsAjax', data)
         }
       )
-     // this.$store.dispatch('newsAjax', ajaxParams)
     },
+    // 关闭新闻消息弹窗
     closeMsgModal () {
       this.showMsgModal = false
     },
+    // 规则弹窗
     help () {
       this.$audio.play(this.$audio.ui)
       this.showRuleModal = true
       let vm = this
-      // let ajaxParams1 = window.JSON.stringify(this.$url + this.$interface['/get/rule/qingtui'] + this.$sign({}))
-      // let ajaxParams2 = window.JSON.stringify(this.$url + this.$interface['/get/rule/huntui'] + this.$sign({}))
-      // let ajaxParams3 = window.JSON.stringify(this.$url + this.$interface['/get/rule/dajiu'] + this.$sign({}))
       let ajaxParams1 = window.JSON.stringify({
         host: this.$url,
         path: this.$interface['/get/rule/qingtui'],
@@ -596,103 +529,8 @@ export default {
           }
         )
       }
-      // this.$store.dispatch('qtRuleAjax', ajaxParams)
-      // this.$store.dispatch('htRuleAjax', ajaxParams)
-      // this.$store.dispatch('djRuleAjax', ajaxParams)
     },
-    closeRuleModal () {
-      this.showRuleModal = false
-    },
-    setting () {
-      this.$audio.play(this.$audio.ui)
-      this.$refs.setting.openSetModal()
-    },
-    createRoom () {
-      this.$audio.play(this.$audio.btn)
-      this.showCreateRoom = true
-     // this.createRoomData.substitute = false
-    },
-    closeCreateRoom () {
-      this.showCreateRoom = false
-    },
-    joinRoom () {
-      this.$audio.play(this.$audio.btn)
-      this.showJoinRoom = true
-    },
-    closeJoinRoom () {
-      this.showJoinRoom = false
-    },
-    selectNum (item, index) {
-      this.$audio.play(this.$audio.ui)
-      if (typeof item === 'string') {
-        this.handleSelect(index)
-        return false
-      }
-      // 填入数字
-      if (this.numIndex > MAX_ROOM_NUM - 1) {
-        return false
-      }
-      this.$set(this.roomNums, this.numIndex, item)
-      this.numIndex++
-      // 进入房间
-      if (this.numIndex === MAX_ROOM_NUM) {
-        // this.$store.dispatch('getRoom', this.roomNums.join(''))
-        // window.android.saveRoom(this.roomNums.join(''))
-        if (this.selectTypes === 0) {
-          this.$router.push({path: '/qt', params: {}})
-        } else if (this.selectTypes === 1) {
-          this.$router.push({path: '/ht', params: {}})
-        } else {
-          this.$router.push({path: '/dj', params: {}})
-        }
-        // CHAT.init(this.$url, {
-        //   'command': 1001,
-        //   'data': {'roomId': this.roomId, 'userId': this.userId}
-        // })
-        let ajaxParams = window.JSON.stringify({
-          host: this.$url,
-          path: this.$interface['/app'],
-          params: {
-            command: 1001,
-            data: {'roomId': this.roomId, 'userId': this.userId}
-          }
-        })
-        // let vm = this
-        this.$JsBridge.callHandler(
-        'joinRoom' // 原生的方法名
-        , {'param': ajaxParams} // 带个原生方法的参数
-        , function (responseData) { // 响应原生回调方法
-          // let data = window.JSON.parse(responseData)
-          // if (Number(data.code) === 200) {
-          //   vm.userId = data.id
-          //   vm.roomId = data.numId
-          //   vm.$store.dispatch('saveId', {
-          //     userId: vm.userId,
-          //     roomId: vm.roomId
-          //   })
-          //   vm.$router.push({path: this.router, params: {userId: vm.userId, roomId: vm.roomId}})
-          // }
-        }
-      )
-      }
-    },
-    handleSelect (index) {
-      this.$audio.play(this.$audio.ui)
-      if (index === 0) {
-        // 重输
-        this.roomNums.forEach((item, index) => {
-          this.$set(this.roomNums, index, '')
-        })
-        this.numIndex = 0
-      } else if (index === 2) {
-        // 删除
-        if (this.numIndex < 0) {
-          return false
-        }
-        this.numIndex--
-        this.$set(this.roomNums, this.numIndex, '')
-      }
-    },
+    // 规则（清推、混推、大九）
     changeGame (index) {
       this.$audio.play(this.$audio.ui)
       this.gameTabs.forEach((item, ids) => {
@@ -704,6 +542,22 @@ export default {
       })
       this.selectGame = index
     },
+    // 关闭规则弹窗
+    closeRuleModal () {
+      this.showRuleModal = false
+    },
+    // 设置弹窗
+    setting () {
+      this.$audio.play(this.$audio.ui)
+      this.$refs.setting.openSetModal()
+    },
+    // 创建房间弹窗
+    createRoom () {
+      this.$audio.play(this.$audio.btn)
+      this.showCreateRoom = true
+     // this.createRoomData.substitute = false
+    },
+    // 创建房间类型切换（清推、混推、大九）
     changeRoom (index) {
       this.$audio.play(this.$audio.ui)
       this.createRoomTabs.forEach((item, ids) => {
@@ -717,30 +571,37 @@ export default {
       this.selectTypes = index
       this.selectRoom = index
     },
+    // 清推局数选择
     selectTime1 (data) {
       this.$audio.play(this.$audio.ui)
       this.createRoomData1.round = data
     },
+    // 清推分数选择
     selectScore1 (data) {
       this.$audio.play(this.$audio.ui)
       this.createRoomData1.score = data
     },
+    // 混推局数选择
     selectTime2 (data) {
       this.$audio.play(this.$audio.ui)
       this.createRoomData2.round = data
     },
+    // 混推分数选择
     selectScore2 (data) {
       this.$audio.play(this.$audio.ui)
       this.createRoomData2.score = data
     },
+    // 大九局数选择
     selectTime3 (data) {
       this.$audio.play(this.$audio.ui)
       this.createRoomData3.round = data
     },
+    // 大九分数选择
     selectScore3 (data) {
       this.$audio.play(this.$audio.ui)
       this.createRoomData3.score = data
     },
+    // 创建房间
     createGameRoom () {
       this.$audio.play(this.$audio.btn)
       let selectData = {}
@@ -749,15 +610,15 @@ export default {
       if (this.selectTypes === 0) {
         selectData = this.createRoomData1
         type = 1
-        this.router = '/qt'
+       // this.router = '/qt'
       } else if (this.selectTypes === 1) {
         selectData = this.createRoomData2
         type = 2
-        this.router = '/ht'
+       // this.router = '/ht'
       } else {
         selectData = this.createRoomData3
         type = 3
-        this.router = '/dj'
+      //  this.router = '/dj'
       }
       let params = {
         userId: this.userInfo.id,
@@ -771,33 +632,6 @@ export default {
         path: this.$interface['/room/create'],
         params: this.$sign(params)
       })
-      // let params1 = {
-      //   userId: 905372,
-      //   baseScore: selectData.score,
-      //   baseRound: selectData.round,
-      //   substitute: selectData.substitute,
-      //   gameType: type,
-      //   version: '0.0.2',
-      //   source: 'android'
-      // }
-      // let str = 'meizhuangdaka.com?&'
-      // Object.keys(params1).sort().forEach((key) => {
-      //   str += key + '=' + params1[key] + '?&'
-      // })
-      // params1.sign = this.$md5(str)
-      // console.log(this.$sign({
-      //   userId: 905372,
-      //   baseScore: selectData.score,
-      //   baseRound: selectData.round,
-      //   substitute: selectData.substitute,
-      //   gameType: type
-      // }))
-      // console.log(params1)
-      // this.$axios.post(this.$interface['/room/create'], params1).then((res) => {
-      //   console.log(res)
-      // }).catch((err) => {
-      //   console.log(err)
-      // })
       // 调用android原生内部方法
       let vm = this
       this.$JsBridge.callHandler(
@@ -816,39 +650,8 @@ export default {
           }
         }
       )
-          // let params3 = {
-    //   openid: 'oO8p8wqkSseyl3KPu7Sm02jskdlw',
-    //   nickname: 'Jeffery',
-    //   sex: '1',
-    //   headimgurl: 'http://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83eqevDmfhVRfeibjyianWrRWYlCSkjOAhgOiaDkAnHQkib6DVSsl8u8wSLPo5FEYCr0triauYl7DqkbiaKyg/0'
-    // }
-      // console.log(this.userInfo)
-    //   let params3 = {
-    //     userId: this.userInfo.id,
-    //     baseScore: selectData.score,
-    //     baseRound: selectData.round,
-    //     substitute: selectData.substitute,
-    //     gameType: type,
-    //     version: '0.0.2',
-    //     source: 'android'
-    //   }
-    //   let str = 'meizhuangdaka.com?&'
-    //   Object.keys(params).sort().forEach((key) => {
-    //     str += key + '=' + params[key] + '?&'
-    //   })
-    //   params3.sign = this.$md5(str)
-    // //  let ajaxParams3 = this.$sign(params3)
-    //   console.log(params3)
-    //   var obj = new XMLHttpRequest()
-    //   obj.open('POST', 'http://www.syhpgkj.com:8080/app/room/create', true)
-    //   obj.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')  // 添加http头，发送信息至服务器时内容编码类型
-    //   obj.onreadystatechange = function () {
-    //     if (obj.readyState === 4 && (obj.status === 200 || obj.status === 304)) {  // 304未修改
-    //        // fn.call(this, obj.responseText);
-    //     }
-    //   }
-    //   obj.send(JSON.stringify(params3))
     },
+    // 是否代开房间
     invoiceGameRoom () {
       this.$audio.play(this.$audio.btn)
       if (this.selectTypes === 0) {
@@ -858,6 +661,108 @@ export default {
       } else {
         this.createRoomData3.substitute = true
       }
+    },
+    // 关闭创建房间弹窗
+    closeCreateRoom () {
+      this.showCreateRoom = false
+    },
+    // 加入房间弹窗
+    joinRoom () {
+      this.$audio.play(this.$audio.btn)
+      this.showJoinRoom = true
+    },
+    // 加入房间选择数字
+    selectNum (item, index) {
+      let vm = this
+      this.$audio.play(this.$audio.ui)
+      if (typeof item === 'string') {
+        this.handleSelect(index)
+        return false
+      }
+      // 填入数字
+      if (this.numIndex > MAX_ROOM_NUM - 1) {
+        return false
+      }
+      this.$set(this.roomNums, this.numIndex, item)
+      this.numIndex++
+      // 进入房间
+      if (this.numIndex === MAX_ROOM_NUM) {
+        this.numIndex = 0
+        this.roomNums.forEach((item, index) => {
+          this.$set(this.roomNums, index, '')
+        })
+        let ajaxParams = window.JSON.stringify({
+          host: this.$url,
+          path: this.$interface['/app'],
+          params: {
+            command: 1001,
+            data: {'roomId': this.roomId, 'userId': this.userId}
+          }
+        })
+        // let vm = this
+        this.$JsBridge.callHandler(
+        'joinRoom' // 原生的方法名
+        , {'param': ajaxParams} // 带个原生方法的参数
+        , function (responseData) { // 响应原生回调方法
+          vm.showJoinRoom = false
+          if (vm.selectTypes === 0) {
+            // vm.$router.push({path: '/qt', params: {}})
+            vm.showQt = true
+          } else if (vm.selectTypes === 1) {
+            // vm.$router.push({path: '/ht', params: {}})
+            vm.showHt = true
+          } else {
+            // vm.$router.push({path: '/dj', params: {}})
+            vm.showDj = true
+          }
+          let data = window.JSON.parse(responseData)
+          vm.users = data
+          // if (Number(data.code) === 200) {
+          //   vm.userId = data.id
+          //   vm.roomId = data.numId
+          //   vm.$store.dispatch('saveId', {
+          //     userId: vm.userId,
+          //     roomId: vm.roomId
+          //   })
+          //   vm.$router.push({path: this.router, params: {userId: vm.userId, roomId: vm.roomId}})
+          // }
+        }
+      )
+      }
+    },
+    // 加入房间弹窗数字处理(包括重输和删除功能)
+    handleSelect (index) {
+      this.$audio.play(this.$audio.ui)
+      if (index === 0) {
+        // 重输
+        this.roomNums.forEach((item, index) => {
+          this.$set(this.roomNums, index, '')
+        })
+        this.numIndex = 0
+      } else if (index === 2) {
+        // 删除
+        if (this.numIndex < 0) {
+          return false
+        }
+        this.numIndex--
+        this.$set(this.roomNums, this.numIndex, '')
+      }
+    },
+     // 关闭加入房间弹窗
+    closeJoinRoom () {
+      this.showJoinRoom = false
+    },
+    // 玩大九游戏
+    closeDj () {
+      this.showDj = false
+    },
+    // 玩清推游戏
+    closeQt () {
+      this.showQt = false
+    },
+    // 玩混推游戏
+    closeHt () {
+      this.showHt = false
     }
   }
 }

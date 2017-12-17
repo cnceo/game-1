@@ -31,47 +31,6 @@ export default {
       // 调用responseCallback方法可以带传参数到原生
       responseCallback(responseData)
     })
-    // let vm = this
-    //   this.$JsBridge.callHandler(
-    //     'submitFromWeb' // 原生的方法名
-    //     , {'param': 'aaaaa'} // 带个原生方法的参数
-    //     , function (responseData) { // 响应原生回调方法
-    //       vm.content2 = 'send get responseData from java, data = ' + responseData
-    //     }
-    //   )
-    // window.user = '{"max": "31", "cur": "15"}'
-   // window.music = '{"max": "31", "cur": "15"}'
-    // vm.$store.dispatch('getMusic', {
-    //   sound: {
-    //     max: vm.$audio.max,
-    //     cur: vm.$audio.volume
-    //   },
-    //   music: JSON.parse(window.music)
-    // })
-    // let total = 0
-    // this.timer = setInterval(() => {
-    //   if (total >= 2) {
-    //     clearInterval(this.timer)
-    //     this.timer = null
-    //   }
-    //   if (window.user) { // object类型
-    //     total++
-    //     this.userInfo = window.JSON.parse(window.user)
-    //     window.android.read(window.user)
-    //     this.$store.dispatch('getWxUserInfo', this.userInfo)
-    //   }
-    //   if (window.music) {
-    //     total++
-    //     this.music = Object.assign({}, this.handleJSON(window.music))
-    //     this.$store.dispatch('getMusic', {
-    //       sound: {
-    //         max: this.$audio.max,
-    //         cur: this.$audio.volume
-    //       },
-    //       music: this.music
-    //     })
-    //   }
-    // }, 500)
   },
   mounted () {
     // 获取Android传来的数据
@@ -95,15 +54,6 @@ export default {
       responseCallback(responseData)
     })
   },
-  // computed: mapGetters({
-  //   roomId: 'listenRoom'
-  // }),
-  // watch: {
-  //   roomId (val) {
-  //     this.$store.dispatch('getRoom', val)
-  //     this.$router.push({path: '/game', query: {}})
-  //   }
-  // },
   methods: {
     handleJSON (json) {
       let reg = /[0-9a-zA-Z_]+/g

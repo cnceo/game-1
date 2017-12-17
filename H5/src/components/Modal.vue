@@ -1,6 +1,6 @@
 <template>
   <div class="game-modal" v-show="show">
-    <div class="modal-content">
+    <div class="modal-content" :class="{'s-right': sites}">
       
       <div class="modal-bg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1">
         <slot name="modal-bg" height="100%">
@@ -16,7 +16,7 @@
       <div class="game-foot">
         <slot name="foot"></slot>
       </div>
-      <span class="close" @click="closeModal" v-show="showX">X</span>
+      <span class="close" @touchstart="closeModal" v-show="showX">X</span>
     </div>
     <div class="modal-mask"></div>
   </div>
@@ -33,6 +33,10 @@ export default {
     showClose: {
       type: Boolean,
       default: true
+    },
+    site: {
+      type: Boolean,
+      default: false
     }
   },
   watch: {
@@ -41,17 +45,23 @@ export default {
     },
     showClose (val) {
       this.showX = val
+    },
+    // 弹窗位置（中间或右侧）
+    site (val) {
+      this.sites = val
     }
   },
   data () {
     return {
       show: false,
-      showX: true
+      showX: true,
+      sites: false
     }
   },
   created () {
     this.show = this.showModal
     this.showX = this.showClose
+    this.sites = this.site
   },
   methods: {
     closeModal () {
@@ -68,10 +78,10 @@ export default {
   .modal-content{
     position: fixed;
     top: 50%;
-    left: 50%;
+    right: 50%;
     width: 60%;
     height: 60%;
-    transform: translate(-50%, -50%);
+    transform: translate(50%, -50%);
    // background: rgba(0, 0, 0, .8);
     z-index: 1000;
     .game-title{
@@ -90,6 +100,10 @@ export default {
     .game-body{
       padding: 20px 0 30px 0;
     }
+  }
+  .modal-content.s-right{
+    right: 30px;
+    transform: translate(0, -50%);
   }
   .modal-mask{
     position: fixed;

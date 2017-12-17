@@ -33,19 +33,6 @@ Vue.prototype.$fn = Fn
 
 Vue.config.productionTip = false
 
-// Vue.directive('tap', {
-//   bind: function (el, binding) {
-//     console.log(el)
-//     console.log(binding)
-//     el.addEventListener('touchstart', function () {
-//       console.log('开始了')
-//       binding.value('hhhh')
-//     })
-//     el.addEventListener('touchend', function () {
-//       console.log('touch-end')
-//     })
-//   }
-// })
 Vue.component('touch', {
   template: '<img :src="src" @touchstart="ontouchstart" @touchmove="ontouchmove" @touchend="ontouchend"/>',
   props: {

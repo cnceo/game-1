@@ -2,7 +2,7 @@
   <div class="select-type">
     <ul>
       <li v-for="(item, index) in types" :key="index" class="row" v-show="index <= 2">
-        <span class="label" @click="selectType(index)" style="border-color: #f00">
+        <span class="label" @touchstart="selectType(index)" style="border-color: #f00">
           <img src="../assets/imgs/img_Create_yes.png" alt=""  v-if="item.select" width="100%">
         </span>
         <div class="select-info1" v-if="bigImg">
@@ -17,7 +17,7 @@
     </ul>
     <ul>
       <li v-for="(item, index) in types" :key="index" class="row" v-show="index > 2"  :class="{'g-top': index > 2}">
-        <span class="label" @click="selectType(index)" style="border-color: #f00">
+        <span class="label" @touchstart="selectType(index)" style="border-color: #f00">
           <img src="../assets/imgs/img_Create_yes.png" alt=""  v-if="item.select" width="100%">
         </span>
         <div class="select-info1" v-if="bigImg">
@@ -59,6 +59,7 @@ export default {
     }
   },
   methods: {
+    // 创建房间选择的游戏类型参数
     selectType (index) {
       let value = ''
       this.types.forEach((item, ids) => {

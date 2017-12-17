@@ -1,10 +1,10 @@
 <template>
     <div class="bar-box" name="bar" style="" 
     @click="setVoice($event)" ref="soundbox">
-      <div class="cur-box" ref="cur" name="bar" @click="setVoice($event)">
+      <div class="cur-box" ref="cur" name="bar" @touchstart="setVoice($event)">
         <div class="bar-dot" name="dot" draggable="true" style="width: 40px;" 
       @touchmove="moveDot($event)" ref="soundbar">
-        <div class="inner-dot"></div>
+        <img src="../assets/imgs/img_Setuphualun.png" alt="" width="100%" height="100%">
       </div>
       </div>
     </div>
@@ -156,26 +156,26 @@ export default {
 }
 .bar-dot{
   position: absolute;
-  top: -50%;
-  left: 31px;
-  width: 40px;
-  height: 30px;
-  padding: 5px;
+  top: -60%;
+  left: 0;
+  width: 50px;
+  height: 40px;
+  //padding: 5px;
   border-radius: 50%;
-  background: #eed23a;
-  background: -webkit-linear-gradient(#cc9900, #996600);
+  // background: #eed23a;
+ // background: -webkit-linear-gradient(#cc9900, #996600);
   cursor: pointer;
 }
 
-.inner-dot{
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 40px;
-  height: 30px;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  background: #c78c29; //eed23a
-  background: -webkit-linear-gradient(#996600, #cc9900);
-}
+// .inner-dot{
+//   position: absolute;
+//   top: 50%;
+//   left: 50%;
+//   width: 40px;
+//   height: 30px;
+//   border-radius: 50%;
+//   transform: translate(-50%, -50%);
+//   background: #c78c29; //eed23a
+//   background: -webkit-linear-gradient(#996600, #cc9900);
+// }
 </style>

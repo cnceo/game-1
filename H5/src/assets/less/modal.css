@@ -68,6 +68,10 @@
   width: 50%;
   margin: 0 auto;
 }
+#app .xz-modal .xz-title {
+  width: 50%;
+  margin: 0 auto;
+}
 #app .modal-bg {
   height: 100%;
 }

@@ -5,7 +5,7 @@
     class="set-modal">
       <div slot="title" class="set-title">
         <div class="set-tabs">
-          <span v-for="(item, index) in setTabs" @click="changeSet(index)" :key="index" 
+          <span v-for="(item, index) in setTabs" @touchstart="changeSet(index)" :key="index" 
           class="title-active">
              <img :src="item.img" alt="" width="100%">
           </span>
@@ -93,7 +93,21 @@ export default {
         }
       ],
       selectSet: 0,
-      ds0: [
+      // ds0: [
+      //   {
+      //     img: tabImgs.cards[0],
+      //     select: true
+      //   },
+      //   {
+      //     img: tabImgs.cards[1],
+      //     select: false
+      //   },
+      //   {
+      //     img: tabImgs.cards[2],
+      //     select: false
+      //   }
+      // ],
+      ds0_1: [
         {
           img: tabImgs.cards[0],
           select: true
@@ -107,13 +121,25 @@ export default {
           select: false
         }
       ],
-      ds0_1: [],
-      ds0_2: []
+      ds0_2: [
+        {
+          img: tabImgs.cards[3],
+          select: true
+        },
+        {
+          img: tabImgs.cards[4],
+          select: false
+        },
+        {
+          img: tabImgs.cards[5],
+          select: false
+        }
+      ]
     }
   },
   created () {
     // 初始化数据
-    this.handleArray([this.ds0_1, this.ds0_2], this.ds0)
+   // this.handleArray([this.ds0_1, this.ds0_2], this.ds0)
     this.music = this.sounds.music
     this.sound = this.sounds.sound
   },
@@ -131,13 +157,16 @@ export default {
         })
       })
     },
+    // 设置弹窗（由父组件调用）
     openSetModal () {
       this.$audio.play(this.$audio.ui)
       this.showSetModal = true
     },
+    // 关闭设置弹窗
     closeSetModal () {
       this.showSetModal = false
     },
+    // 游戏设置和系统设置切换
     changeSet (index) {
       this.$audio.play(this.$audio.ui)
       this.setTabs.forEach((item, ids) => {
@@ -153,10 +182,12 @@ export default {
       })
       this.selectSet = index
     },
+    // 选择桌面
     selectDesktop (data) {
       this.$audio.play(this.$audio.ui)
      // console.log(data)
     },
+    // 选择牌面
     selectCard (data) {
       this.$audio.play(this.$audio.ui)
     // console.log(data)
@@ -192,6 +223,7 @@ export default {
         sound: this.sound
       })
     },
+    // 切换账号
     changeAccount () {
       this.$audio.play(this.$audio.btn)
       // 调用android原生内部方法
