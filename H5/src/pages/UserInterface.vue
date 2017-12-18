@@ -687,10 +687,6 @@ export default {
       this.numIndex++
       // 进入房间
       if (this.numIndex === MAX_ROOM_NUM) {
-        this.numIndex = 0
-        this.roomNums.forEach((item, index) => {
-          this.$set(this.roomNums, index, '')
-        })
         let ajaxParams = window.JSON.stringify({
           host: this.$url,
           path: this.$interface['/app'],
@@ -704,6 +700,10 @@ export default {
         'joinRoom' // 原生的方法名
         , {'param': ajaxParams} // 带个原生方法的参数
         , function (responseData) { // 响应原生回调方法
+          this.numIndex = 0
+          this.roomNums.forEach((item, index) => {
+            this.$set(this.roomNums, index, '')
+          })
           vm.showJoinRoom = false
           if (vm.selectTypes === 0) {
             // vm.$router.push({path: '/qt', params: {}})
