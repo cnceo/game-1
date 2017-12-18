@@ -120,7 +120,7 @@
     </div>
     <!-- 游戏信息 -->
     <div class="game-info">
-      <div class="room-num">房间号： 11111</div>
+      <div class="room-num">房间号： 11111{{ds}}</div>
       <div class="geme-type">
         <span>清推</span><span>20局</span><span>50分封顶</span>
       </div>
@@ -231,6 +231,7 @@
 <script>
 import tabImgs from './tabImgs'
 import avatar from '../assets/imgs/head_img.jpg'
+import {mapGetters} from 'vuex'
 
 const HEAD_IMG_SIZE = 0
 export default {
@@ -342,15 +343,11 @@ export default {
     dj: {
       type: Boolean,
       default: false
-    },
-    // 进入房间数据
-    ds: {
-      type: Array,
-      default: function () {
-        return []
-      }
     }
   },
+  computed: mapGetters({
+    ds: 'listenGameUser'
+  }),
   watch: {
     dj (val) {
       this.showDj = val
