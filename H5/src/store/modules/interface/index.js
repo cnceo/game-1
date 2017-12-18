@@ -10,7 +10,8 @@ const state = {
   qtRules: [], // 清推规则
   htRules: [], // 混推规则
   djRules: [], // 大九规则
-  ids: {} // 房间号和用户id
+  ids: {}, // 房间号和用户id
+  gameUsers: [] // 游戏中所有用户信息
 }
 
 const mutations = {
@@ -40,6 +41,9 @@ const mutations = {
   },
   [types.SAVE_ID] (state, { data }) {
     state.ids = data
+  },
+  [types.GAME_USERS] (state, { data }) {
+    state.gameUsers = data
   }
 }
 
@@ -101,6 +105,10 @@ const actions = {
         resolve(data)
       }, params)
     })
+  },
+  // 加入房间，保存游戏用户信息
+  saveUsers ({ commit }, data) {
+    commit(types.GAME_USERS, { data })
   }
 }
 
@@ -113,7 +121,8 @@ const getters = {
   listenQtRule: state => state.qtRules,
   listenHtRule: state => state.htRules,
   listenDjRule: state => state.djRules,
-  listenIds: state => state.ids
+  listenIds: state => state.ids,
+  listenGameUser: state => state.gameUsers
 }
 
 export default {

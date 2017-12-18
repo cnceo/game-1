@@ -104,7 +104,7 @@
     <div slot="modal-bg" class="modal-bg">
       <img src="../assets/imgs/img_Message_messagebackground.png" alt=""  width="100%" height="100%">
     </div>
-      <div slot="title" class="create-title title-active">创建房间</div>
+      <div slot="title" class="create-title title-active" style="color: #fff;font-weight: bold">创建房间</div>
       <div slot="body" class="create-body">
         <div class="create-content">
           <div class="game-tabs">
@@ -201,7 +201,7 @@
       </div>
     </Modal>
     <!-- 大九 -->
-    <dj-game :dj="showDj" :ds="users" @on-close="closeDj"></dj-game>
+    <dj-game :dj="showDj" @on-close="closeDj"></dj-game>
     <!-- 清推 -->
     <qt-game :qt="showQt" @on-close="closeQt"></qt-game>
     <!-- 混推 -->
@@ -319,8 +319,7 @@ export default {
       dtMsg: '',
       userId: '',
       roomId: '',
-      router: '',
-      users: [] // 进入房间获取游戏中用户信息
+      router: ''
     }
   },
   created () {
@@ -673,7 +672,6 @@ export default {
     },
     // 加入房间选择数字
     selectNum (item, index) {
-      let vm = this
       this.$audio.play(this.$audio.ui)
       if (typeof item === 'string') {
         this.handleSelect(index)
@@ -687,6 +685,8 @@ export default {
       this.numIndex++
       // 进入房间
       if (this.numIndex === MAX_ROOM_NUM) {
+        this.showJoinRoom = false
+        this.showDj = true
         let ajaxParams = window.JSON.stringify({
           host: this.$url,
           path: this.$interface['/app'],
@@ -695,39 +695,40 @@ export default {
             data: {'roomId': this.roomId, 'userId': this.userId}
           }
         })
-        // let vm = this
+        let vm = this
         this.$JsBridge.callHandler(
-        'joinRoom' // 原生的方法名
-        , {'param': ajaxParams} // 带个原生方法的参数
-        , function (responseData) { // 响应原生回调方法
-          this.numIndex = 0
-          this.roomNums.forEach((item, index) => {
-            this.$set(this.roomNums, index, '')
-          })
-          vm.showJoinRoom = false
-          if (vm.selectTypes === 0) {
-            // vm.$router.push({path: '/qt', params: {}})
-            vm.showQt = true
-          } else if (vm.selectTypes === 1) {
-            // vm.$router.push({path: '/ht', params: {}})
-            vm.showHt = true
-          } else {
-            // vm.$router.push({path: '/dj', params: {}})
-            vm.showDj = true
+          'joinRooms' // 原生的方法名
+          , {'param': ajaxParams} // 带个原生方法的参数
+          , function (responseData) { // 响应原生回调方法
+            var reg = /{(.*)}/g
+            var arr = []
+            var obj = {}
+            var users = []
+            responseData.replace(reg, function (match, contents) {
+              arr = contents.split(',')
+            })
+            console.log(arr[0])
+            arr.forEach((item) => {
+              var its = item.trim().split('=')
+              console.log(its[0] + 'ssssssssss' + its[1])
+              obj[its[0]] = its[1]
+              console.log('hahahahaahahaha ')
+            })
+            users.push(obj)
+            vm.showJoinRoom = false
+            vm.$store.dispatch('saveUsers', obj)
+            if (vm.selectTypes === 0) {
+              // vm.$router.push({path: '/qt', params: {}})
+              vm.showQt = true
+            } else if (vm.selectTypes === 1) {
+              // vm.$router.push({path: '/ht', params: {}})
+              vm.showHt = true
+            } else {
+              // vm.$router.push({path: '/dj', params: {}})
+              vm.showDj = true
+            }
           }
-          let data = window.JSON.parse(responseData)
-          vm.users = data
-          // if (Number(data.code) === 200) {
-          //   vm.userId = data.id
-          //   vm.roomId = data.numId
-          //   vm.$store.dispatch('saveId', {
-          //     userId: vm.userId,
-          //     roomId: vm.roomId
-          //   })
-          //   vm.$router.push({path: this.router, params: {userId: vm.userId, roomId: vm.roomId}})
-          // }
-        }
-      )
+        )
       }
     },
     // 加入房间弹窗数字处理(包括重输和删除功能)
