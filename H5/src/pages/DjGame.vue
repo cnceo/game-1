@@ -132,11 +132,13 @@
         <img :src="item" alt="" height="100%">
       </div>
       <div class="coins">
-        <span v-for="(item, index) in coins" :key="index" :class="{'coin0': index === 0,
-        'coin1': index === 1, 'coin2': index === 2, 'coin3': index === 3, 'coin4': index === 4,
-        'coin5': index === 5, 'coin6': index === 6, 'coin7': index === 7,}">
-          <img :src="item" alt="" width="100%">
-        </span>
+        <!-- <transition name="move"> -->
+          <span v-for="(item, index) in coins" :key="index" :class="{'coin0': index === 0,
+          'coin1': index === 1, 'coin2': index === 2, 'coin3': index === 3, 'coin4': index === 4,
+          'coin5': index === 5, 'coin6': index === 6, 'coin7': index === 7, 'active': showCoins}">
+            <img :src="item" alt="" width="100%" v-if="showCoins">
+          </span>
+        <!-- </transition> -->
       </div>
     </div>
     <!-- 邀请好友 -->
@@ -336,7 +338,8 @@ export default {
       {
         img: tabImgs.lowz[3],
         selected: false
-      }]
+      }],
+      showCoins: false
     }
   },
   props: {
@@ -397,6 +400,7 @@ export default {
     },
     xzOk () {
       this.showXzModal = false
+      this.showCoins = true
     },
     invateFriend () {
       // let vm = this
@@ -415,6 +419,12 @@ export default {
 </script>
 
 <style scoped lang="less">
+.move-enter-active, .move-leave-active {
+  transition: opacity .5s
+}
+.move-enter, .move-leave-to /* .fade-leave-active in below version 2.1.8 */ {
+  opacity: 0
+}
 .g-flex-column{
   display: flex;
   flex-direction: column;
@@ -758,12 +768,24 @@ export default {
         height: 70px;
       }
       .coin0{
-        top: 150px;
+        top: 10px;
         left: 160px;
+        opacity: 0.5;
+        transition: all 0.3s linear;
+      }
+      .coin0.active{
+        top: 150px;
+        opacity: 1;
       }
       .coin1{
-        top: 130px;
+        top: 50px;
         left: 30px;
+        opacity: 0.5;
+        transition: all 0.3s linear 0.1s;
+      }
+      .coin1.active{
+        top: 130px;
+        opacity: 1;
       }
       .coin2{
         top: 180px;

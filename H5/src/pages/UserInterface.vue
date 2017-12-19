@@ -685,10 +685,8 @@ export default {
       this.numIndex++
       // 进入房间
       if (this.numIndex === MAX_ROOM_NUM) {
-        this.numIndex = 0
-        this.roomNums.forEach((item, index) => {
-          this.$set(this.roomNums, index, '')
-        })
+        this.showJoinRoom = false
+        this.showDj = true
         let ajaxParams = window.JSON.stringify({
           host: this.$url,
           path: this.$interface['/app'],
