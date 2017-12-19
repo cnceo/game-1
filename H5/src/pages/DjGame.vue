@@ -120,7 +120,7 @@
     </div>
     <!-- 游戏信息 -->
     <div class="game-info">
-      <div class="room-num">房间号： 11111{{ds}}</div>
+      <div class="room-num">房间号： 11111</div>
       <div class="geme-type">
         <span>清推</span><span>20局</span><span>50分封顶</span>
       </div>
@@ -352,17 +352,28 @@ export default {
     dj (val) {
       this.showDj = val
     },
-    ds: {
-      handler (val) {
-        this.users = []
-        val.forEach((item) => {
-          if (item instanceof Object) {
-            item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
-            this.users.push(item)
-          }
-        })
-      },
-      deep: true
+    // ds: {
+    //   handler (val) {
+    //     console.log(val)
+    //     this.users = []
+    //     val.forEach((item) => {
+    //       if (item instanceof Object) {
+    //         item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
+    //         this.users.push(item)
+    //       }
+    //     })
+    //   },
+    //   deep: true
+    // },
+    ds (val) {
+      console.log('啊公司嘎嘎嘎嘎嘎')
+      this.users = []
+      val.forEach((item) => {
+        if (item instanceof Object) {
+          item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
+          this.users.push(item)
+        }
+      })
     }
   },
   created () {

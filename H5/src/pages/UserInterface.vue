@@ -702,23 +702,29 @@ export default {
           'joinRooms' // 原生的方法名
           , {'param': ajaxParams} // 带个原生方法的参数
           , function (responseData) { // 响应原生回调方法
-            var reg = /{(.*)}/g
-            var arr = []
-            var obj = {}
-            var users = []
-            responseData.replace(reg, function (match, contents) {
-              arr = contents.split(',')
-            })
-            console.log(arr[0])
-            arr.forEach((item) => {
-              var its = item.trim().split('=')
-              console.log(its[0] + 'ssssssssss' + its[1])
-              obj[its[0]] = its[1]
-              console.log('hahahahaahahaha ')
-            })
-            users.push(obj)
-            vm.showJoinRoom = false
-            vm.$store.dispatch('saveUsers', obj)
+          //   console.log('hahahahaahahaha ')
+          //   var reg = /{(.*)}/g
+          //   var arr = []
+          //   var obj = {}
+          //   var users = []
+          //   responseData.replace(reg, function (match, contents) {
+          //     arr = contents.split(',')
+          //   })
+          //   console.log(arr[0])
+          //   arr.forEach((item) => {
+          //     var its = item.trim().split('=')
+          //     obj[its[0]] = its[1]
+          //   })
+          // //  console.log(Object.keys(obj))
+          //   users[0] = obj
+          //   vm.showJoinRoom = false
+          //   users.forEach((item) => {
+          //     for (let key in item) {
+          //       console.log(key + '对应的是：' + item[key])
+          //     }
+          //   })
+            let data = vm.$hds.handler(responseData)
+            vm.$store.dispatch('saveUsers', data)
             if (vm.selectTypes === 0) {
               // vm.$router.push({path: '/qt', params: {}})
               vm.showQt = true
