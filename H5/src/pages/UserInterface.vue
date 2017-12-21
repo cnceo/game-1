@@ -21,13 +21,13 @@
         </div>
         <!--基本设置-->
         <ul class="base-settting g-flex-row">
-          <li @touchstart="help">
+          <li @touchstart="help($event)">
             <img src="../assets/imgs/rules.png" width="100%"/>
           </li>
-          <li @touchstart="message">
+          <li @touchstart="message($event)">
             <img src="../assets/imgs/message.png" width="100%"/>
           </li>
-          <li @touchstart="setting">
+          <li @touchstart="setting($event)">
             <img src="../assets/imgs/steup.png" width="100%"/>
           </li>
         </ul>
@@ -47,10 +47,10 @@
         <img src="../assets/imgs/beautyGirl.png"  width="100%"/> 
       </div>
       <div class="all-room">
-        <div class="room-item create-room" @touchstart="createRoom">
+        <div class="room-item create-room" @touchstart="createRoom($event)">
           <img src="../assets/imgs/createroom.png"  width="100%"/> 
         </div>
-        <div class="room-item join-room" @touchstart="joinRoom">
+        <div class="room-item join-room" @touchstart="joinRoom($event)">
           <img src="../assets/imgs/joinroom.png"  width="100%"/> 
         </div>
       </div>
@@ -71,7 +71,7 @@
       </div>
       <div slot="body" class="rule-body">
         <div class="game-tabs">
-          <span v-for="(item, index) in gameTabs" @touchstart="changeGame(index)" :key="index"
+          <span v-for="(item, index) in gameTabs" @touchstart="changeGame(index, $event)" :key="index"
           :class="{'game-active': item.select}">
             <img :src="item.img" alt="">
           </span>
@@ -108,7 +108,7 @@
       <div slot="body" class="create-body">
         <div class="create-content">
           <div class="game-tabs">
-            <span v-for="(item, index) in createRoomTabs" @touchstart="changeRoom(index)" :key="index"
+            <span v-for="(item, index) in createRoomTabs" @touchstart="changeRoom(index, $event)" :key="index"
             >
               <img :src="item.img" alt="">
             </span>
@@ -160,12 +160,12 @@
         </div>
         <div class="foot-change">
           <div class="toggle">
-            <span class="box" @touchstart="createGameRoom">
+            <span class="box" @touchstart="createGameRoom($event)">
               <img src="../assets/imgs/img_Create_Createaroom.png" alt="" width="100%">
             </span>
           </div>
           <div class="toggle">
-            <span class="box" @touchstart="invoiceGameRoom">
+            <span class="box" @touchstart="invoiceGameRoom($event)">
               <img src="../assets/imgs/img_Create_Topoenaroom.png" alt="" width="100%">
             </span>  
           </div>    
@@ -193,7 +193,7 @@
         </div>
         <div class="select-num">
           <div class="num-row" v-for="(item, index) in nums" :key="index">
-            <span class="num-cell" v-for="(its, i) in item" :key="i" @touchstart="selectNum(its.num, i)">
+            <span class="num-cell" v-for="(its, i) in item" :key="i" @touchstart="selectNum(its.num, i, $event)">
               <img :src="its.img" alt="" width="100%" height="100%">
             </span>
           </div>
@@ -212,7 +212,7 @@
 <script>
 import {mapGetters} from 'vuex'
 import tabImgs from './tabImgs'
-const MAX_ROOM_NUM = 4
+const MAX_ROOM_NUM = 6
 const HEAD_IMG_SIZE = 0
 
 export default {
@@ -450,7 +450,8 @@ export default {
       })
     },
     // 新闻消息弹窗
-    message () {
+    message (e) {
+      e.preventDefault()
       this.$audio.play(this.$audio.ui)
       this.showMsgModal = true
       let vm = this
@@ -475,7 +476,8 @@ export default {
       this.showMsgModal = false
     },
     // 规则弹窗
-    help () {
+    help (e) {
+      e.preventDefault()
       this.$audio.play(this.$audio.ui)
       this.showRuleModal = true
       let vm = this
@@ -530,7 +532,8 @@ export default {
       }
     },
     // 规则（清推、混推、大九）
-    changeGame (index) {
+    changeGame (index, e) {
+      e.preventDefault()
       this.$audio.play(this.$audio.ui)
       this.gameTabs.forEach((item, ids) => {
         if (ids === index) {
@@ -546,18 +549,21 @@ export default {
       this.showRuleModal = false
     },
     // 设置弹窗
-    setting () {
+    setting (e) {
+      e.preventDefault()
       this.$audio.play(this.$audio.ui)
       this.$refs.setting.openSetModal()
     },
     // 创建房间弹窗
-    createRoom () {
+    createRoom (e) {
+      e.preventDefault()
       this.$audio.play(this.$audio.btn)
       this.showCreateRoom = true
      // this.createRoomData.substitute = false
     },
     // 创建房间类型切换（清推、混推、大九）
-    changeRoom (index) {
+    changeRoom (index, e) {
+      e.preventDefault()
       this.$audio.play(this.$audio.ui)
       this.createRoomTabs.forEach((item, ids) => {
         if (ids === index) {
@@ -601,7 +607,8 @@ export default {
       this.createRoomData3.score = data
     },
     // 创建房间
-    createGameRoom () {
+    createGameRoom (e) {
+      e.preventDefault()
       this.$audio.play(this.$audio.btn)
       let selectData = {}
       let type = null
@@ -651,7 +658,8 @@ export default {
       )
     },
     // 是否代开房间
-    invoiceGameRoom () {
+    invoiceGameRoom (e) {
+      e.preventDefault()
       this.$audio.play(this.$audio.btn)
       if (this.selectTypes === 0) {
         this.createRoomData1.substitute = true
@@ -666,12 +674,14 @@ export default {
       this.showCreateRoom = false
     },
     // 加入房间弹窗
-    joinRoom () {
+    joinRoom (e) {
+      e.preventDefault()
       this.$audio.play(this.$audio.btn)
       this.showJoinRoom = true
     },
     // 加入房间选择数字
-    selectNum (item, index) {
+    selectNum (item, index, e) {
+      e.preventDefault()
       this.$audio.play(this.$audio.ui)
       if (typeof item === 'string') {
         this.handleSelect(index)

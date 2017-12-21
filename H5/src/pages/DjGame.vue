@@ -45,7 +45,7 @@
             </div>
           </div>
         </div>
-        <div class="status"  :class="{'l-site': (index !== 0) && (index % 2 !== 0),
+        <div class="status" :class="{'l-site': (index !== 0) && (index % 2 !== 0),
          'r-site': (index === 0) || (index % 2 === 0)}">
             <span v-show="item.status === 0">
               <img src="../assets/imgs/img_Room_ready.png" alt="" width="100%" height="100%">
@@ -65,6 +65,10 @@
           <span v-show="item.xz === 1">
             <img src="../assets/imgs/img_Bet_zhengzaixiazhu.png" alt="" width="100%" height="100%">
           </span>
+        </div>
+        <div class="xz-tip score">
+          <span class="sign">+</span>
+          <span class="num">222</span>
         </div>
       </div>
     </div>
@@ -132,15 +136,21 @@
         <img :src="item" alt="" height="100%">
       </div>
       <div class="coins">
-        <!-- <transition name="move"> -->
-          <span v-for="(item, index) in coins" :key="index" :class="{'coin0': index === 0,
+          <div v-for="(item, index) in coins" :key="index">
+          <span :class="{'coin0': index === 0,
           'coin1': index === 1, 'coin2': index === 2, 'coin3': index === 3, 'coin4': index === 4,
-          'coin5': index === 5, 'coin6': index === 6, 'coin7': index === 7, 'active': showCoins}">
+          'coin5': index === 5, 'coin6': index === 6, 'coin7': index === 7, 'active': showCoins}" 
+          v-show="showCoins" :key="index"></span>
             <img :src="item" alt="" width="100%" v-if="showCoins">
-          </span>
-        <!-- </transition> -->
+          </div>
       </div>
     </div>
+    <!-- <div style="padding: 60px;">
+    <span style="display: block;width: 50px;height: 50px; background: #eee;" class="win" v-show="showCoins"></span>
+    <div style="padding: 60px;"></div>
+    <span style="display: block;width: 50px;height: 50px; background: #eee;" class="lost" v-show="showCoins"></span>
+    </div>
+    <button @click="xzOk">点击</button> -->
     <!-- 邀请好友 -->
     <div class="yq-friend g-flex-row" @touchstart="invateFriend">
       <img src="../assets/imgs/img_Room_lnvitefriends.png" alt="" width= "100%">
@@ -500,7 +510,13 @@ export default {
         .result .win{
           display: block;
           width: 100%;
-          transform: scale(1.5)
+          animation: win 0.2s linear forwards;
+        }
+        .result .lost{
+          animation: lost 0.2s linear forwards;
+        }
+        .result .tie{
+          animation: lost 0.2s linear forwards;
         }
       }
       .msg{
@@ -574,6 +590,9 @@ export default {
           width: 100%;
           height: 40px;
         }
+      }
+      .score {
+
       }
     }
     .site0{
@@ -768,48 +787,60 @@ export default {
         height: 70px;
       }
       .coin0{
-        top: 10px;
         left: 160px;
-        opacity: 0.5;
-        transition: all 0.3s linear;
+        box-shadow: 5px 5px 15px 2px #999;
       }
       .coin0.active{
-        top: 150px;
-        opacity: 1;
+        animation: coinMove0 0.1s linear forwards;
       }
       .coin1{
-        top: 50px;
         left: 30px;
-        opacity: 0.5;
-        transition: all 0.3s linear 0.1s;
+        box-shadow: 5px 5px 15px 2px #999;
       }
       .coin1.active{
-        top: 130px;
-        opacity: 1;
+        animation: coinMove1 0.1s linear forwards;
       }
       .coin2{
-        top: 180px;
         left: 70px;
+        box-shadow: 5px 5px 15px 2px #999;
+      }
+      .coin2.active{
+        animation: coinMove2 0.1s linear forwards;
       }
       .coin3{
-        top: 250px;
         left: 120px;
+        box-shadow: 5px 5px 15px 2px #999;
+      }
+      .coin3.active{
+       animation: coinMove3 0.1s linear forwards;
       }
       .coin4{
-        top: 200px;
         left: 140px;
+        box-shadow: 5px 5px 15px 2px #999;
+      }
+      .coin4.active{
+        animation: coinMove4 0.2s linear forwards;
       }
       .coin5{
-       top: 260px;
        left: 50px;
+       box-shadow: 5px 5px 15px 2px #999;
+      }
+      .coin5.active{
+        animation: coinMove5 0.1s linear forwards;
       }
       .coin6{
-       top: 200px;
         left: 20px;
+        box-shadow: 5px 5px 15px 2px #999;
+      }
+      .coin6.active{
+       animation: coinMove6 0.1s linear forwards;
       }
       .coin7{
-        top: 240px;
         left: 180px;
+        box-shadow: 5px 5px 15px 2px #999;
+      }
+      .coin7.active{
+       animation: coinMove7 0.2s linear forwards;
       }
     }
   }
@@ -931,4 +962,178 @@ export default {
     }
   }
 }
+/**动画**/
+
+@keyframes coinMove0 {
+  0% {
+    top: 10px;
+    opacity: 0;
+  }
+  60% {
+    top: 150px;
+    opacity: 0.5;
+  }
+  80% {
+    top: 120px;
+    opacity: 1;
+  }
+  100% {
+    top: 150px;
+    opacity: 1;
+  }
+}
+
+@keyframes coinMove1 {
+  0% {
+    top: 50px;
+    opacity: 0.5;
+  }
+  60% {
+    top: 130px;
+    opacity: 1;
+  }
+  80% {
+    top: 80px;
+    opacity: 1;
+  }
+  100% {
+    top: 130px;
+    opacity: 1;
+  }
+}
+@keyframes coinMove2 {
+  0% {
+    top: 50px;
+    opacity: 0.5;
+  }
+  60% {
+    top: 180px;
+    opacity: 1;
+  }
+  80% {
+    top: 140px;
+    opacity: 1;
+  }
+  100% {
+    top: 180px;
+    opacity: 1;
+  }
+}
+@keyframes coinMove3 {
+  0% {
+    top: 60px;
+    opacity: 0.5;
+  }
+  60% {
+    top: 250px;
+    opacity: 1;
+  }
+  80% {
+    top: 200px;
+    opacity: 1;
+  }
+  100% {
+    top: 250px;
+    opacity: 1;
+  }
+}
+@keyframes coinMove4 {
+  0% {
+    top: 10px;
+    opacity: 0.5;
+  }
+  60% {
+    top: 200px;
+    opacity: 1;
+  }
+  80% {
+    top: 180px;
+    opacity: 1;
+  }
+  100% {
+    top: 200px;
+    opacity: 1;
+  }
+}
+@keyframes coinMove5 {
+  0% {
+    top: 60px;
+    opacity: 0.5;
+  }
+  60% {
+    top: 260px;
+    opacity: 1;
+  }
+  80% {
+    top: 210px;
+    opacity: 1;
+  }
+  100% {
+    top: 260px;
+    opacity: 1;
+  }
+}
+@keyframes coinMove6 {
+  0% {
+    top: 50px;
+    opacity: 0.5;
+  }
+  60% {
+    top: 200px;
+    opacity: 1;
+  }
+  80% {
+    top: 160px;
+    opacity: 1;
+  }
+  100% {
+    top: 200px;
+    opacity: 1;
+  }
+}
+@keyframes coinMove7 {
+  0% {
+    top: 30px;
+    opacity: 0.5;
+  }
+  60% {
+    top: 240px;
+    opacity: 1;
+  }
+  80% {
+    top: 200px;
+    opacity: 1;
+  }
+  100% {
+    top: 240px;
+    opacity: 1;
+  }
+}
+@keyframes win {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(3)
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.5)
+  }
+}
+@keyframes lost {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(2)
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1)
+  }
+}
+
 </style>

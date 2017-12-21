@@ -34,13 +34,13 @@ export default {
     }
   },
   created () {
-    // this.$nextTick(() => {
-    //   let rate = this.sound.cur / this.sound.max
-    //   let [dotElem, barWidth, dotWidth] = this.initSound()
-    //   dotElem.style.left = barWidth * rate - (dotWidth / 2) + 'px'
-    //   this.$refs.cur.style.width = barWidth * rate - (dotWidth / 2) + 'px'
-    //   console.log(this.$refs.cur)
-    // })
+    this.$nextTick(() => {
+      let rate = this.sound.cur / this.sound.max
+      let [dotElem, barWidth, dotWidth] = this.initSound()
+      dotElem.style.left = barWidth * rate - (dotWidth / 2) + 'px'
+      this.$refs.cur.style.width = barWidth * rate - (dotWidth / 2) + 'px'
+      console.log(this.$refs.cur)
+    })
   },
   mounted () {
     let width = document.documentElement.clientWidth * 0.6 - 80
