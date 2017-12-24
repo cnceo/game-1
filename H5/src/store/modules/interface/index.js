@@ -3,6 +3,7 @@ import * as types from '../../mutation-types'
 
 const state = {
   users: {}, // 用户信息
+  userId: '',
   wxUser: {}, // 用户微信信息
   music: {}, // 音量数据
   public: {}, // 首页公告
@@ -17,6 +18,9 @@ const state = {
 const mutations = {
   [types.USER_MSG] (state, { data }) {
     state.users = data
+  },
+  [types.USER_ID] (state, { data }) {
+    state.userId = data
   },
   [types.WX_USER_INFO] (state, { data }) {
     state.wxUser = data
@@ -56,6 +60,11 @@ const actions = {
   userInfo ({ commit }, data) {
     // api.userAjax(data => {
     commit(types.USER_MSG, { data })
+    //  }, params)
+  },
+  saveUserId ({ commit }, data) {
+    // api.userAjax(data => {
+    commit(types.USER_ID, { data })
     //  }, params)
   },
   // 获取音量数据
@@ -115,6 +124,7 @@ const actions = {
 const getters = {
   listenWxUser: state => state.wxUser,
   listenUser: state => state.users,
+  listenUserId: state => state.userId,
   listenMusic: state => state.music,
   listenPublic: state => state.public,
   listenNews: state => state.news,

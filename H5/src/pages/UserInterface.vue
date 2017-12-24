@@ -206,7 +206,7 @@
       {{tipMsg}}
     </div>
     <!-- 大九 -->
-    <dj-game :dj="showDj" @on-close="closeDj"></dj-game>
+    <dj-game :dj="showDj" :uid="userId" :rid="roomId" @on-close="closeDj"></dj-game>
     <!-- 清推 -->
     <qt-game :qt="showQt" @on-close="closeQt"></qt-game>
     <!-- 混推 -->
@@ -354,6 +354,7 @@ export default {
           vm.userInfo[key] = data.model[key]
         })
         vm.$store.dispatch('userInfo', vm.userInfo)
+        vm.userId = vm.userInfo.id
       }
     )
     // 初始化数据
@@ -361,7 +362,7 @@ export default {
     this.handleArray([this.ds1_1, this.ds2_1, this.ds3_1], this.ds1)
     this.handleArray([this.ds1_2, this.ds2_2, this.ds3_2], this.ds2)
     // 注册交互时间
-    this.registerFn()
+    // this.registerFn()
   },
   mounted () {
     let vm = this
@@ -411,24 +412,28 @@ export default {
         path: this.$interface['/user/login'],
         params: this.$sign(params)
       })
-      this.$JsBridge.callHandler(
+      setTimeout(() => {
+        this.$JsBridge.callHandler(
         'getUserMsg' // 原生的方法名
-        , {'param': ajaxParams} // 带个原生方法的参数
-        , function (responseData) { // 响应原生回调方法
-          let data = window.JSON.parse(responseData)
-          data.model.headimgurl = data.model.headimgurl + HEAD_IMG_SIZE
-          Object.keys(vm.userInfo).forEach((key) => {
-            vm.userInfo[key] = data.model[key]
-          })
-          vm.$store.dispatch('userInfo', vm.userInfo)
-        }
-      )
+          , {'param': ajaxParams} // 带个原生方法的参数
+          , function (responseData) { // 响应原生回调方法
+            let data = window.JSON.parse(responseData)
+            data.model.headimgurl = data.model.headimgurl + HEAD_IMG_SIZE
+            Object.keys(vm.userInfo).forEach((key) => {
+              vm.userInfo[key] = data.model[key]
+            })
+            vm.$store.dispatch('userInfo', vm.userInfo)
+            vm.userId = vm.userInfo.id
+          }
+        )
+      }, 1000)
     },
-    curUser (val) {
-      Object.keys(this.userInfo).forEach((key) => {
-        this.userInfo[key] = val[key]
-      })
-    },
+    // curUser (val) {
+    //   console.log('更新嘻嘻嘻嘻嘻嘻嘻嘻嘻嘻嘻嘻嘻嘻嘻嘻嘻')
+    //   Object.keys(this.userInfo).forEach((key) => {
+    //     this.userInfo[key] = val[key]
+    //   })
+    // },
     indexPublic (val) {
       this.dtMsg = val.model
     },
@@ -446,18 +451,18 @@ export default {
     }
   },
   methods: {
-    registerFn () {
-      let vm = this
-      // 获取加入游戏的用户列表
-      this.$JsBridge.registerHandler('updateRoom', function (data, responseCallback) {
-        // 将原生带来的参数，显示在show标签位置
-        let datas = vm.$hds.handler(data)
-        vm.$store.dispatch('saveUsers', datas)
-        var responseData = '用户列表：' + window.JSON.stringify(vm.userInfo)
-        // 调用responseCallback方法可以带传参数到原生
-        responseCallback(responseData)
-      })
-    },
+    // registerFn () {
+    //   let vm = this
+    //   // 获取加入游戏的用户列表
+    //   this.$JsBridge.registerHandler('updateRoom', function (data, responseCallback) {
+    //     // 将原生带来的参数，显示在show标签位置
+    //     let datas = vm.$hds.handler(data)
+    //     vm.$store.dispatch('saveUsers', datas)
+    //     var responseData = '用户列表：' + window.JSON.stringify(vm.userInfo)
+    //     // 调用responseCallback方法可以带传参数到原生
+    //     responseCallback(responseData)
+    //   })
+    // },
     handleArray (arr, data) {
       arr.forEach((item, index) => {
         data.forEach((its, i) => {
@@ -668,11 +673,12 @@ export default {
         , function (responseData) { // 响应原生回调方法
           let data = window.JSON.parse(responseData)
           if (Number(data.code) === 200) {
-            vm.userId = data.model.createUserId
+            // vm.userId = data.model.createUserId
+            // vm.roomId = data.model.id
             vm.roomId = data.model.id
             if (vm.userInfo.roomNum) {
-              vm.userId = data.model.createUserId
-              vm.roomId = data.model.id
+              // vm.userId = data.model.createUserId
+              // vm.roomId = data.model.id
               // 创建房间房主才有邀请好友，保存房间号用于微信好友邀请
              // vm.numId = data.model.numId
               vm.$store.dispatch('saveCreateMsg', {
@@ -751,6 +757,10 @@ export default {
       this.numIndex++
       // 进入房间
       if (this.numIndex === MAX_ROOM_NUM) {
+        this.roomNums.forEach((item, index) => {
+          this.$set(this.roomNums, index, '')
+        })
+        this.numIndex = 0
         this.enterRoom()
       }
     },

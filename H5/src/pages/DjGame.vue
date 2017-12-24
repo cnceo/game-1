@@ -15,7 +15,7 @@
             <img :src="item.headimgurl" alt="" width="100%" height="100%">
           </div>
           <div class="master" :class="{'l-site': (index === 0) || (index % 2 !== 0),
-           'r-site': (index !== 0) && (index % 2 === 0)}" v-show="item.takeBanker">
+           'r-site': (index !== 0) && (index % 2 === 0)}" v-show="item.takeBanker == 'true'">
             <img src="../assets/imgs/img_Room_owner.png" alt="" width="100%" height="100%">
            </div>
           <div class="result" :class="{'cur-user': index === 0}">
@@ -46,14 +46,17 @@
           </div>
         </div>
         <div class="status" :class="{'l-site': (index !== 0) && (index % 2 !== 0),
-         'r-site': (index === 0) || (index % 2 === 0)}">
-            <span v-show="item.ready == false && !item.takeBanker && isOwnerStart" @click="startReady">
+         'r-site': (index % 2 === 0), 'c-site': (index === 0)}">
+         {{item.ready == 'false'}}
+         {{item.roomOwner == 'false'}}
+         {{isOwnerStart}}
+            <span v-show="item.ready == 'false' && item.roomOwner == 'false' && isOwnerStart" @click="startReady">
               <img src="../assets/imgs/img_Room_ready.png" alt="" width="100%" height="100%">
             </span>
-            <span v-show="item.ready == true && !item.takeBanker && isOwnerStart">
+            <span v-show="item.ready == 'true' && item.roomOwner == 'false' && isOwnerStart">
               <img src="../assets/imgs/img_Room_readying.png" alt="" width="100%" height="100%">
             </span>
-            <span v-show="item.ready == false && item.takeBanker && isFriends" @click="startGame">
+            <span v-show="item.ready == 'false' && item.roomOwner == 'true' && isFriends" @click="startGame">
               <img src="../assets/imgs/img_Setup_Exchangeaccount.png" alt="" width="100%" height="100%">
             </span>
          </div>
@@ -379,7 +382,7 @@ export default {
       showSetModal: false,
       socket: null,
       id: '',
-      showXzModal: true,
+      showXzModal: false,
       showClose: false,
       site: true,
       mType: [
@@ -416,6 +419,7 @@ export default {
         value: tabImgs.lowz[3].value
       }],
       showCoins: false,
+      cards: [],
       cmScore: 0, // 出门下注分数
       tmScore: 0, // 天门下注分数
       kmScore: 0, // 坎门下注分数
@@ -444,12 +448,21 @@ export default {
     dj: {
       type: Boolean,
       default: false
+    },
+    uid: {
+      type: String,
+      dafault: ''
+    },
+    rid: {
+      type: String,
+      dafault: ''
     }
   },
   computed: mapGetters({
     ds: 'listenGameUser',
     roomMsg: 'listenRoomMsg',
-    curUser: 'listenUser'
+    curUser: 'listenUser',
+    curUserId: 'listenUserId'
   }),
   watch: {
     dj (val) {
@@ -468,40 +481,59 @@ export default {
     //   },
     //   deep: true
     // },
-    curUser (val) {
-      this.userId = val.openid
+    // curUser (val) {
+    //   console.log('sssssssssssssssss')
+    //   for (let key in val) {
+    //     console.log(key + ':' + val(key))
+    //   }
+    //   this.userId = val.id
+    // },
+    uid (val) {
+      this.userId = val
     },
-    ds (val) {
-      this.users = []
-      val.forEach((item) => {
-        if (item instanceof Object) {
-          item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
-          this.users.push(item)
-          let obj = {}
-          for (let key in item) {
-            obj[key] = item[key]
-          }
-          obj.nickname = 'Tom'
-          obj.userId = '99000'
-          this.users.push(obj)
-          this.users.push(obj)
-          this.users.push(obj)
-          this.users.push(obj)
-        }
-      })
-      // 获取当前设置对应信息
-      // roomId、userId
-      // 判断游戏中用户人数是否至少为2人
-      if (this.users >= MIN_USER) {
-        this.isFriends = true
-      }
-    },
-    roomMsg (val) {
-      this.roomId = val.roomId
-      this.roomNum = val.numId
-      // 房间创建者可以邀请好友
-      this.isMaster = true
+    rid (val) {
+      console.log('dssdfsdfsdf')
+      this.roomId = val
     }
+    // ds (val) {
+    //   this.users = []
+    //   let arr = []
+    //   val.forEach((item) => {
+    //     if (item instanceof Object) {
+    //       item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
+    //       let obj = {}
+    //       for (let key in item) {
+    //         obj[key] = item[key]
+    //       }
+    //       obj.nickname = 'Tom'
+    //       obj.userId = '99000'
+    //       arr.push(obj)
+    //       arr.push(obj)
+    //       arr.push(item)
+    //       arr.push(obj)
+    //       arr.push(obj)
+    //     }
+    //   })
+    //   arr.forEach((item) => {
+    //     if (item.userId === this.userId) {
+    //       this.users.unshift(item)
+    //     } else {
+    //       this.users.push(item)
+    //     }
+    //   })
+    //   // 获取当前设置对应信息
+    //   // roomId、userId
+    //   // 判断游戏中用户人数是否至少为2人
+    //   if (this.users >= MIN_USER) {
+    //     this.isFriends = true
+    //   }
+    // }
+    // roomMsg (val) {
+    //   this.roomId = val.roomId
+    //   this.roomNum = val.numId
+    //   // 房间创建者可以邀请好友
+    //   this.isMaster = true
+    // }
   },
   created () {
     this.showDj = this.dj
@@ -514,20 +546,122 @@ export default {
       let vm = this
       // 获取加入游戏的用户列表
       this.$JsBridge.registerHandler('updateUsers', function (data, responseCallback) {
+        console.log('游戏中用户列表更新了')
+        console.log(data)
         // 将原生带来的参数，显示在show标签位置
-        vm.users = vm.$hds.handler(data)
-        if (!vm.isOwnerStart) {
-          // 房主点击开始游戏
-          vm.isOwnerStart = true
+        vm.users = []
+        let arr = []
+        let val = []
+        val = vm.$hds.handler(data)
+        val.forEach((item) => {
+          if (item instanceof Object) {
+            item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
+            item.ready = 'false'
+            let obj = {}
+            let objs = {}
+            for (let key in item) {
+              obj[key] = item[key]
+            }
+            for (let key in item) {
+              objs[key] = item[key]
+            }
+            obj.nickname = 'Tom'
+            obj.userId = '99000'
+            obj.roomOwner = 'false'
+            obj.takeBanker = 'false'
+            obj.ready = 'true'
+            objs.nickname = 'Tom'
+            objs.userId = '99000'
+            objs.roomOwner = 'false'
+            objs.takeBanker = 'false'
+            objs.ready = 'true'
+            arr.push(obj)
+            arr.push(obj)
+            arr.push(item)
+            arr.push(objs)
+            arr.push(obj)
+          }
+        })
+        // 如果人数最少2人，即可开始游戏
+        if (arr < MIN_USER) {
+          console.log('aaaaaaaaaaaaaaaaaaaa')
+          arr.forEach((item) => {
+            if (Number(item.userId) === Number(vm.userId)) {
+              console.log('我是当前用户')
+              if (item.roomOwner) {
+                // 房间创建者可以邀请好友
+                vm.isMaster = true
+              }
+              vm.users.unshift(item)
+            } else {
+              vm.users.push(item)
+            }
+          })
         } else {
-          // 其他玩家点击准备按钮,判断是否都已经准备就绪
-          if (vm.isAllUserReady(vm.users)) {
-            vm.isOwnerStart = false
-            // 禁止抢庄
-            vm.isGameStart = true
-            // 开始发牌
+          arr.forEach((item) => {
+            if (Number(item.userId) === Number(vm.userId)) {
+              console.log('我是当前用户')
+              if (item.roomOwner) {
+                // 房间创建者可以邀请好友
+                vm.isMaster = true
+              }
+              vm.users.unshift(item)
+            } else {
+              vm.users.push(item)
+            }
+          })
+          console.log(window.JSON.stringify(vm.users))
+          console.log('bbbbbbbbbbbbbbbbbbbbb')
+          // 显示准备按钮
+          if (!vm.isOwnerStart) {
+            console.log('cccccccccccccccc')
+            vm.isOwnerStart = true
+          } else {
+            // 房主点击开始游戏
+            console.log(vm.isOtherReady(vm.users))
+            if (vm.isOtherReady(vm.users)) {
+              console.log('eeeeee')
+              vm.isFriends = true
+            }
+            setTimeout(() => {
+              vm.playCards()
+            })
+            // 其他玩家点击准备按钮,判断是否都已经准备就绪
+            console.log('ddddddddddddddddddddddd')
+            if (vm.isAllUserReady(vm.users)) {
+              console.log('kkkk')
+              vm.isOwnerStart = false
+              vm.isMaster = false
+              vm.isFriends = false
+              // 禁止抢庄
+              vm.isGameStart = true
+              // 开始发牌
+             // vm.playCards()
+            }
           }
         }
+        // 调用responseCallback方法可以带传参数到原生
+        responseCallback('')
+      })
+      // 游戏未开始解散房间
+      this.$JsBridge.registerHandler('updateCards', function (data, responseCallback) {
+        // 将原生带来的参数，显示在show标签位置
+        vm.cards = vm.$hds.handler(data)
+        console.log('ssssssssssssssssss')
+        console.log(window.JSON.stringify(vm.cards))
+        vm.showDj = false
+        vm.$emit('on-close', vm.showDj)
+        // 调用responseCallback方法可以带传参数到原生
+        responseCallback('')
+      })
+      // 游戏未开始解散房间
+      this.$JsBridge.registerHandler('updateCoins', function (data, responseCallback) {
+        // 将原生带来的参数，显示在show标签位置
+        vm.cards = vm.$hds.handler(data)
+        console.log('ssssssssssssssssss')
+        console.log(window.JSON.stringify(vm.cards))
+        vm.showDj = false
+        vm.$emit('on-close', vm.showDj)
         // 调用responseCallback方法可以带传参数到原生
         responseCallback('')
       })
@@ -560,7 +694,22 @@ export default {
     },
     isAllUserReady (users) {
       for (let i = 0, len = users.length; i < len; i++) {
-        if (Boolean(users[i].ready) === false) {
+        if (users[i].ready === 'false') {
+          // 有用户未准备就绪
+          return false
+        }
+      }
+      return true
+    },
+    isOtherReady (users) {
+      let datas = []
+      users.forEach((item) => {
+        if (item.userId !== String(this.userId)) {
+          datas.push(item)
+        }
+      })
+      for (let i = 0, len = datas.length; i < len; i++) {
+        if (datas[i].ready === 'false') {
           // 有用户未准备就绪
           return false
         }
@@ -574,15 +723,23 @@ export default {
         return false
       }
       this.qz = !this.qz
-      let params = {
-        roomId: this.roomId,
-        userId: this.userId,
-        takeBanker: this.qz
-      }
+      let params = window.JSON.stringify({
+        host: this.$url,
+        path: this.$interface['/app'],
+        params: {
+          command: 1002,
+          data: {
+            roomId: this.roomId,
+            userId: this.userId,
+            takeBanker: this.qz
+          }
+        }
+      })
+      console.log('强庄了')
       // let vm = this
       this.$JsBridge.callHandler(
         'qianZuan' // 原生的方法名
-        , {'param': window.JSON.stringify(params)} // 带个原生方法的参数
+        , {'param': params} // 带个原生方法的参数
         , function (responseData) { // 响应原生回调方法
           // if (Number(window.JSON.parse(responseData)) === 200) {
           //   vm.$router.push({path: router, params: {}})
@@ -762,17 +919,25 @@ export default {
           score: this.kmScore
         })
       }
-      let params = {
-        userId: this.userId,
-        roomId: this.roomId,
-        userDoorVOList: userDoorVOList
-      }
-      console.log(params)
+      let params = window.JSON.stringify({
+        host: this.$url,
+        path: this.$interface['/app'],
+        params: {
+          command: 1008,
+          data: {
+            userId: this.userId,
+            roomId: this.roomId,
+            userDoorVOList: userDoorVOList
+          }
+        }
+      })
       // let vm = this
       this.$JsBridge.callHandler(
-        'xiazu' // 原生的方法名
-        , {'param': window.JSON.stringify(params)} // 带个原生方法的参数
+        'downCoin' // 原生的方法名
+        , {'param': params} // 带个原生方法的参数
         , function (responseData) { // 响应原生回调方法
+          this.showXzModal = false
+          this.showCoins = true
           // if (Number(window.JSON.parse(responseData)) === 200) {
           //   vm.$router.push({path: router, params: {}})
           // }
@@ -780,8 +945,6 @@ export default {
         }
       )
       // 后期需要注释
-      this.showXzModal = false
-      this.showCoins = true
     },
     // 邀请好友
     invateFriend () {
@@ -800,15 +963,21 @@ export default {
     },
     // 开始游戏
     startGame () {
-      let params = {
-        roomId: this.roomId,
-        userId: this.userId,
-        ready: true
-      }
+      let params = window.JSON.stringify({
+        host: this.$url,
+        path: this.$interface['/app'],
+        params: {
+          command: 1006,
+          data: {
+            roomId: this.roomId,
+            userId: this.userId
+          }
+        }
+      })
       // let vm = this
       this.$JsBridge.callHandler(
         'startGame' // 原生的方法名
-        , {'param': window.JSON.stringify(params)} // 带个原生方法的参数
+        , {'param': params} // 带个原生方法的参数
         , function (responseData) { // 响应原生回调方法
           // if (Number(window.JSON.parse(responseData)) === 200) {
           //   vm.$router.push({path: router, params: {}})
@@ -819,15 +988,49 @@ export default {
     },
     // 开始准备
     startReady () {
-      let params = {
-        roomId: this.roomId,
-        userId: this.userId,
-        ready: true
-      }
+      let params = window.JSON.stringify({
+        host: this.$url,
+        path: this.$interface['/app'],
+        params: {
+          command: 1003,
+          data: {
+            roomId: this.roomId,
+            userId: this.userId,
+            ready: true
+          }
+        }
+      })
       // let vm = this
       this.$JsBridge.callHandler(
         'startReady' // 原生的方法名
-        , {'param': window.JSON.stringify(params)} // 带个原生方法的参数
+        , {'param': params} // 带个原生方法的参数
+        , function (responseData) { // 响应原生回调方法
+          // if (Number(window.JSON.parse(responseData)) === 200) {
+          //   vm.$router.push({path: router, params: {}})
+          // }
+          //
+        }
+      )
+    },
+    playCards () {
+      let params = window.JSON.stringify({
+        host: this.$url,
+        path: this.$interface['/app'],
+        params: {
+          command: 1007,
+          data: {
+            roomId: this.roomId,
+            userId: this.userId
+          }
+        }
+      })
+      // 需要注释
+      this.showXzModal = true
+      this.gameOver()
+      // let vm = this
+      this.$JsBridge.callHandler(
+        'delayRoom' // 原生的方法名
+        , {'param': params} // 带个原生方法的参数
         , function (responseData) { // 响应原生回调方法
           // if (Number(window.JSON.parse(responseData)) === 200) {
           //   vm.$router.push({path: router, params: {}})
@@ -1008,7 +1211,7 @@ export default {
       }
       .status{
         position: absolute;
-        top: 40px;
+        top: 20px;
         width: 180px;
       }
       .status.l-site{
@@ -1016,6 +1219,9 @@ export default {
         }
       .status.r-site{
           right: -220px; 
+      }
+      .status.c-site{
+          right: 20px; 
       }
       .xz-tip{
         position: absolute;
