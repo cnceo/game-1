@@ -5,6 +5,7 @@ import SelectType from './SelectType'
 import DjGame from '../pages/DjGame'
 import QtGame from '../pages/QtGame'
 import HtGame from '../pages/HtGame'
+import DkModal from '../pages/DkModal'
 
 // 公共组件全局注册
 const Global = {
@@ -27,6 +28,8 @@ const Global = {
     Vue.component('qt-game', QtGame)
       // 混推
     Vue.component('ht-game', HtGame)
+    // 代开
+    Vue.component('dk-modal', DkModal)
   }
 }
 

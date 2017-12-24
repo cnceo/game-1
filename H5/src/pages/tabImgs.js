@@ -68,8 +68,10 @@ import ten from '../assets/imgs/img-Chips-ten.png'
 import tone from '../assets/imgs/img_Bet_chouma1.png'
 import tfive from '../assets/imgs/img_Bet_chouma5.png'
 import tten from '../assets/imgs/img_Bet_chouma10.png'
-import tmax from '../assets/imgs/img_Bet_choumazuida.png'
-
+import tmax20 from '../assets/imgs/img_max_score_20.jpg'
+import tmax50 from '../assets/imgs/img_max_score_50.jpg'
+import tmax100 from '../assets/imgs/img_max_score_100.jpg'
+import tmax200 from '../assets/imgs/img_max_score_200.jpg'
 const tabsImgs = {
   imgs: [img1, img2, img3],
   hoverImgs: [img1Hover, img2Hover, img3Hover],
@@ -99,10 +101,25 @@ const tabsImgs = {
   {
     img: tten,
     value: 10
-  }, {
-    img: tmax,
-    value: 20
-  }]
+  }],
+  lowzMax: [
+    {
+      img: tmax20,
+      value: 20
+    },
+    {
+      img: tmax50,
+      value: 50
+    },
+    {
+      img: tmax100,
+      value: 100
+    },
+    {
+      img: tmax200,
+      value: 200
+    }
+  ]
 }
 
 export default tabsImgs

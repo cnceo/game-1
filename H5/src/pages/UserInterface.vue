@@ -211,6 +211,9 @@
     <qt-game :qt="showQt" @on-close="closeQt"></qt-game>
     <!-- 混推 -->
     <ht-game :ht="showHt" @on-close="closeHt"></ht-game>
+    <!-- 代开 -->
+    <dk-modal :dk="showDkModal" @on-close="closeDk"></dk-modal>
+    
   </div>
 </template>
 
@@ -239,6 +242,7 @@ export default {
       showHt: false,
       showTip: false,
       tipMsg: '房卡不在',
+      showDkModal: false,
       tabs: [
         {
           img: tabImgs.hoverImgs[0],
@@ -383,7 +387,7 @@ export default {
           vm.$store.dispatch('publicAjax', data)
         }
       )
-    }, 1200)
+    }, 1500)
   },
   computed: mapGetters({
     userMsg: 'listenWxUser',
@@ -691,6 +695,8 @@ export default {
               if (!selectData.substitute) {
                 // 进入房间
                 vm.enterRoom()
+              } else {
+                vm.showDkModal = true
               }
             } else {
               // 提示房卡不足
@@ -831,6 +837,9 @@ export default {
     // 玩混推游戏
     closeHt () {
       this.showHt = false
+    },
+    closeDk () {
+      this.showDkModal = false
     }
   }
 }
