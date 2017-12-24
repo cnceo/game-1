@@ -15,7 +15,7 @@
             <img :src="item.headimgurl" alt="" width="100%" height="100%">
           </div>
           <div class="master" :class="{'l-site': (index === 0) || (index % 2 !== 0),
-           'r-site': (index !== 0) && (index % 2 === 0)}" v-show="item.master">
+           'r-site': (index !== 0) && (index % 2 === 0)}" v-show="item.takeBanker">
             <img src="../assets/imgs/img_Room_owner.png" alt="" width="100%" height="100%">
            </div>
           <div class="result" :class="{'cur-user': index === 0}">
@@ -47,13 +47,13 @@
         </div>
         <div class="status" :class="{'l-site': (index !== 0) && (index % 2 !== 0),
          'r-site': (index === 0) || (index % 2 === 0)}">
-            <span v-show="item.status === 0">
+            <span v-show="item.ready == false && !item.takeBanker && isOwnerStart" @click="startReady">
               <img src="../assets/imgs/img_Room_ready.png" alt="" width="100%" height="100%">
             </span>
-            <span v-show="item.status === 1">
+            <span v-show="item.ready == true && !item.takeBanker && isOwnerStart">
               <img src="../assets/imgs/img_Room_readying.png" alt="" width="100%" height="100%">
             </span>
-            <span v-show="item.status === 2 && index === 0">
+            <span v-show="item.ready == false && item.takeBanker && isFriends" @click="startGame">
               <img src="../assets/imgs/img_Setup_Exchangeaccount.png" alt="" width="100%" height="100%">
             </span>
          </div>
@@ -77,10 +77,10 @@
       <div class="all-operate g-flex-row">
         <div class="host g-flex">
           <div class="host-bg">
-            <div class="qz-bg bg" v-if="qz" >
+            <div class="qz-bg bg" v-if="qz" @touchstart="isQz">
               <img src="../assets/imgs/img_Create_qiangzhuang.png" alt="" width= "100%">
             </div>
-             <div class="bqz-bg bg" v-else>
+             <div class="bqz-bg bg" v-else @touchstart="isQz">
               <img src="../assets/imgs/img_Create_buqiangzhuang.png" alt="" width= "100%">
             </div>
             <span class="cur" v-if="qz" @touchstart="isQz" :class="{'active': qz}">
@@ -102,15 +102,18 @@
         <div class="games">
           <img src="../assets/imgs/img_Room_roomnumber.png" alt="" width= "100%">
           <div class="box">
-            <div class="rate">10/20</div>
-            <div class="room-num">11111</div>
+            <div class="rate">{{roomNum}}</div>
+            <div class="room-num">10/20</div>
           </div>
         </div>
         <div class="setting" @touchstart="setting">
           <img src="../assets/imgs/img_Room_setup.png" alt="" width= "100%">
         </div>
-        <div class="js-room" @touchstart="releaseRoom">
-          <img src="../assets/imgs/img_Room_dissolvetheroom.png" alt="" width= "100%">
+        <div class="js-room">
+          <img src="../assets/imgs/img_Room_dissolvetheroom.png" alt="" width= "100%" 
+          v-if="isMaster || isGameStart" @touchstart="releaseRoom">
+          <img src="../assets/imgs/img_Room_dissolvetheroom.png" alt="" width= "100%" 
+          v-else @touchstart="exitRoom">
         </div>
       </div>
       <div class="intro g-flex">
@@ -124,7 +127,7 @@
     </div>
     <!-- 游戏信息 -->
     <div class="game-info">
-      <div class="room-num">房间号： 11111</div>
+      <div class="room-num">房间号： {{roomId}}</div>
       <div class="geme-type">
         <span>清推</span><span>20局</span><span>50分封顶</span>
       </div>
@@ -136,13 +139,13 @@
         <img :src="item" alt="" height="100%">
       </div>
       <div class="coins">
-          <div v-for="(item, index) in coins" :key="index">
-          <span :class="{'coin0': index === 0,
+          <span v-for="(item, index) in coins" :key="index" :class="{'coin0': index === 0,
           'coin1': index === 1, 'coin2': index === 2, 'coin3': index === 3, 'coin4': index === 4,
           'coin5': index === 5, 'coin6': index === 6, 'coin7': index === 7, 'active': showCoins}" 
-          v-show="showCoins" :key="index"></span>
-            <img :src="item" alt="" width="100%" v-if="showCoins">
-          </div>
+          v-show="showCoins">
+          <img :src="item" alt="" width="100%" v-if="showCoins">
+          </span>
+            
       </div>
     </div>
     <!-- <div style="padding: 60px;">
@@ -152,7 +155,7 @@
     </div>
     <button @click="xzOk">点击</button> -->
     <!-- 邀请好友 -->
-    <div class="yq-friend g-flex-row" @touchstart="invateFriend">
+    <div class="yq-friend g-flex-row" @touchstart="invateFriend" v-show="isMaster">
       <img src="../assets/imgs/img_Room_lnvitefriends.png" alt="" width= "100%">
     </div>
     <!-- 交流 -->
@@ -181,13 +184,13 @@
             </span>
             <div class="select-xz">
               <div class="nums">
-                <span class="num" v-for="(item, index) in lowz" :key="index">
+                <span class="num" v-for="(item, index) in lowz" :key="index" @click="selectCmScore(item.value)">
                   <img :src="item.img" alt="">
                 </span>
               </div>
               <div class="total">
-                <span class="res">20</span>
-                <span class="close">
+                <span class="res">{{cmScore}}</span>
+                <span class="close" @click="deleteCmScore">
                   <img src="../assets/imgs/img_Bet_huishan.png" alt="">
                 </span>
               </div>
@@ -199,13 +202,13 @@
             </span>
             <div class="select-xz">
               <div class="nums">
-                <span class="num" v-for="(item, index) in lowz" :key="index">
+                <span class="num" v-for="(item, index) in lowz" :key="index" @click="selectTmScore(item.value)">
                   <img :src="item.img" alt="">
                 </span>
               </div>
               <div class="total">
-                <span class="res">20</span>
-                <span class="close">
+                <span class="res">{{tmScore}}</span>
+                <span class="close" @click="deleteTmScore">
                   <img src="../assets/imgs/img_Bet_huishan.png" alt="">
                 </span>
               </div>
@@ -217,13 +220,13 @@
             </span>
             <div class="select-xz">
               <div class="nums">
-                <span class="num" v-for="(item, index) in lowz" :key="index">
+                <span class="num" v-for="(item, index) in lowz" :key="index" @click="selectKmScore(item.value)">
                   <img :src="item.img" alt="">
                 </span>
               </div>
               <div class="total">
-                <span class="res">20</span>
-                <span class="close">
+                <span class="res">{{kmScore}}</span>
+                <span class="close" @click="deleteKmScore">
                   <img src="../assets/imgs/img_Bet_huishan.png" alt="">
                 </span>
               </div>
@@ -237,15 +240,78 @@
         </div>
       </div>
     </Modal>
+    <!-- 退出房间弹窗 -->
+    <Modal :showModal="showExitModal"
+    class="exit-modal">
+    <div slot="modal-bg" class="modal-bg">
+      <img src="../assets/imgs/img-Stoppingdoor-background.png" alt=""  width="100%" height="100%">
+    </div>
+      <!-- <div slot="title" class="xz-title title-active">
+         <img src="../assets/imgs/img_Bet_title.png" alt=""  width="100%">
+      </div> -->
+      <div slot="body" class="exit-body">
+      {{exitText}}
+      </div>
+      <div slot="foot" class="exit-foot">
+        <div class="ok exit-btn" @touchstart="exitRoomOk">
+           <img src="../assets/imgs/img-Stoppingdoor-confirm.png" alt=""  width="100%">
+        </div>
+        <div class="cancel exit-btn" @touchstart="exitRoomCancel">
+           <img src="../assets/imgs/img-Stoppingdoor-nostoppingdoor.png" alt=""  width="100%">
+        </div>
+      </div>
+    </Modal>
+    <!-- 游戏未开始房主解散房间弹窗 -->
+    <Modal :showModal="showReleaseWaitModal"
+    class="exit-modal">
+    <div slot="modal-bg" class="modal-bg">
+      <img src="../assets/imgs/img-Stoppingdoor-background.png" alt=""  width="100%" height="100%">
+    </div>
+      <!-- <div slot="title" class="xz-title title-active">
+         <img src="../assets/imgs/img_Bet_title.png" alt=""  width="100%">
+      </div> -->
+      <div slot="body" class="exit-body">
+      {{releaseWaitText}}
+      </div>
+      <div slot="foot" class="exit-foot">
+        <div class="ok exit-btn" @touchstart="releaseWaitOk">
+           <img src="../assets/imgs/img-Stoppingdoor-confirm.png" alt=""  width="100%">
+        </div>
+        <div class="cancel exit-btn" @touchstart="releaseWaitCancel">
+           <img src="../assets/imgs/img-Stoppingdoor-nostoppingdoor.png" alt=""  width="100%">
+        </div>
+      </div>
+    </Modal>
+    <!-- 游戏中解散房间弹窗 -->
+    <Modal :showModal="showReleaseReadyModal"
+    class="exit-modal">
+    <div slot="modal-bg" class="modal-bg">
+      <img src="../assets/imgs/img-Stoppingdoor-background.png" alt=""  width="100%" height="100%">
+    </div>
+      <!-- <div slot="title" class="xz-title title-active">
+         <img src="../assets/imgs/img_Bet_title.png" alt=""  width="100%">
+      </div> -->
+      <div slot="body" class="exit-body">
+      {{releaseReadyText}}
+      </div>
+      <div slot="foot" class="exit-foot">
+        <div class="ok exit-btn" @touchstart="releaseReadyOk">
+           <img src="../assets/imgs/img-Stoppingdoor-confirm.png" alt=""  width="100%">
+        </div>
+        <div class="cancel exit-btn" @touchstart="releaseReadyCancel">
+           <img src="../assets/imgs/img-Stoppingdoor-nostoppingdoor.png" alt=""  width="100%">
+        </div>
+      </div>
+    </Modal>
   </div>
 </template>
 
 <script>
 import tabImgs from './tabImgs'
-import avatar from '../assets/imgs/head_img.jpg'
 import {mapGetters} from 'vuex'
 
 const HEAD_IMG_SIZE = 0
+const MIN_USER = 2
 export default {
   name: 'app',
   data () {
@@ -261,7 +327,7 @@ export default {
       users: [
         {
           name: '小乐',
-          avatar: avatar,
+          avatar: '',
           money: 3000,
           master: true,
           result: 0,
@@ -271,7 +337,7 @@ export default {
         },
         {
           name: '小刚',
-          avatar: avatar,
+          avatar: '',
           money: 3000,
           master: true,
           result: 1,
@@ -281,7 +347,7 @@ export default {
         },
         {
           name: '小王',
-          avatar: avatar,
+          avatar: '',
           money: 3000,
           master: false,
           result: 1,
@@ -291,7 +357,7 @@ export default {
         },
         {
           name: '小李',
-          avatar: avatar,
+          avatar: '',
           money: 3000,
           master: false,
           result: 2,
@@ -301,7 +367,7 @@ export default {
         },
         {
           name: '小张',
-          avatar: avatar,
+          avatar: '',
           money: 3000,
           master: true,
           result: 0,
@@ -334,22 +400,44 @@ export default {
       result: tabImgs.result,
       coins: tabImgs.coins,
       lowz: [{
-        img: tabImgs.lowz[0],
-        selected: false
+        img: tabImgs.lowz[0].img,
+        value: tabImgs.lowz[0].value
       },
       {
-        img: tabImgs.lowz[1],
-        selected: false
+        img: tabImgs.lowz[1].img,
+        value: tabImgs.lowz[1].value
       },
       {
-        img: tabImgs.lowz[2],
-        selected: false
+        img: tabImgs.lowz[2].img,
+        value: tabImgs.lowz[2].value
       },
       {
-        img: tabImgs.lowz[3],
-        selected: false
+        img: tabImgs.lowz[3].img,
+        value: tabImgs.lowz[3].value
       }],
-      showCoins: false
+      showCoins: false,
+      cmScore: 0, // 出门下注分数
+      tmScore: 0, // 天门下注分数
+      kmScore: 0, // 坎门下注分数
+      cmType: 0, // 出门下注类型
+      tmType: 0, // 天门下注类型
+      kmType: 0, // 坎门下注类型
+      roomNum: '', // 房间号
+      roomId: '', // 房间id,
+      userId: '', // 用户id
+      isMaster: false, // 是否是房主
+      isFriends: false, // 是否邀请好友，游戏中至少2个人
+      isOwnerStart: false, // 房主是否点击开始，
+      // isReady: false // 用户是否已经准备就绪,
+      isGameStart: false, // 是否游戏已经开始,
+      disbandType: 0, // 游戏中解散房间类型，解散请求和响应
+      disbandAgree: true, // 游戏中解散是否同意
+      showExitModal: false,
+      exitText: '', // 用户退出提示文字
+      showReleaseWaitModal: false,
+      releaseWaitText: '', // 房主提示文字
+      showReleaseReadyModal: false,
+      releaseReadyText: '' // 游戏中解散房间提示文字
     }
   },
   props: {
@@ -359,7 +447,9 @@ export default {
     }
   },
   computed: mapGetters({
-    ds: 'listenGameUser'
+    ds: 'listenGameUser',
+    roomMsg: 'listenRoomMsg',
+    curUser: 'listenUser'
   }),
   watch: {
     dj (val) {
@@ -378,41 +468,324 @@ export default {
     //   },
     //   deep: true
     // },
+    curUser (val) {
+      this.userId = val.openid
+    },
     ds (val) {
-      console.log('啊公司嘎嘎嘎嘎嘎')
       this.users = []
       val.forEach((item) => {
         if (item instanceof Object) {
           item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
           this.users.push(item)
+          let obj = {}
+          for (let key in item) {
+            obj[key] = item[key]
+          }
+          obj.nickname = 'Tom'
+          obj.userId = '99000'
+          this.users.push(obj)
+          this.users.push(obj)
+          this.users.push(obj)
+          this.users.push(obj)
         }
       })
+      // 获取当前设置对应信息
+      // roomId、userId
+      // 判断游戏中用户人数是否至少为2人
+      if (this.users >= MIN_USER) {
+        this.isFriends = true
+      }
+    },
+    roomMsg (val) {
+      this.roomId = val.roomId
+      this.roomNum = val.numId
+      // 房间创建者可以邀请好友
+      this.isMaster = true
     }
   },
   created () {
     this.showDj = this.dj
     this.users = this.ds
+    // 注册交互事件
+    this.registerFn()
   },
   methods: {
-    isQz () {
-      this.qz = !this.qz
+    registerFn () {
+      let vm = this
+      // 获取加入游戏的用户列表
+      this.$JsBridge.registerHandler('updateUsers', function (data, responseCallback) {
+        // 将原生带来的参数，显示在show标签位置
+        vm.users = vm.$hds.handler(data)
+        if (!vm.isOwnerStart) {
+          // 房主点击开始游戏
+          vm.isOwnerStart = true
+        } else {
+          // 其他玩家点击准备按钮,判断是否都已经准备就绪
+          if (vm.isAllUserReady(vm.users)) {
+            vm.isOwnerStart = false
+            // 禁止抢庄
+            vm.isGameStart = true
+            // 开始发牌
+          }
+        }
+        // 调用responseCallback方法可以带传参数到原生
+        responseCallback('')
+      })
+      // 游戏未开始解散房间
+      this.$JsBridge.registerHandler('releaseWait', function (data, responseCallback) {
+        // 将原生带来的参数，显示在show标签位置
+        vm.users = vm.$hds.handler(data)
+        vm.showDj = false
+        vm.$emit('on-close', vm.showDj)
+        // 调用responseCallback方法可以带传参数到原生
+        responseCallback('')
+      })
+      // 游戏中解散房间
+      this.$JsBridge.registerHandler('releaseReady', function (data, responseCallback) {
+        // 将原生带来的参数，显示在show标签位置
+        vm.users = vm.$hds.handler(data)
+        vm.disbandType = 2
+        vm.releaseReadyText = '有用户在解散房间，您是否同意？'
+        vm.showReleaseReadyModal = true
+        // 调用responseCallback方法可以带传参数到原生
+        responseCallback('')
+      })
+      // 投注后更新结果
+      this.$JsBridge.registerHandler('updateResult', function (data, responseCallback) {
+        // 将原生带来的参数，显示在show标签位置
+        vm.users = vm.$hds.handler(data)
+        // 调用responseCallback方法可以带传参数到原生
+        responseCallback('')
+      })
     },
+    isAllUserReady (users) {
+      for (let i = 0, len = users.length; i < len; i++) {
+        if (Boolean(users[i].ready) === false) {
+          // 有用户未准备就绪
+          return false
+        }
+      }
+      return true
+    },
+    // 抢庄
+    isQz () {
+      // 若是都准备就绪，禁止抢庄
+      if (this.isGameStart) {
+        return false
+      }
+      this.qz = !this.qz
+      let params = {
+        roomId: this.roomId,
+        userId: this.userId,
+        takeBanker: this.qz
+      }
+      // let vm = this
+      this.$JsBridge.callHandler(
+        'qianZuan' // 原生的方法名
+        , {'param': window.JSON.stringify(params)} // 带个原生方法的参数
+        , function (responseData) { // 响应原生回调方法
+          // if (Number(window.JSON.parse(responseData)) === 200) {
+          //   vm.$router.push({path: router, params: {}})
+          // }
+          //
+        }
+      )
+    },
+    // 设置
     setting () {
       this.$refs.setting.openSetModal()
     },
+    // 退出房间
+    exitRoom () {
+     // this.$router.push({path: '/', query: {'id': ''}})
+      this.exitText = '您确定要退出房间吗？'
+      this.showExitModal = true
+    },
+    exitRoomCancel () {
+      this.showExitModal = false
+    },
+    // 确定退出房间
+    exitRoomOk () {
+      let params = {
+        userId: this.userId,
+        roomId: this.roomId
+      }
+      let vm = this
+      this.$JsBridge.callHandler(
+        'exitRoom' // 原生的方法名
+        , {'param': window.JSON.stringify(params)} // 带个原生方法的参数
+        , function (responseData) { // 响应原生回调方法
+          // if (Number(window.JSON.parse(responseData)) === 200) {
+          //   vm.$router.push({path: router, params: {}})
+          // }
+          //
+          vm.showExitModal = false
+          vm.showDj = false
+          vm.$emit('on-close', vm.showDj)
+        }
+      )
+    },
+    // 解散房间
     releaseRoom () {
      // this.$router.push({path: '/', query: {'id': ''}})
-      this.showDj = false
-      this.$emit('on-close', this.showDj)
+      if (this.isGameStart) {
+        // 游戏中解散房间
+        this.releaseReadyModal()
+      } else {
+        // 游戏还没开始解散房间
+        this.releaseWaitModal()
+      }
     },
+    releaseWaitModal () {
+      this.releaseWaitText = '您确定要解散当前房间吗？'
+      this.showReleaseWaitModal = true
+    },
+    releaseWaitCancel () {
+      this.showReleaseWaitModal = false
+    },
+    // 游戏还没开始解散房间
+    releaseWaitOk () {
+      let params = {
+        userId: this.userId,
+        roomId: this.roomId
+      }
+      let vm = this
+      this.$JsBridge.callHandler(
+        'releaseWait' // 原生的方法名
+        , {'param': window.JSON.stringify(params)} // 带个原生方法的参数
+        , function (responseData) { // 响应原生回调方法
+          // if (Number(window.JSON.parse(responseData)) === 200) {
+          //   vm.$router.push({path: router, params: {}})
+          // }
+          //
+          vm.showReleaseWaitModal = true
+          vm.showDj = false
+          vm.$emit('on-close', vm.showDj)
+        }
+      )
+    },
+    releaseReadyModal () {
+      this.disbandType = 1
+      this.releaseReadyText = '游戏正在进行中，您确定要解散当前房间吗？'
+      this.showReleaseReadyModal = true
+    },
+    releaseReadyCancel () {
+      this.showReleaseReadyModal = false
+    },
+    // 游戏进行中解散房间
+    releaseReadyOk () {
+      let params = {
+        userId: this.userId,
+        roomId: this.roomId,
+        disbandType: this.disbandType,
+        agree: this.disbandAgree
+      }
+      let vm = this
+      this.$JsBridge.callHandler(
+        'releaseReady' // 原生的方法名
+        , {'param': window.JSON.stringify(params)} // 带个原生方法的参数
+        , function (responseData) { // 响应原生回调方法
+          // if (Number(window.JSON.parse(responseData)) === 200) {
+          //   vm.$router.push({path: router, params: {}})
+          // }
+          //
+          vm.showReleaseReadyModal = true
+          vm.showDj = false
+          vm.$emit('on-close', vm.showDj)
+        }
+      )
+    },
+    // 关闭设置弹窗
     closeSetModal () {
       this.showSetModal = false
     },
+    // 出门投注分数
+    selectCmScore (val) {
+      this.cmType = 1
+      this.cmScore += val
+      if (this.cmScore >= 50) {
+        this.cmScore = 50
+      }
+      console.log(this.cmScore)
+    },
+    // 删除出门投注分数
+    deleteCmScore () {
+      this.cmType = 0
+      this.cmScore = 0
+    },
+    // 天门投注分数
+    selectTmScore (val) {
+      this.tmType = 2
+      this.tmScore += val
+      if (this.tmScore >= 50) {
+        this.tmScore = 50
+      }
+      console.log(this.tmScore)
+    },
+    // 删除天门投注分数
+    deleteTmScore () {
+      this.tmType = 0
+      this.tmScore = 0
+    },
+    // 投注坎门
+    selectKmScore (val) {
+      this.kmType = 3
+      this.kmScore += val
+      if (this.kmScore >= 50) {
+        this.kmScore = 50
+      }
+      console.log(this.kmScore)
+    },
+    // 删除坎门投注分数
+    deleteKmScore () {
+      this.kmType = 0
+      this.kmScore = 0
+    },
+    // 确定下注
     xzOk () {
+      let userDoorVOList = []
+      if (this.cmScore) {
+        userDoorVOList.push({
+          doorNum: this.cmType,
+          score: this.cmScore
+        })
+      }
+      if (this.tmScore) {
+        userDoorVOList.push({
+          doorNum: this.tmType,
+          score: this.tmScore
+        })
+      }
+      if (this.kmScore) {
+        userDoorVOList.push({
+          doorNum: this.kmType,
+          score: this.kmScore
+        })
+      }
+      let params = {
+        userId: this.userId,
+        roomId: this.roomId,
+        userDoorVOList: userDoorVOList
+      }
+      console.log(params)
+      // let vm = this
+      this.$JsBridge.callHandler(
+        'xiazu' // 原生的方法名
+        , {'param': window.JSON.stringify(params)} // 带个原生方法的参数
+        , function (responseData) { // 响应原生回调方法
+          // if (Number(window.JSON.parse(responseData)) === 200) {
+          //   vm.$router.push({path: router, params: {}})
+          // }
+          //
+        }
+      )
+      // 后期需要注释
       this.showXzModal = false
       this.showCoins = true
     },
+    // 邀请好友
     invateFriend () {
+      // roomMsg(房间信息)
       // let vm = this
       this.$JsBridge.callHandler(
         'invateFriend' // 原生的方法名
@@ -421,6 +794,67 @@ export default {
           // if (Number(window.JSON.parse(responseData)) === 200) {
           //   vm.$router.push({path: router, params: {}})
           // }
+          //
+        }
+      )
+    },
+    // 开始游戏
+    startGame () {
+      let params = {
+        roomId: this.roomId,
+        userId: this.userId,
+        ready: true
+      }
+      // let vm = this
+      this.$JsBridge.callHandler(
+        'startGame' // 原生的方法名
+        , {'param': window.JSON.stringify(params)} // 带个原生方法的参数
+        , function (responseData) { // 响应原生回调方法
+          // if (Number(window.JSON.parse(responseData)) === 200) {
+          //   vm.$router.push({path: router, params: {}})
+          // }
+          //
+        }
+      )
+    },
+    // 开始准备
+    startReady () {
+      let params = {
+        roomId: this.roomId,
+        userId: this.userId,
+        ready: true
+      }
+      // let vm = this
+      this.$JsBridge.callHandler(
+        'startReady' // 原生的方法名
+        , {'param': window.JSON.stringify(params)} // 带个原生方法的参数
+        , function (responseData) { // 响应原生回调方法
+          // if (Number(window.JSON.parse(responseData)) === 200) {
+          //   vm.$router.push({path: router, params: {}})
+          // }
+          //
+        }
+      )
+    },
+    // 游戏结束后统计
+    gameOver () {
+      let vm = this
+      let params = {
+        roomId: this.roomId
+      }
+      let ajaxParams = window.JSON.stringify({
+        host: this.$url,
+        path: this.$interface['/gameover/statistics'],
+        params: this.$sign({params})
+      })
+      // 调用android原生内部方法
+      this.$JsBridge.callHandler(
+        'gameOver' // 原生的方法名
+        , {'param': ajaxParams} // 带个原生方法的参数
+        , function (responseData) { // 响应原生回调方法
+          let data = window.JSON.parse(responseData)
+          vm.publics = data.model
+          vm.$store.dispatch('newsAjax', data)
         }
       )
     }
@@ -784,60 +1218,61 @@ export default {
         position: absolute;
         display: block;
         width: 70px;
-        height: 70px;
+        height: 56px;
+        border-radius: 50%;
       }
       .coin0{
         left: 160px;
-        box-shadow: 5px 5px 15px 2px #999;
+        box-shadow: 5px 5px 15px 2px #333;
       }
       .coin0.active{
         animation: coinMove0 0.1s linear forwards;
       }
       .coin1{
         left: 30px;
-        box-shadow: 5px 5px 15px 2px #999;
+        box-shadow: 5px 5px 15px 2px #333;
       }
       .coin1.active{
         animation: coinMove1 0.1s linear forwards;
       }
       .coin2{
         left: 70px;
-        box-shadow: 5px 5px 15px 2px #999;
+        box-shadow: 5px 5px 15px 2px #333;
       }
       .coin2.active{
         animation: coinMove2 0.1s linear forwards;
       }
       .coin3{
         left: 120px;
-        box-shadow: 5px 5px 15px 2px #999;
+        box-shadow: 5px 5px 15px 2px #333;
       }
       .coin3.active{
        animation: coinMove3 0.1s linear forwards;
       }
       .coin4{
         left: 140px;
-        box-shadow: 5px 5px 15px 2px #999;
+        box-shadow: 5px 5px 15px 2px #333;
       }
       .coin4.active{
         animation: coinMove4 0.2s linear forwards;
       }
       .coin5{
        left: 50px;
-       box-shadow: 5px 5px 15px 2px #999;
+       box-shadow: 5px 5px 15px 2px #333;
       }
       .coin5.active{
         animation: coinMove5 0.1s linear forwards;
       }
       .coin6{
         left: 20px;
-        box-shadow: 5px 5px 15px 2px #999;
+        box-shadow: 5px 5px 15px 2px #333;
       }
       .coin6.active{
        animation: coinMove6 0.1s linear forwards;
       }
       .coin7{
         left: 180px;
-        box-shadow: 5px 5px 15px 2px #999;
+        box-shadow: 5px 5px 15px 2px #333;
       }
       .coin7.active{
        animation: coinMove7 0.2s linear forwards;
@@ -962,11 +1397,27 @@ export default {
     }
   }
 }
+.exit-modal{
+  .exit-body{
+    padding: 86px 0;
+    color: #fff;
+    font-size: 48px;
+  }
+  .exit-foot{
+     display: flex;
+     flex-direction: row;
+     padding: 0 10%;
+     justify-content: space-between;
+    .exit-btn{
+      flex: 0 0 32%;
+    }
+  }
+}
 /**动画**/
 
 @keyframes coinMove0 {
   0% {
-    top: 10px;
+    top: -50px;
     opacity: 0;
   }
   60% {
@@ -985,7 +1436,7 @@ export default {
 
 @keyframes coinMove1 {
   0% {
-    top: 50px;
+    top: -10px;
     opacity: 0.5;
   }
   60% {
@@ -1003,7 +1454,7 @@ export default {
 }
 @keyframes coinMove2 {
   0% {
-    top: 50px;
+    top: -10px;
     opacity: 0.5;
   }
   60% {
@@ -1021,7 +1472,7 @@ export default {
 }
 @keyframes coinMove3 {
   0% {
-    top: 60px;
+    top: 0px;
     opacity: 0.5;
   }
   60% {
@@ -1039,7 +1490,7 @@ export default {
 }
 @keyframes coinMove4 {
   0% {
-    top: 10px;
+    top: -50px;
     opacity: 0.5;
   }
   60% {
@@ -1057,7 +1508,7 @@ export default {
 }
 @keyframes coinMove5 {
   0% {
-    top: 60px;
+    top: 0px;
     opacity: 0.5;
   }
   60% {
@@ -1075,7 +1526,7 @@ export default {
 }
 @keyframes coinMove6 {
   0% {
-    top: 50px;
+    top: -10px;
     opacity: 0.5;
   }
   60% {
@@ -1093,7 +1544,7 @@ export default {
 }
 @keyframes coinMove7 {
   0% {
-    top: 30px;
+    top: -30px;
     opacity: 0.5;
   }
   60% {

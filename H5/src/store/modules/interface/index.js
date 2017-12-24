@@ -10,7 +10,7 @@ const state = {
   qtRules: [], // 清推规则
   htRules: [], // 混推规则
   djRules: [], // 大九规则
-  ids: {}, // 房间号和用户id
+  roomMsg: '', // 房间号等创建信息
   gameUsers: [] // 游戏中所有用户信息
 }
 
@@ -39,8 +39,8 @@ const mutations = {
   [types.DJ_RULE] (state, { data }) {
     state.djRules = data
   },
-  [types.SAVE_ID] (state, { data }) {
-    state.ids = data
+  [types.SAVE_ROOM_MSG] (state, { data }) {
+    state.roomMsg = data
   },
   [types.GAME_USERS] (state, { data }) {
     state.gameUsers = data
@@ -93,9 +93,9 @@ const actions = {
    // }, params)
   },
   // 保存房间号和用户id
-  saveId ({ commit }, data) {
+  saveCreateMsg ({ commit }, data) {
     // api.djRuleAjax(data => {
-    commit(types.SAVE_ID, { data })
+    commit(types.SAVE_ROOM_MSG, { data })
     // }, params)
   },
   // 创建房间
@@ -121,7 +121,7 @@ const getters = {
   listenQtRule: state => state.qtRules,
   listenHtRule: state => state.htRules,
   listenDjRule: state => state.djRules,
-  listenIds: state => state.ids,
+  listenRoomMsg: state => state.roomMsg,
   listenGameUser: state => state.gameUsers
 }
 

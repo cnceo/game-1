@@ -200,6 +200,11 @@
         </div>
       </div>
     </Modal>
+
+    <!-- 提示弹窗 -->
+    <div class="tip-modal" :class="{'active': showTip}" v-show="showTip">
+      {{tipMsg}}
+    </div>
     <!-- 大九 -->
     <dj-game :dj="showDj" @on-close="closeDj"></dj-game>
     <!-- 清推 -->
@@ -232,6 +237,8 @@ export default {
       showDj: false,
       showQt: false,
       showHt: false,
+      showTip: false,
+      tipMsg: '房卡不在',
       tabs: [
         {
           img: tabImgs.hoverImgs[0],
@@ -291,7 +298,7 @@ export default {
       ds3_1: [],
       ds3_2: [],
       nums: tabImgs.nums,
-      roomNums: ['', '', '', ''],
+      roomNums: ['', '', '', '', '', ''],
       numIndex: 0,
       createRoomTabs: [],
       selectRoom: 0,
@@ -317,8 +324,9 @@ export default {
       },
       selectTypes: 0,
       dtMsg: '',
-      userId: '',
-      roomId: '',
+      userId: '', // 用户id
+      numId: '', // 房间号，用于微信分享和邀请好友
+      roomId: '', // 房间id
       router: ''
     }
   },
@@ -352,6 +360,8 @@ export default {
     this.handleArray([this.gameTabs, this.createRoomTabs], this.tabs)
     this.handleArray([this.ds1_1, this.ds2_1, this.ds3_1], this.ds1)
     this.handleArray([this.ds1_2, this.ds2_2, this.ds3_2], this.ds2)
+    // 注册交互时间
+    this.registerFn()
   },
   mounted () {
     let vm = this
@@ -436,6 +446,18 @@ export default {
     }
   },
   methods: {
+    registerFn () {
+      let vm = this
+      // 获取加入游戏的用户列表
+      this.$JsBridge.registerHandler('updateRoom', function (data, responseCallback) {
+        // 将原生带来的参数，显示在show标签位置
+        let datas = vm.$hds.handler(data)
+        vm.$store.dispatch('saveUsers', datas)
+        var responseData = '用户列表：' + window.JSON.stringify(vm.userInfo)
+        // 调用responseCallback方法可以带传参数到原生
+        responseCallback(responseData)
+      })
+    },
     handleArray (arr, data) {
       arr.forEach((item, index) => {
         data.forEach((its, i) => {
@@ -648,11 +670,45 @@ export default {
           if (Number(data.code) === 200) {
             vm.userId = data.model.createUserId
             vm.roomId = data.model.id
-            vm.$store.dispatch('saveId', {
-              userId: vm.userId,
-              roomId: vm.roomId
-            })
+            if (vm.userInfo.roomNum) {
+              vm.userId = data.model.createUserId
+              vm.roomId = data.model.id
+              // 创建房间房主才有邀请好友，保存房间号用于微信好友邀请
+             // vm.numId = data.model.numId
+              vm.$store.dispatch('saveCreateMsg', {
+                roomId: data.model.id,
+                numId: data.model.numId,
+                baseScore: data.model.baseScore,
+                baseRound: data.model.baseRound
+              })
+              // 是否是代开房间
+              if (!selectData.substitute) {
+                // 进入房间
+                vm.enterRoom()
+              }
+            } else {
+              // 提示房卡不足
+              vm.showTip = true
+              vm.tipMsg = '房卡不足'
+              setTimeout(() => {
+                vm.showTip = false
+              }, 1000)
+            }
+            // userInfo.roomNum房卡数
+            // vm.$store.dispatch('saveId', {
+            //   userId: vm.userId,
+            //   roomId: vm.roomId
+            // })// vm.$store.dispatch('saveId', {
+            //   userId: vm.userId,
+            //   roomId: vm.roomId
+            // })
            // vm.$router.push({path: vm.router, params: {userId: vm.userId, roomId: vm.roomId}})
+          } else {
+            vm.showTip = true
+            vm.tipMsg = '创建房间失败'
+            setTimeout(() => {
+              vm.showTip = false
+            }, 1000)
           }
         }
       )
@@ -695,57 +751,42 @@ export default {
       this.numIndex++
       // 进入房间
       if (this.numIndex === MAX_ROOM_NUM) {
-        this.showJoinRoom = false
-        this.showDj = true
-        let ajaxParams = window.JSON.stringify({
-          host: this.$url,
-          path: this.$interface['/app'],
-          params: {
-            command: 1001,
-            data: {'roomId': this.roomId, 'userId': this.userId}
-          }
-        })
-        let vm = this
-        this.$JsBridge.callHandler(
-          'joinRooms' // 原生的方法名
-          , {'param': ajaxParams} // 带个原生方法的参数
-          , function (responseData) { // 响应原生回调方法
-          //   console.log('hahahahaahahaha ')
-          //   var reg = /{(.*)}/g
-          //   var arr = []
-          //   var obj = {}
-          //   var users = []
-          //   responseData.replace(reg, function (match, contents) {
-          //     arr = contents.split(',')
-          //   })
-          //   console.log(arr[0])
-          //   arr.forEach((item) => {
-          //     var its = item.trim().split('=')
-          //     obj[its[0]] = its[1]
-          //   })
-          // //  console.log(Object.keys(obj))
-          //   users[0] = obj
-          //   vm.showJoinRoom = false
-          //   users.forEach((item) => {
-          //     for (let key in item) {
-          //       console.log(key + '对应的是：' + item[key])
-          //     }
-          //   })
-            let data = vm.$hds.handler(responseData)
-            vm.$store.dispatch('saveUsers', data)
-            if (vm.selectTypes === 0) {
-              // vm.$router.push({path: '/qt', params: {}})
-              vm.showQt = true
-            } else if (vm.selectTypes === 1) {
-              // vm.$router.push({path: '/ht', params: {}})
-              vm.showHt = true
-            } else {
-              // vm.$router.push({path: '/dj', params: {}})
-              vm.showDj = true
-            }
-          }
-        )
+        this.enterRoom()
       }
+    },
+    enterRoom () {
+      // 后期需要注释
+      // this.showJoinRoom = false
+      // this.showDj = true
+      let ajaxParams = window.JSON.stringify({
+        host: this.$url,
+        path: this.$interface['/app'],
+        params: {
+          command: 1001,
+          data: {'roomId': this.roomId, 'userId': this.userId}
+        }
+      })
+      let vm = this
+      this.$JsBridge.callHandler(
+        'joinRoom' // 原生的方法名
+        , {'param': ajaxParams} // 带个原生方法的参数
+        , function (responseData) { // 响应原生回调方法
+          let data = vm.$hds.handler(responseData)
+          vm.$store.dispatch('saveUsers', data)
+          vm.showJoinRoom = false
+          // this.showDj = true
+          if (vm.selectTypes === 0) {
+            // vm.$router.push({path: '/qt', params: {}})
+            vm.showQt = true
+          } else if (vm.selectTypes === 1) {
+            // vm.$router.push({path: '/ht', params: {}})
+            vm.showHt = true
+          } else {
+            // vm.$router.push({path: '/dj', params: {}})
+            vm.showDj = true
+          }
+        }
+      )
     },
     // 加入房间弹窗数字处理(包括重输和删除功能)
     handleSelect (index) {
@@ -787,6 +828,20 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
+.tip-modal{
+  position: fixed;
+  top: -100px;
+  left: 50%;
+  padding: 5px 20px;
+  color: #fff;
+  background: red;
+  border-radius: 10px;
+  transform: translateX(-50%);
+}
+.tip-modal.active{
+  top: 10px;
+  transition: top 5s linear;
+}
 .g-flex-column{
   display: flex;
   flex-direction: column;
@@ -1026,24 +1081,22 @@ export default {
           display: flex;
           flex-direction: row;
           width: 100%;
-          margin: 0 14%;
           height: 64px;
           font-size: 0;
           .num-item{
             display: inline-block;
-            flex: 0 0 24%;
-            width: 24%;
+            flex: 0 0 16.5%;
+            width: 16.5%;
             height: 68px;
             line-height: 68px;
             text-align: center;
             font-size: 52px;
             color: #fff;
           }
-          .num-item:first-child{
-            flex: 0 0 23%;
-            width: 23%;
-            margin-left: 15px;
-          }
+          // .num-item:first-child{
+          //   flex: 0 0 16%;
+          //   width: 16%;
+          // }
         }
       }
       .select-num{

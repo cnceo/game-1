@@ -88,7 +88,21 @@ const tabsImgs = {
   tbg: [cbg, tbg, kbg],
   result: [win, lose, tie],
   coins: [five, one, ten, five, ten, one, five, one],
-  lowz: [tone, tfive, tten, tmax]
+  lowz: [{
+    img: tone,
+    value: 1
+  },
+  {
+    img: tfive,
+    value: 5
+  },
+  {
+    img: tten,
+    value: 10
+  }, {
+    img: tmax,
+    value: 20
+  }]
 }
 
 export default tabsImgs
