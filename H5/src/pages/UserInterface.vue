@@ -763,10 +763,6 @@ export default {
       this.numIndex++
       // 进入房间
       if (this.numIndex === MAX_ROOM_NUM) {
-        this.roomNums.forEach((item, index) => {
-          this.$set(this.roomNums, index, '')
-        })
-        this.numIndex = 0
         this.enterRoom()
       }
     },
@@ -787,9 +783,13 @@ export default {
         'joinRoom' // 原生的方法名
         , {'param': ajaxParams} // 带个原生方法的参数
         , function (responseData) { // 响应原生回调方法
+          this.roomNums.forEach((item, index) => {
+            this.$set(this.roomNums, index, '')
+          })
+          this.numIndex = 0
+          vm.showJoinRoom = false
           let data = vm.$hds.handler(responseData)
           vm.$store.dispatch('saveUsers', data)
-          vm.showJoinRoom = false
           // this.showDj = true
           if (vm.selectTypes === 0) {
             // vm.$router.push({path: '/qt', params: {}})
