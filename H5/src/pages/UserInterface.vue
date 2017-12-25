@@ -263,12 +263,12 @@ export default {
         {
           img: tabImgs.tables[0],
           select: true,
-          value: 10
+          value: 30
         },
         {
           img: tabImgs.tables[1],
           select: false,
-          value: 30
+          value: 60
         }
       ],
       ds2: [
