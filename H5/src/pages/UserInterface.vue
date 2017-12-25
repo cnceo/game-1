@@ -719,6 +719,7 @@ export default {
             // vm.userId = data.model.createUserId
             // vm.roomId = data.model.id
             vm.roomId = data.model.id
+            vm.numId = data.model.numId
           //  if (vm.userInfo.roomNum) {
               // vm.userId = data.model.createUserId
               // vm.roomId = data.model.id
@@ -805,7 +806,7 @@ export default {
     startEnterRoom () {
       let params = {
         userId: this.userInfo.id,
-        roomNumId: this.roomId
+        roomNumId: this.numId
       }
       let ajaxParams = window.JSON.stringify({
         host: this.$url,
