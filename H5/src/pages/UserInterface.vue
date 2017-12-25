@@ -482,7 +482,6 @@ export default {
     },
     // 新闻消息弹窗
     message (e) {
-      e.preventDefault()
       this.$audio.play(this.$audio.ui)
       this.showMsgModal = true
       let vm = this
@@ -508,23 +507,15 @@ export default {
     },
     // 规则弹窗
     help (e) {
-      e.preventDefault()
       this.$audio.play(this.$audio.ui)
       this.showRuleModal = true
+      this.qtAjax()
+    },
+    qtAjax () {
       let vm = this
       let ajaxParams1 = window.JSON.stringify({
         host: this.$url,
         path: this.$interface['/get/rule/qingtui'],
-        params: this.$sign({})
-      })
-      let ajaxParams2 = window.JSON.stringify({
-        host: this.$url,
-        path: this.$interface['/get/rule/huntui'],
-        params: this.$sign({})
-      })
-      let ajaxParams3 = window.JSON.stringify({
-        host: this.$url,
-        path: this.$interface['/get/rule/dajiu'],
         params: this.$sign({})
       })
       if (!this.qtRules) {
@@ -539,6 +530,14 @@ export default {
           }
         )
       }
+    },
+    htAjax () {
+      let vm = this
+      let ajaxParams2 = window.JSON.stringify({
+        host: this.$url,
+        path: this.$interface['/get/rule/huntui'],
+        params: this.$sign({})
+      })
       if (!this.htRules) {
         this.$JsBridge.callHandler(
           'getHtMsg' // 原生的方法名
@@ -550,6 +549,14 @@ export default {
           }
         )
       }
+    },
+    djAjax () {
+      let vm = this
+      let ajaxParams3 = window.JSON.stringify({
+        host: this.$url,
+        path: this.$interface['/get/rule/dajiu'],
+        params: this.$sign({})
+      })
       if (!this.djRules) {
         this.$JsBridge.callHandler(
           'getDjMsg' // 原生的方法名
@@ -564,13 +571,19 @@ export default {
     },
     // 规则（清推、混推、大九）
     changeGame (index, e) {
-      e.preventDefault()
       this.$audio.play(this.$audio.ui)
       this.gameTabs.forEach((item, ids) => {
         if (ids === index) {
           item.img = tabImgs.hoverImgs[ids]
         } else {
           item.img = tabImgs.imgs[ids]
+        }
+        if (index === 0) {
+          this.qtAjax()
+        } else if (index === 1) {
+          this.htAjax()
+        } else if (index === 2) {
+          this.djAjax()
         }
       })
       this.selectGame = index
@@ -581,20 +594,17 @@ export default {
     },
     // 设置弹窗
     setting (e) {
-      e.preventDefault()
       this.$audio.play(this.$audio.ui)
       this.$refs.setting.openSetModal()
     },
     // 创建房间弹窗
     createRoom (e) {
-      e.preventDefault()
       this.$audio.play(this.$audio.btn)
       this.showCreateRoom = true
      // this.createRoomData.substitute = false
     },
     // 创建房间类型切换（清推、混推、大九）
     changeRoom (index, e) {
-      e.preventDefault()
       this.$audio.play(this.$audio.ui)
       this.createRoomTabs.forEach((item, ids) => {
         if (ids === index) {
@@ -639,7 +649,6 @@ export default {
     },
     // 创建房间
     createGameRoom (e) {
-      e.preventDefault()
       this.$audio.play(this.$audio.btn)
       let selectData = {}
       let type = null
@@ -727,7 +736,6 @@ export default {
     },
     // 是否代开房间
     invoiceGameRoom (e) {
-      e.preventDefault()
       this.$audio.play(this.$audio.btn)
       if (this.selectTypes === 0) {
         this.createRoomData1.substitute = true
@@ -743,13 +751,11 @@ export default {
     },
     // 加入房间弹窗
     joinRoom (e) {
-      e.preventDefault()
       this.$audio.play(this.$audio.btn)
       this.showJoinRoom = true
     },
     // 加入房间选择数字
     selectNum (item, index, e) {
-      e.preventDefault()
       this.$audio.play(this.$audio.ui)
       if (typeof item === 'string') {
         this.handleSelect(index)
