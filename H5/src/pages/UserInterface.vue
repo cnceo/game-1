@@ -855,10 +855,10 @@ export default {
         , {'param': ajaxParams} // 带个原生方法的参数
         , function (responseData) { // 响应原生回调方法
           console.log('加入房间socket成功')
-          this.roomNums.forEach((item, index) => {
-            this.$set(this.roomNums, index, '')
+          vm.roomNums.forEach((item, index) => {
+            vm.$set(vm.roomNums, index, '')
           })
-          this.numIndex = 0
+          vm.numIndex = 0
           vm.showJoinRoom = false
           let data = vm.$hds.handler(responseData)
           vm.$store.dispatch('saveUsers', data)

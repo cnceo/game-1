@@ -579,39 +579,39 @@ export default {
         console.log('游戏中用户列表更新了')
         console.log(data)
         // 将原生带来的参数，显示在show标签位置
-        vm.users = []
+        // vm.users = []
         let arr = []
-        let val = []
-        val = vm.$hds.handler(data)
-        val.forEach((item) => {
-          if (item instanceof Object) {
-            item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
-            item.ready = 'false'
-            let obj = {}
-            let objs = {}
-            for (let key in item) {
-              obj[key] = item[key]
-            }
-            for (let key in item) {
-              objs[key] = item[key]
-            }
-            obj.nickname = 'Tom'
-            obj.userId = '99000'
-            obj.roomOwner = 'false'
-            obj.takeBanker = 'false'
-            obj.ready = 'true'
-            objs.nickname = 'Tom'
-            objs.userId = '99000'
-            objs.roomOwner = 'false'
-            objs.takeBanker = 'false'
-            objs.ready = 'true'
-            arr.push(obj)
-            arr.push(obj)
-            arr.push(item)
-            arr.push(objs)
-            arr.push(obj)
-          }
-        })
+        // let val = []
+        arr = vm.$hds.handler(data)
+        // val.forEach((item) => {
+        //   if (item instanceof Object) {
+        //     item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
+        //     item.ready = 'false'
+        //     let obj = {}
+        //     let objs = {}
+        //     for (let key in item) {
+        //       obj[key] = item[key]
+        //     }
+        //     for (let key in item) {
+        //       objs[key] = item[key]
+        //     }
+        //     obj.nickname = 'Tom'
+        //     obj.userId = '99000'
+        //     obj.roomOwner = 'false'
+        //     obj.takeBanker = 'false'
+        //     obj.ready = 'true'
+        //     objs.nickname = 'Tom'
+        //     objs.userId = '99000'
+        //     objs.roomOwner = 'false'
+        //     objs.takeBanker = 'false'
+        //     objs.ready = 'true'
+        //     arr.push(obj)
+        //     arr.push(obj)
+        //     arr.push(item)
+        //     arr.push(objs)
+        //     arr.push(obj)
+        //   }
+        // })
         // 如果人数最少2人，即可开始游戏
         if (arr < MIN_USER) {
           console.log('aaaaaaaaaaaaaaaaaaaa')
@@ -624,8 +624,10 @@ export default {
                 // 房间创建者可以邀请好友
                 vm.isMaster = true
               }
+              item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
               vm.users.unshift(item)
             } else {
+              item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
               vm.users.push(item)
             }
           })
@@ -658,7 +660,7 @@ export default {
               console.log('eeeeee')
               vm.isFriends = true
             }
-            vm.playCards()
+           // vm.playCards()
             // 其他玩家点击准备按钮,判断是否都已经准备就绪
             console.log('ddddddddddddddddddddddd')
             if (vm.isAllUserReady(vm.users)) {
@@ -669,7 +671,7 @@ export default {
               // 禁止抢庄
               vm.isGameStart = true
               // 开始发牌
-             // vm.playCards()
+              vm.playCards()
             }
           }
         }
