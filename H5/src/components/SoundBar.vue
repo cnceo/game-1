@@ -3,8 +3,8 @@
     @click="setVoice($event)" ref="soundbox">
       <div class="cur-box" ref="cur" name="bar" @touchstart="setVoice($event)">
         <div class="bar-dot" name="dot" draggable="true" style="width: 40px;" 
-      @touchmove="moveDot($event)" ref="soundbar">
-        <img src="../assets/imgs/img_Setuphualun.png" alt="" width="100%" height="100%">
+      @touchstart="startMove($event)" @touchmove="moveDot($event)" ref="soundbar">
+        <!-- <img src="../assets/imgs/img_Setuphualun.png" alt="" width="100%" height="100%"> -->
       </div>
       </div>
     </div>
@@ -67,7 +67,11 @@ export default {
       let site = event.offsetX
       this.calcVolume(site)
     },
+    startMove (event) {
+    //  event.preventDefault()
+    },
     moveDot (event) {
+    //  event.preventDefault()
       if (event.target.getAttribute('name') !== 'dot') {
         return false
       }
@@ -91,16 +95,19 @@ export default {
     },
     calcVolume (site) {
       let [dotElem, barWidth, dotWidth] = this.initSound()
-      this.$refs.cur.style.width = site + 'px'
+     // this.$refs.cur.style.width = site + 'px'
       // 进度条对应显示
       if (site <= (dotWidth)) {
        // return
         dotElem.style.left = '0px'
-      } else if (site >= (barWidth - (dotWidth))) {
+        this.$refs.cur.style.width = '0px'
+      } else if (site >= (barWidth - (dotWidth) - 30)) {
        // return
-        dotElem.style.left = (barWidth - dotWidth) + 'px'
+        dotElem.style.left = (barWidth - dotWidth) - 30 + 'px'
+        this.$refs.cur.style.width = (barWidth - dotWidth) - 20 + 'px'
       } else {
         dotElem.style.left = site - (dotWidth / 2) + 'px'
+        this.$refs.cur.style.width = site - (dotWidth / 2) + 10 + 'px'
       }
       // 获取当前的位置
       // let curSite = site <= 0 ? 0 : (site >= barWidth) ? barWidth : site
@@ -164,6 +171,8 @@ export default {
   border-radius: 50%;
   // background: #eed23a;
  // background: -webkit-linear-gradient(#cc9900, #996600);
+  background: #cc9900 url('../assets/imgs/img_Setuphualun.png');
+  background-size: cover;
   cursor: pointer;
 }
 

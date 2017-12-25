@@ -99,7 +99,7 @@
           <p class="tip"></p>
         </div>
         <div class="message">
-          <span class="rate">10/20</span>
+          <span class="rate">{{gameMsg.currentRound}}/{{gameMsg.baseRound}}</span>
           <span class="time">{{date}}</span>
           <span class="power"></span>
         </div>
@@ -108,8 +108,8 @@
         <div class="games">
           <img src="../assets/imgs/img_Room_roomnumber.png" alt="" width= "100%">
           <div class="box">
-            <div class="rate">{{roomNum}}</div>
-            <div class="room-num">10/20</div>
+            <div class="rate">{{gameMsg.numId}}</div>
+            <div class="room-num">{{gameMsg.currentRound}}/{{gameMsg.baseRound}}</div>
           </div>
         </div>
         <div class="setting" @touchstart="setting">
@@ -133,9 +133,13 @@
     </div>
     <!-- 游戏信息 -->
     <div class="game-info">
-      <div class="room-num">房间号： {{roomId}}</div>
+      <div class="room-num">房间号： {{gameMsg.numId}}</div>
       <div class="geme-type">
-        <span>清推</span><span>20局</span><span>50分封顶</span>
+        <span v-show="gameMsg.gameType == '1'">清推</span>
+        <span v-show="gameMsg.gameType == '2'">混推</span>
+        <span v-show="gameMsg.gameType == '3'">大九</span>
+        <span>{{gameMsg.baseRound}}局</span>
+        <span>{{gameMsg.baseScore}}分封顶</span>
       </div>
     </div>
     <!-- 牌面 -->
@@ -436,6 +440,7 @@ export default {
       showCoins: false,
       isFirst: true,
       cards: [],
+      gameMsg: {},
       cmScore: 0, // 出门下注分数
       tmScore: 0, // 天门下注分数
       kmScore: 0, // 坎门下注分数
@@ -472,6 +477,12 @@ export default {
     rid: {
       type: String,
       dafault: ''
+    },
+    ds: {
+      type: String,
+      default: function () {
+        return {}
+      }
     }
   },
   computed: mapGetters({
@@ -509,6 +520,9 @@ export default {
     },
     rid (val) {
       this.roomId = val
+    },
+    ds (val) {
+      this.gameMsg = val
     },
     // ds (val) {
     //   this.users = []
@@ -553,6 +567,7 @@ export default {
   created () {
     this.showDj = this.dj
     this.users = this.ds
+    this.gameMsg = this.ds
     // 注册交互事件
     this.registerFn()
   },
@@ -1001,16 +1016,20 @@ export default {
     },
     // 邀请好友
     invateFriend () {
-      // roomMsg(房间信息)
-      // let vm = this
+      let params = window.JSON.stringify({
+        numId: this.gameMsg.roomId,
+        baseScore: this.gameMsg.baseScore,
+        baseRound: this.gameMsg.baseRound
+      })
       this.$JsBridge.callHandler(
         'invateFriend' // 原生的方法名
-        , {'param': ''} // 带个原生方法的参数
+        , {'param': params} // 带个原生方法的参数
         , function (responseData) { // 响应原生回调方法
           // if (Number(window.JSON.parse(responseData)) === 200) {
           //   vm.$router.push({path: router, params: {}})
           // }
           //
+          console.log('分享成功')
         }
       )
     },

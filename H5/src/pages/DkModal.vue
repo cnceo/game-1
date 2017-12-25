@@ -18,36 +18,53 @@ export default {
   name: 'app',
   data () {
     return {
-      showDk: false
+      showDk: false,
+      gameMsg: {}
     }
   },
   props: {
     dk: {
       type: Boolean,
       default: false
+    },
+    ds: {
+      type: String,
+      default: function () {
+        return {}
+      }
     }
   },
   watch: {
     dk (val) {
       this.showDk = val
+    },
+    ds (val) {
+      this.gameMsg = val
     }
   },
   created () {
     this.showDk = this.dk
+    this.gameMsg = this.ds
   },
   methods: {
     // 邀请好友
     invateFriend () {
       // roomMsg(房间信息)
       // let vm = this
+      let params = window.JSON.stringify({
+        numId: this.gameMsg.roomId,
+        baseScore: this.gameMsg.baseScore,
+        baseRound: this.gameMsg.baseRound
+      })
       this.$JsBridge.callHandler(
         'invateFriend' // 原生的方法名
-        , {'param': ''} // 带个原生方法的参数
+        , {'param': params} // 带个原生方法的参数
         , function (responseData) { // 响应原生回调方法
           // if (Number(window.JSON.parse(responseData)) === 200) {
           //   vm.$router.push({path: router, params: {}})
           // }
           //
+          console.log('分享成功')
         }
       )
     }

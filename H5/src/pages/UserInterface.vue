@@ -77,9 +77,21 @@
           </span>
         </div>
         <div class="game-box">
-          <div v-show="selectGame === 0" v-html="qtRules" class="item"></div>
-          <div v-show="selectGame === 1" v-html="htRules" class="item"></div>
-          <div v-show="selectGame === 2" v-html="djRules" class="item"></div>
+          <div v-show="selectGame === 0" class="item">
+            <div v-html="qtRules"></div>
+            <img src="../assets/imgs/loading.gif" alt=""  width="100%" class="loading1" 
+        v-show="loadQt">
+          </div>
+          <div v-show="selectGame === 1" class="item">
+            <div v-html="htRules"></div>
+            <img src="../assets/imgs/loading.gif" alt=""  width="100%" class="loading1" 
+        v-show="loadHt">
+          </div>
+          <div v-show="selectGame === 2" class="item">
+            <div v-html="djRules"></div>
+            <img src="../assets/imgs/loading.gif" alt=""  width="100%" class="loading1" 
+        v-show="loadDj">
+          </div>
         </div>
       </div>
     </Modal>
@@ -91,7 +103,11 @@
       <div slot="title" class="msg-title title-active">
          <img src="../assets/imgs/img_Message_message.png" alt=""  width="100%">
       </div>
-      <div slot="body" class="msg-body">{{publics}}</div>
+      <div slot="body" class="msg-body">
+        {{publics}}
+        <img src="../assets/imgs/loading.gif" alt=""  width="100%" class="loading2" 
+        v-show="loadMsg">
+        </div>
     </Modal>
 
     <!--设置-->
@@ -206,13 +222,13 @@
       {{tipMsg}}
     </div>
     <!-- 大九 -->
-    <dj-game :dj="showDj" :uid="userId" :rid="roomId" @on-close="closeDj"></dj-game>
+    <dj-game :dj="showDj" :uid="userId" :rid="roomId" :ds="gameDatas" @on-close="closeDj"></dj-game>
     <!-- 清推 -->
     <qt-game :qt="showQt" @on-close="closeQt"></qt-game>
     <!-- 混推 -->
     <ht-game :ht="showHt" @on-close="closeHt"></ht-game>
     <!-- 代开 -->
-    <dk-modal :dk="showDkModal" @on-close="closeDk"></dk-modal>
+    <dk-modal :dk="showDkModal" :ds="gameDatas" @on-close="closeDk"></dk-modal>
     
   </div>
 </template>
@@ -331,7 +347,12 @@ export default {
       userId: '', // 用户id
       numId: '', // 房间号，用于微信分享和邀请好友
       roomId: '', // 房间id
-      router: ''
+      router: '',
+      gameDatas: {}, // 保存房间信息
+      loadMsg: false,
+      loadQt: false,
+      loadHt: false,
+      loadDj: false
     }
   },
   created () {
@@ -430,7 +451,7 @@ export default {
             vm.userId = vm.userInfo.id
           }
         )
-      }, 1000)
+      }, 800)
     },
     // curUser (val) {
     //   console.log('更新嘻嘻嘻嘻嘻嘻嘻嘻嘻嘻嘻嘻嘻嘻嘻嘻嘻')
@@ -484,6 +505,7 @@ export default {
     message (e) {
       this.$audio.play(this.$audio.ui)
       this.showMsgModal = true
+      this.loadMsg = true
       let vm = this
       let ajaxParams = window.JSON.stringify({
         host: this.$url,
@@ -497,6 +519,7 @@ export default {
         , function (responseData) { // 响应原生回调方法
           let data = window.JSON.parse(responseData)
           vm.publics = data.model
+          vm.loadMsg = false
           vm.$store.dispatch('newsAjax', data)
         }
       )
@@ -509,6 +532,7 @@ export default {
     help (e) {
       this.$audio.play(this.$audio.ui)
       this.showRuleModal = true
+      this.loadQt = true
       this.qtAjax()
     },
     qtAjax () {
@@ -518,18 +542,19 @@ export default {
         path: this.$interface['/get/rule/qingtui'],
         params: this.$sign({})
       })
-      if (!this.qtRules) {
+     // if (!this.qtRules) {
         // 调用android原生内部方法
-        this.$JsBridge.callHandler(
-          'getQtMsg' // 原生的方法名
-          , {'param': ajaxParams1} // 带个原生方法的参数
-          , function (responseData) { // 响应原生回调方法
-            let data = window.JSON.parse(responseData)
-            vm.qtRules = data.model
-            vm.$store.dispatch('qtRuleAjax', data)
-          }
-        )
-      }
+      this.$JsBridge.callHandler(
+        'getQtMsg' // 原生的方法名
+        , {'param': ajaxParams1} // 带个原生方法的参数
+        , function (responseData) { // 响应原生回调方法
+          let data = window.JSON.parse(responseData)
+          vm.loadQt = false
+          vm.qtRules = data.model
+          vm.$store.dispatch('qtRuleAjax', data)
+        }
+      )
+     // }
     },
     htAjax () {
       let vm = this
@@ -538,17 +563,18 @@ export default {
         path: this.$interface['/get/rule/huntui'],
         params: this.$sign({})
       })
-      if (!this.htRules) {
-        this.$JsBridge.callHandler(
-          'getHtMsg' // 原生的方法名
-          , {'param': ajaxParams2} // 带个原生方法的参数
-          , function (responseData) { // 响应原生回调方法
-            let data = window.JSON.parse(responseData)
-            vm.htRules = data.model
-            vm.$store.dispatch('htRuleAjax', data)
-          }
-        )
-      }
+    //  if (!this.htRules) {
+      this.$JsBridge.callHandler(
+        'getHtMsg' // 原生的方法名
+        , {'param': ajaxParams2} // 带个原生方法的参数
+        , function (responseData) { // 响应原生回调方法
+          let data = window.JSON.parse(responseData)
+          vm.htRules = data.model
+          vm.loadHt = false
+          vm.$store.dispatch('htRuleAjax', data)
+        }
+      )
+     // }
     },
     djAjax () {
       let vm = this
@@ -557,17 +583,18 @@ export default {
         path: this.$interface['/get/rule/dajiu'],
         params: this.$sign({})
       })
-      if (!this.djRules) {
-        this.$JsBridge.callHandler(
-          'getDjMsg' // 原生的方法名
-          , {'param': ajaxParams3} // 带个原生方法的参数
-          , function (responseData) { // 响应原生回调方法
-            let data = window.JSON.parse(responseData)
-            vm.djRules = data.model
-            vm.$store.dispatch('djRuleAjax', data)
-          }
-        )
-      }
+    //  if (!this.djRules) {
+      this.$JsBridge.callHandler(
+        'getDjMsg' // 原生的方法名
+        , {'param': ajaxParams3} // 带个原生方法的参数
+        , function (responseData) { // 响应原生回调方法
+          let data = window.JSON.parse(responseData)
+          vm.djRules = data.model
+          vm.loadDj = false
+          vm.$store.dispatch('djRuleAjax', data)
+        }
+      )
+     // }
     },
     // 规则（清推、混推、大九）
     changeGame (index, e) {
@@ -579,10 +606,13 @@ export default {
           item.img = tabImgs.imgs[ids]
         }
         if (index === 0) {
+          this.loadQt = true
           this.qtAjax()
         } else if (index === 1) {
+          this.loadHt = true
           this.htAjax()
         } else if (index === 2) {
+          this.loadDj = true
           this.djAjax()
         }
       })
@@ -689,32 +719,32 @@ export default {
             // vm.userId = data.model.createUserId
             // vm.roomId = data.model.id
             vm.roomId = data.model.id
-            if (vm.userInfo.roomNum) {
+          //  if (vm.userInfo.roomNum) {
               // vm.userId = data.model.createUserId
               // vm.roomId = data.model.id
               // 创建房间房主才有邀请好友，保存房间号用于微信好友邀请
              // vm.numId = data.model.numId
-              vm.$store.dispatch('saveCreateMsg', {
-                roomId: data.model.id,
-                numId: data.model.numId,
-                baseScore: data.model.baseScore,
-                baseRound: data.model.baseRound
-              })
+            vm.$store.dispatch('saveCreateMsg', {
+              roomId: data.model.id,
+              numId: data.model.numId,
+              baseScore: data.model.baseScore,
+              baseRound: data.model.baseRound
+            })
               // 是否是代开房间
-              if (!selectData.substitute) {
-                // 进入房间
-                vm.enterRoom()
-              } else {
-                vm.showDkModal = true
-              }
+            if (!selectData.substitute) {
+              // 进入房间
+              vm.startEnterRoom()
             } else {
-              // 提示房卡不足
-              vm.showTip = true
-              vm.tipMsg = '房卡不足'
-              setTimeout(() => {
-                vm.showTip = false
-              }, 1000)
+              vm.showDkModal = true
             }
+            // } else {
+            //   // 提示房卡不足
+            //   vm.showTip = true
+            //   vm.tipMsg = '房卡不足'
+            //   setTimeout(() => {
+            //     vm.showTip = false
+            //   }, 1000)
+            // }
             // userInfo.roomNum房卡数
             // vm.$store.dispatch('saveId', {
             //   userId: vm.userId,
@@ -726,7 +756,7 @@ export default {
            // vm.$router.push({path: vm.router, params: {userId: vm.userId, roomId: vm.roomId}})
           } else {
             vm.showTip = true
-            vm.tipMsg = '创建房间失败'
+            vm.tipMsg = data.message
             setTimeout(() => {
               vm.showTip = false
             }, 1000)
@@ -769,8 +799,42 @@ export default {
       this.numIndex++
       // 进入房间
       if (this.numIndex === MAX_ROOM_NUM) {
-        this.enterRoom()
+        this.startEnterRoom()
       }
+    },
+    startEnterRoom () {
+      let params = {
+        userId: this.userInfo.id,
+        roomNumId: this.roomId
+      }
+      let ajaxParams = window.JSON.stringify({
+        host: this.$url,
+        path: this.$interface['/user/enter/room'],
+        params: this.$sign(params)
+      })
+      let vm = this
+      this.$JsBridge.callHandler(
+        'joinRoom' // 原生的方法名
+        , {'param': ajaxParams} // 带个原生方法的参数
+        , function (responseData) { // 响应原生回调方法
+          console.log('加入房间成功')
+          let data = window.JSON.parse(responseData)
+          if (Number(data.code) === 200) {
+            vm.gameDatas.numId = data.model.numId
+            vm.gameDatas.baseScore = data.model.baseScore
+            vm.gameDatas.baseRound = data.model.baseRound
+            vm.gameDatas.currentRound = data.model.currentRound
+            vm.gameDatas.gameType = data.model.gameType
+            vm.enterRoom()
+          } else {
+            vm.showTip = true
+            vm.tipMsg = data.message
+            setTimeout(() => {
+              vm.showTip = false
+            }, 1000)
+          }
+        }
+      )
     },
     enterRoom () {
       // 后期需要注释
@@ -789,6 +853,7 @@ export default {
         'joinRoom' // 原生的方法名
         , {'param': ajaxParams} // 带个原生方法的参数
         , function (responseData) { // 响应原生回调方法
+          console.log('加入房间socket成功')
           this.roomNums.forEach((item, index) => {
             this.$set(this.roomNums, index, '')
           })
@@ -1200,6 +1265,22 @@ export default {
       width: 240px;
     }
   }
+}
+.loading1{
+  position: absolute;
+  left: 65%;
+  top: 50%;
+  width: 160px;
+  height: 160px;
+  transform: translate(-50%, -50%);
+}
+.loading2{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 160px;
+  height: 160px;
+  transform: translate(-50%, -50%);
 }
 #horse {  
     position: relative;  
