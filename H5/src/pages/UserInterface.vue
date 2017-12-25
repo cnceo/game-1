@@ -734,7 +734,7 @@ export default {
               // 是否是代开房间
             if (!selectData.substitute) {
               // 进入房间
-              vm.startEnterRoom()
+              vm.startEnterRoom(vm.numId)
             } else {
               vm.showDkModal = true
             }
@@ -800,13 +800,17 @@ export default {
       this.numIndex++
       // 进入房间
       if (this.numIndex === MAX_ROOM_NUM) {
-        this.startEnterRoom()
+        let str = ''
+        this.roomNums.forEach((item) => {
+          str += item
+        })
+        this.startEnterRoom(str)
       }
     },
-    startEnterRoom () {
+    startEnterRoom (str) {
       let params = {
         userId: this.userInfo.id,
-        roomNumId: this.numId
+        roomNumId: str
       }
       let ajaxParams = window.JSON.stringify({
         host: this.$url,

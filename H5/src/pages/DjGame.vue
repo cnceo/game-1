@@ -636,6 +636,7 @@ export default {
             if (Number(item.userId) === Number(vm.userId)) {
               console.log('我是当前用户')
               item.curUser = true
+              item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
               vm.getRoomMsg(item)
               if (item.roomOwner) {
                 // 房间创建者可以邀请好友
@@ -644,6 +645,7 @@ export default {
               vm.users.unshift(item)
             } else {
               item.curUser = false
+              item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
               vm.users.push(item)
             }
           })
