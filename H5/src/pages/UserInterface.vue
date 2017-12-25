@@ -850,7 +850,7 @@ export default {
       })
       let vm = this
       this.$JsBridge.callHandler(
-        'joinRoom' // 原生的方法名
+        'enterRoom' // 原生的方法名
         , {'param': ajaxParams} // 带个原生方法的参数
         , function (responseData) { // 响应原生回调方法
           console.log('加入房间socket成功')
