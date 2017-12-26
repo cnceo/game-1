@@ -171,8 +171,8 @@ export default {
   border-radius: 50%;
   // background: #eed23a;
  // background: -webkit-linear-gradient(#cc9900, #996600);
-  background: #cc9900 url('../assets/imgs/img_Setuphualun.png');
-  background-size: cover;
+  background: url('../assets/imgs/img_Setuphualun.png');
+  background-size: 100% 100%;
   cursor: pointer;
 }
 

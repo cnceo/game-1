@@ -1,6 +1,6 @@
 <template>
   <div class="user-face g-flex-column">
-    <div class="face-bar">   
+    <div class="face-bar"> 
       <div class="box g-flex-row">
         <!--用户信息-->
         <div class="user-info g-flex-row">
@@ -222,7 +222,7 @@
       {{tipMsg}}
     </div>
     <!-- 大九 -->
-    <dj-game :dj="showDj" :uid="userId" :rid="roomId" :ds="gameDatas" @on-close="closeDj"></dj-game>
+    <dj-game :dj="showDj" :uid="userId" :rid="roomId" :isOwner="isMaster" :ds="gameDatas" @on-close="closeDj"></dj-game>
     <!-- 清推 -->
     <qt-game :qt="showQt" @on-close="closeQt"></qt-game>
     <!-- 混推 -->
@@ -328,17 +328,17 @@ export default {
       htRules: '',
       djRules: '',
       createRoomData1: {
-        round: 10,
+        round: 30,
         score: 20,
         substitute: false
       },
       createRoomData2: {
-        round: 10,
+        round: 30,
         score: 20,
         substitute: false
       },
       createRoomData3: {
-        round: 10,
+        round: 30,
         score: 20,
         substitute: false
       },
@@ -349,10 +349,15 @@ export default {
       roomId: '', // 房间id
       router: '',
       gameDatas: {}, // 保存房间信息
+      isMaster: false,
       loadMsg: false,
+      isFirstMsg: true,
       loadQt: false,
+      isFirstQt: true,
       loadHt: false,
-      loadDj: false
+      isFirstHt: true,
+      loadDj: false,
+      isFirstDj: true
     }
   },
   created () {
@@ -489,6 +494,7 @@ export default {
     //   })
     // },
     handleArray (arr, data) {
+      console.log(data)
       arr.forEach((item, index) => {
         data.forEach((its, i) => {
           if (its instanceof Object) {
@@ -500,12 +506,16 @@ export default {
           }
         })
       })
+      console.log(arr)
     },
     // 新闻消息弹窗
     message (e) {
       this.$audio.play(this.$audio.ui)
       this.showMsgModal = true
-      this.loadMsg = true
+      if (this.isFirstMsg) {
+        this.loadMsg = true
+        this.isFirstMsg = false
+      }
       let vm = this
       let ajaxParams = window.JSON.stringify({
         host: this.$url,
@@ -532,7 +542,10 @@ export default {
     help (e) {
       this.$audio.play(this.$audio.ui)
       this.showRuleModal = true
-      this.loadQt = true
+      if (this.isFirstQt) {
+        this.loadQt = true
+        this.isFirstQt = false
+      }
       this.qtAjax()
     },
     qtAjax () {
@@ -606,13 +619,22 @@ export default {
           item.img = tabImgs.imgs[ids]
         }
         if (index === 0) {
-          this.loadQt = true
+          if (this.isFirstQt) {
+            this.loadQt = true
+            this.isFirstQt = false
+          }
           this.qtAjax()
         } else if (index === 1) {
-          this.loadHt = true
+          if (this.isFirstHt) {
+            this.loadHt = true
+            this.isFirstHt = false
+          }
           this.htAjax()
         } else if (index === 2) {
-          this.loadDj = true
+          if (this.isFirstDj) {
+            this.loadDj = true
+            this.isFirstDj = false
+          }
           this.djAjax()
         }
       })
@@ -649,6 +671,7 @@ export default {
     },
     // 清推局数选择
     selectTime1 (data) {
+      console.log(data)
       this.$audio.play(this.$audio.ui)
       this.createRoomData1.round = data
     },
@@ -703,6 +726,7 @@ export default {
         substitute: selectData.substitute,
         gameType: type
       }
+      console.log(params)
       let ajaxParams = window.JSON.stringify({
         host: this.$url,
         path: this.$interface['/room/create'],
@@ -718,6 +742,7 @@ export default {
           if (Number(data.code) === 200) {
             // vm.userId = data.model.createUserId
             // vm.roomId = data.model.id
+            vm.isMaster = true
             vm.roomId = data.model.id
             vm.numId = data.model.numId
           //  if (vm.userInfo.roomNum) {
@@ -824,7 +849,13 @@ export default {
         , function (responseData) { // 响应原生回调方法
           console.log('加入房间成功')
           let data = window.JSON.parse(responseData)
+          vm.roomNums.forEach((item, index) => {
+            vm.$set(vm.roomNums, index, '')
+          })
+          vm.numIndex = 0
           if (Number(data.code) === 200) {
+            vm.showCreateRoom = false
+            vm.showJoinRoom = false
             vm.gameDatas.numId = data.model.numId
             vm.gameDatas.baseScore = data.model.baseScore
             vm.gameDatas.baseRound = data.model.baseRound
@@ -859,11 +890,6 @@ export default {
         , {'param': ajaxParams} // 带个原生方法的参数
         , function (responseData) { // 响应原生回调方法
           console.log('加入房间socket成功')
-          vm.roomNums.forEach((item, index) => {
-            vm.$set(vm.roomNums, index, '')
-          })
-          vm.numIndex = 0
-          vm.showJoinRoom = false
           let data = vm.$hds.handler(responseData)
           vm.$store.dispatch('saveUsers', data)
           // this.showDj = true

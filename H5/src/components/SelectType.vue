@@ -70,6 +70,7 @@ export default {
           item.select = false
         }
       })
+      console.log(value)
       this.$emit('on-select', value)
     }
   }

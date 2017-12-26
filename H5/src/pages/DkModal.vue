@@ -52,7 +52,7 @@ export default {
       // roomMsg(房间信息)
       // let vm = this
       let params = window.JSON.stringify({
-        numId: this.gameMsg.roomId,
+        numId: this.gameMsg.numId,
         baseScore: this.gameMsg.baseScore,
         baseRound: this.gameMsg.baseRound
       })

@@ -47,9 +47,6 @@
         </div>
         <div class="status" :class="{'l-site': (index !== 0) && (index % 2 !== 0),
          'r-site': (index % 2 === 0), 'c-site': (index === 0)}">
-         {{item.ready == 'false'}}
-         {{item.roomOwner == 'false'}}
-         {{isStartReady}}
             <span v-show="item.ready == 'false' && item.roomOwner == 'false' && item.curUser" @click="startReady">
               <img src="../assets/imgs/img_Room_ready.png" alt="" width="100%" height="100%">
             </span>
@@ -119,7 +116,7 @@
           <img src="../assets/imgs/img_Room_dissolvetheroom.png" alt="" width= "100%" 
           v-if="isMaster || isGameStart" @touchstart="releaseRoom">
           <img src="../assets/imgs/img_Room_exitroom.jpg" alt="" width= "100%" 
-          v-if="isMaster || isGameStart" @touchstart="exitRoom">
+          v-else @touchstart="exitRoom">
         </div>
       </div>
       <div class="intro g-flex">
@@ -479,14 +476,18 @@ export default {
       dafault: ''
     },
     ds: {
-      type: String,
+      type: Object,
       default: function () {
         return {}
       }
+    },
+    isOwner: {
+      type: Boolean,
+      dafault: false
     }
   },
   computed: mapGetters({
-    ds: 'listenGameUser',
+  //  ds: 'listenGameUser',
     roomMsg: 'listenRoomMsg',
     curUser: 'listenUser',
     curUserId: 'listenUserId'
@@ -522,6 +523,10 @@ export default {
       this.roomId = val
     },
     ds (val) {
+      console.log('获取陈宫进入房间信息')
+      for (let key in val) {
+        console.log(key + ':' + val[key])
+      }
       this.gameMsg = val
     },
     // ds (val) {
@@ -557,11 +562,12 @@ export default {
     //     this.isFriends = true
     //   }
     // }
-    roomMsg (val) {
+    isOwner (val) {
       // this.roomId = val.roomId
       // this.roomNum = val.numId
       // 房间创建者可以邀请好友
-      this.isMaster = true
+      // console.log('哈哈哈，我是房主')
+      // this.isMaster = true
     }
   },
   created () {
@@ -613,14 +619,16 @@ export default {
         //   }
         // })
         // 如果人数最少2人，即可开始游戏
-        if (arr < MIN_USER) {
+        if (arr.length < MIN_USER) {
           console.log('aaaaaaaaaaaaaaaaaaaa')
           arr.forEach((item) => {
             if (Number(item.userId) === Number(vm.userId)) {
+              console.log('我是1个人' + item.userId)
               console.log('我是当前用户')
               item.curUser = true
-              vm.getRoomMsg(item)
+           //   vm.getRoomMsg()
               if (item.roomOwner) {
+                console.log('我是房主')
                 // 房间创建者可以邀请好友
                 vm.isMaster = true
               }
@@ -634,11 +642,13 @@ export default {
         } else {
           arr.forEach((item) => {
             if (Number(item.userId) === Number(vm.userId)) {
+              console.log('我是多个人' + item.userId)
               console.log('我是当前用户')
               item.curUser = true
               item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
-              vm.getRoomMsg(item)
+            //  vm.getRoomMsg()
               if (item.roomOwner) {
+                console.log('我是房主')
                 // 房间创建者可以邀请好友
                 vm.isMaster = true
               }
@@ -731,17 +741,17 @@ export default {
         responseCallback('')
       })
     },
-    getRoomMsg (data) {
+    getRoomMsg () {
       console.log(this.lowz)
-      // if (Number(data.score) === 20) {
-      //   this.lowz.push(this.lowzMax[0])
-      // } else if (Number(data.score) === 50) {
-      //   this.lowz.push(this.lowzMax[1])
-      // } else if (Number(data.score) === 100) {
-      //   this.lowz.push(this.lowzMax[2])
-      // } else if (Number(data.score) === 200) {
-      //   this.lowz.push(this.lowzMax[3])
-      // }
+      if (Number(this.gameMsg.baseScore) === 20) {
+        this.lowz.push(this.lowzMax[0])
+      } else if (this.gameMsg.baseScore === 50) {
+        this.lowz.push(this.lowzMax[1])
+      } else if (this.gameMsg.baseScore === 100) {
+        this.lowz.push(this.lowzMax[2])
+      } else if (this.gameMsg.baseScore === 200) {
+        this.lowz.push(this.lowzMax[3])
+      }
     },
     isAllUserReady (users) {
       for (let i = 0, len = users.length; i < len; i++) {
@@ -1021,7 +1031,7 @@ export default {
     // 邀请好友
     invateFriend () {
       let params = window.JSON.stringify({
-        numId: this.gameMsg.roomId,
+        numId: this.gameMsg.numId,
         baseScore: this.gameMsg.baseScore,
         baseRound: this.gameMsg.baseRound
       })
@@ -1123,6 +1133,7 @@ export default {
         path: this.$interface['/gameover/statistics'],
         params: this.$sign({params})
       })
+      console.log(ajaxParams)
       // 调用android原生内部方法
       this.$JsBridge.callHandler(
         'gameOver' // 原生的方法名
