@@ -332,56 +332,56 @@ export default {
       showAccount: false,
       qz: false,
       users: [
-        {
-          name: '小乐',
-          avatar: '',
-          money: 3000,
-          master: true,
-          result: 0,
-          status: 0,
-          card: null,
-          xz: 0
-        },
-        {
-          name: '小刚',
-          avatar: '',
-          money: 3000,
-          master: true,
-          result: 1,
-          status: 1,
-          card: null,
-          xz: 1
-        },
-        {
-          name: '小王',
-          avatar: '',
-          money: 3000,
-          master: false,
-          result: 1,
-          status: 1,
-          card: null,
-          xz: 0
-        },
-        {
-          name: '小李',
-          avatar: '',
-          money: 3000,
-          master: false,
-          result: 2,
-          status: 2,
-          card: null,
-          xz: 1
-        },
-        {
-          name: '小张',
-          avatar: '',
-          money: 3000,
-          master: true,
-          result: 0,
-          status: 0,
-          card: null,
-          xz: 0
-        }
+        // {
+        //   name: '小乐',
+        //   avatar: '',
+        //   money: 3000,
+        //   master: true,
+        //   result: 0,
+        //   status: 0,
+        //   card: null,
+        //   xz: 0
+        // },
+        // {
+        //   name: '小刚',
+        //   avatar: '',
+        //   money: 3000,
+        //   master: true,
+        //   result: 1,
+        //   status: 1,
+        //   card: null,
+        //   xz: 1
+        // },
+        // {
+        //   name: '小王',
+        //   avatar: '',
+        //   money: 3000,
+        //   master: false,
+        //   result: 1,
+        //   status: 1,
+        //   card: null,
+        //   xz: 0
+        // },
+        // {
+        //   name: '小李',
+        //   avatar: '',
+        //   money: 3000,
+        //   master: false,
+        //   result: 2,
+        //   status: 2,
+        //   card: null,
+        //   xz: 1
+        // },
+        // {
+        //   name: '小张',
+        //   avatar: '',
+        //   money: 3000,
+        //   master: true,
+        //   result: 0,
+        //   status: 0,
+        //   card: null,
+        //   xz: 0
+        // }
       ],
       showSetModal: false,
       socket: null,
@@ -585,7 +585,7 @@ export default {
         console.log('游戏中用户列表更新了')
         console.log(data)
         // 将原生带来的参数，显示在show标签位置
-        // vm.users = []
+        vm.users = []
         let arr = []
         // let val = []
         arr = vm.$hds.handler(data)
@@ -626,17 +626,21 @@ export default {
               console.log('我是1个人' + item.userId)
               console.log('我是当前用户')
               item.curUser = true
-           //   vm.getRoomMsg()
+              vm.getRoomMsg()
               if (item.roomOwner) {
                 console.log('我是房主')
                 // 房间创建者可以邀请好友
                 vm.isMaster = true
               }
+              console.log('我在测试1')
               item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
               vm.users.unshift(item)
+              console.log('我在测试2')
             } else {
               item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
+              console.log('我在测试3')
               vm.users.push(item)
+              console.log('我在测试4')
             }
           })
         } else {
@@ -646,7 +650,7 @@ export default {
               console.log('我是当前用户')
               item.curUser = true
               item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
-            //  vm.getRoomMsg()
+              vm.getRoomMsg()
               if (item.roomOwner) {
                 console.log('我是房主')
                 // 房间创建者可以邀请好友
