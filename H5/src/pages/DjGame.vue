@@ -659,7 +659,7 @@ export default {
               vm.users.push(item)
             }
           })
-          console.log(window.JSON.stringify(vm.users))
+       //   console.log(window.JSON.stringify(vm.users))
           console.log('bbbbbbbbbbbbbbbbbbbbb')
           // 显示准备按钮
           if (!vm.isStartReady) {
