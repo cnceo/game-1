@@ -110,29 +110,35 @@ export default {
       ds0_1: [
         {
           img: tabImgs.cards[0],
-          select: true
+          select: true,
+          value: tabImgs.cards[0]
         },
         {
           img: tabImgs.cards[1],
-          select: false
+          select: false,
+          value: tabImgs.cards[1]
         },
         {
           img: tabImgs.cards[2],
-          select: false
+          select: false,
+          value: tabImgs.cards[2]
         }
       ],
       ds0_2: [
         {
           img: tabImgs.cards[3],
-          select: true
+          select: true,
+          value: tabImgs.cards[3]
         },
         {
           img: tabImgs.cards[4],
-          select: false
+          select: false,
+          value: tabImgs.cards[4]
         },
         {
           img: tabImgs.cards[5],
-          select: false
+          select: false,
+          value: tabImgs.cards[5]
         }
       ]
     }
@@ -190,6 +196,7 @@ export default {
     // 选择牌面
     selectCard (data) {
       this.$audio.play(this.$audio.ui)
+      this.$emit('on-select', data)
     // console.log(data)
     },
     // 音效设置

@@ -111,7 +111,7 @@
     </Modal>
 
     <!--设置-->
-    <Setting ref="setting"></Setting>
+    <Setting ref="setting" @on-select="selectCardBg"></Setting>
 
     <!--创建房间-->
     <Modal :showModal="showCreateRoom"
@@ -222,7 +222,9 @@
       {{tipMsg}}
     </div>
     <!-- 大九 -->
-    <dj-game :dj="showDj" :uid="userId" :rid="roomId" :isOwner="isMaster" :ds="gameDatas" @on-close="closeDj"></dj-game>
+    <dj-game :dj="showDj" :uid="userId" :rid="roomId" 
+    :isOwner="isMaster" :ds="gameDatas" :cardBg="cardBg"
+    @on-close="closeDj"></dj-game>
     <!-- 清推 -->
     <qt-game :qt="showQt" @on-close="closeQt"></qt-game>
     <!-- 混推 -->
@@ -357,7 +359,9 @@ export default {
       loadHt: false,
       isFirstHt: true,
       loadDj: false,
-      isFirstDj: true
+      isFirstDj: true,
+      gameType: 1,
+      cardBg: ''
     }
   },
   created () {
@@ -861,6 +865,10 @@ export default {
             vm.gameDatas.baseRound = data.model.baseRound
             vm.gameDatas.currentRound = data.model.currentRound
             vm.gameDatas.gameType = data.model.gameType
+            console.log(data.model.id)
+            vm.roomId = data.model.id
+            vm.gameType = data.model.gameType
+            console.log(vm.roomId)
             vm.enterRoom()
           } else {
             vm.showTip = true
@@ -876,6 +884,7 @@ export default {
       // 后期需要注释
       // this.showJoinRoom = false
       // this.showDj = true
+      console.log(this.roomId)
       let ajaxParams = window.JSON.stringify({
         host: this.$url,
         path: this.$interface['/app'],
@@ -893,13 +902,13 @@ export default {
           let data = vm.$hds.handler(responseData)
           vm.$store.dispatch('saveUsers', data)
           // this.showDj = true
-          if (vm.selectTypes === 0) {
+          if (vm.gameType === 1) {
             // vm.$router.push({path: '/qt', params: {}})
             vm.showQt = true
-          } else if (vm.selectTypes === 1) {
+          } else if (vm.gameType === 2) {
             // vm.$router.push({path: '/ht', params: {}})
             vm.showHt = true
-          } else {
+          } else if (vm.gameType === 3) {
             // vm.$router.push({path: '/dj', params: {}})
             vm.showDj = true
           }
@@ -923,6 +932,10 @@ export default {
         this.numIndex--
         this.$set(this.roomNums, this.numIndex, '')
       }
+    },
+    // 选择牌面背景
+    selectCardBg (url) {
+      this.cardBg = url
     },
      // 关闭加入房间弹窗
     closeJoinRoom () {

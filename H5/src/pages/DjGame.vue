@@ -15,7 +15,11 @@
             <img :src="item.headimgurl" alt="" width="100%" height="100%">
           </div>
           <div class="master" :class="{'l-site': (index === 0) || (index % 2 !== 0),
-           'r-site': (index !== 0) && (index % 2 === 0)}" v-show="item.takeBanker == 'true'">
+           'r-site': (index !== 0) && (index % 2 === 0)}" v-show="item.roomOwner == 'true'">
+            <img src="../assets/imgs/img_Room_owner.png" alt="" width="100%" height="100%">
+           </div>
+           <div class="zuja" :class="{'l-site': (index === 0) || (index % 2 !== 0),
+           'r-site': (index !== 0) && (index % 2 === 0)}" v-show="item.Banker == 'true'">
             <img src="../assets/imgs/img_Room_owner.png" alt="" width="100%" height="100%">
            </div>
           <div class="result" :class="{'cur-user': index === 0}">
@@ -60,7 +64,10 @@
               <img src="../assets/imgs/img_Room_ready.png" alt="" width="100%" height="100%">
             </span>
          </div>
-        <div class="card">{{item.card}}</div>
+        <div class="card status" :class="{'l-site': (index !== 0) && (index % 2 !== 0),
+         'r-site': (index % 2 === 0), 'c-site': (index === 0)}">
+         <!-- 发牌区域 -->
+         </div>
         <div class="xz-tip">
           <span v-show="item.xz === 0">
             <img src="../assets/imgs/img_Bet_qingxiazhu.png" alt="" width="100%" height="100%">
@@ -459,7 +466,9 @@ export default {
       showReleaseWaitModal: false,
       releaseWaitText: '', // 房主提示文字
       showReleaseReadyModal: false,
-      releaseReadyText: '' // 游戏中解散房间提示文字
+      releaseReadyText: '', // 游戏中解散房间提示文字
+      isCurUserReady: false,
+      curCardBg: ''
     }
   },
   props: {
@@ -484,6 +493,10 @@ export default {
     isOwner: {
       type: Boolean,
       dafault: false
+    },
+    cardBg: {
+      type: String,
+      dafault: ''
     }
   },
   computed: mapGetters({
@@ -567,13 +580,17 @@ export default {
       // this.roomNum = val.numId
       // 房间创建者可以邀请好友
       // console.log('哈哈哈，我是房主')
-      // this.isMaster = true
+      this.isMaster = true
+    },
+    cardBg (val) {
+      this.curCardBg = val
     }
   },
   created () {
     this.showDj = this.dj
     this.users = this.ds
     this.gameMsg = this.ds
+    this.curCardBg = this.cardBg
     // 注册交互事件
     this.registerFn()
   },
@@ -630,7 +647,10 @@ export default {
               if (item.roomOwner) {
                 console.log('我是房主')
                 // 房间创建者可以邀请好友
-                vm.isMaster = true
+             //   vm.isMaster = true
+              }
+              if (item.ready.toString() === 'true') {
+                vm.isCurUserReady = true
               }
               console.log('我在测试1')
               item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
@@ -654,7 +674,10 @@ export default {
               if (item.roomOwner) {
                 console.log('我是房主')
                 // 房间创建者可以邀请好友
-                vm.isMaster = true
+              //  vm.isMaster = true
+              }
+              if (item.ready.toString() === 'true') {
+                vm.isCurUserReady = true
               }
               vm.users.unshift(item)
             } else {
@@ -676,7 +699,7 @@ export default {
               console.log('eeeeee')
               vm.isFriends = true
             }
-           // vm.playCards()
+            vm.playCards()
             // 其他玩家点击准备按钮,判断是否都已经准备就绪
             console.log('ddddddddddddddddddddddd')
             if (vm.isAllUserReady(vm.users)) {
@@ -784,7 +807,7 @@ export default {
     // 抢庄
     isQz () {
       // 若是都准备就绪，禁止抢庄
-      if (this.isGameStart) {
+      if (this.isCurUserReady) {
         return false
       }
       this.qz = !this.qz
@@ -1207,6 +1230,13 @@ export default {
             border-radius: 12px;
             box-shadow: 0 0 10px #000;
           }
+        }
+        .zuja{
+          position: absolute;
+          top: 32px;
+          width: 116px;
+          height: 32px;
+          z-index: -1;
         }
         .master{
           position: absolute;
