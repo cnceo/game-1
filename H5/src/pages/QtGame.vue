@@ -57,7 +57,9 @@
               <img src="../assets/imgs/img_Setup_Exchangeaccount.png" alt="" width="100%" height="100%">
             </span>
          </div>
-        <div class="card">{{item.card}}</div>
+         <div class="card status" :class="{'l-site': (index !== 0) && (index % 2 !== 0),
+         'r-site': (index % 2 === 0), 'c-site': (index === 0)}">
+         </div>
         <div class="xz-tip">
           <span v-show="item.xz === 0">
             <img src="../assets/imgs/img_Bet_qingxiazhu.png" alt="" width="100%" height="100%">
@@ -67,6 +69,20 @@
           </span>
         </div>
       </div>
+    </div>
+     <!-- 发牌区域 -->
+     <div class="cards" v-show="showCards">
+      <ul class="card-list" v-show="showCards"
+         :class="{'active': showCards}">
+        <li v-for="(item, index) in cardList" :key="index"
+        :class="{'card0': index === 0, 'card1': index === 1, 
+        'card2': index === 2, 'card3': index === 3, 
+        'card4': index === 4, 'card5': index === 5, 
+        'card6': index === 6, 'card7': index === 7, 
+        'card8': index === 8, 'card9': index === 9}">
+          <img :src="item.img" alt="">
+        </li>
+      </ul>
     </div>
     <!-- 游戏桌面 -->
     <div class="game-table">
@@ -196,6 +212,48 @@ export default {
       showQt: false,
       showAccount: false,
       qz: false,
+      cardList: [
+        {
+          img: tabImgs.cards[3],
+          show: true
+        },
+        {
+          img: tabImgs.cards[3],
+          show: false
+        },
+        {
+          img: tabImgs.cards[3],
+          show: true
+        },
+        {
+          img: tabImgs.cards[3],
+          show: false
+        },
+        {
+          img: tabImgs.cards[3],
+          show: true
+        },
+        {
+          img: tabImgs.cards[3],
+          show: false
+        },
+        {
+          img: tabImgs.cards[3],
+          show: true
+        },
+        {
+          img: tabImgs.cards[3],
+          show: false
+        },
+        {
+          img: tabImgs.cards[3],
+          show: true
+        },
+        {
+          img: tabImgs.cards[3],
+          show: false
+        }
+      ],
       users: [
         {
           name: '小乐',
@@ -270,18 +328,29 @@ export default {
       tbg: tabImgs.tbg,
       result: tabImgs.result,
       coins: tabImgs.coins,
-      lowz: tabImgs.lowz
+      lowz: tabImgs.lowz,
+      showCards: false
     }
   },
   props: {
     qt: {
       type: Boolean,
       default: false
+    },
+    cardBg: {
+      type: String,
+      dafault: ''
     }
   },
   watch: {
     qt (val) {
       this.showQt = val
+    },
+    cardBg (val) {
+      this.curCardBg = val
+      this.cardList.forEach((item) => {
+        item.img = val
+      })
     }
   },
   created () {
@@ -756,6 +825,215 @@ export default {
     .lm-btn{
       flex: 0 0 32%;
     }
+  }
+}
+.cards{
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+  .card-list{
+    position: relative;
+    bottom: -75%;
+    width: 60%;
+    height: 60px;
+    left: 50%;
+    transform: translateX(-70%);
+    li{
+      display: inline-block;
+      list-style: none;
+      position: absolute;
+      left: 25%;
+      bottom: 180px;
+      width: 12%;
+      height: 60px;
+      border: 1px solid #ddd;
+      z-index: 1;
+      img{
+        width: 100%;
+      }
+    }
+    li:nth-child(2) {
+      left: 30%;
+      z-index: 2;
+    }
+    li:nth-child(3) {
+      left: 35%;
+      z-index: 3;
+    }
+    li:nth-child(4) {
+      left: 40%;
+      z-index: 4;
+    }
+    li:nth-child(5) {
+      left: 45%;
+      z-index: 5;
+    }
+    li:nth-child(6) {
+      left: 50%;
+      z-index: 6;
+    } 
+    li:nth-child(7) {
+      left: 55%;
+      z-index: 7;
+    }
+     li:nth-child(8) {
+      left: 60%;
+      z-index: 8;
+    }
+    li:nth-child(9) {
+      left: 67%;
+      z-index: 9;
+    }
+    li:nth-child(10) {
+      left: 70%;
+      z-index: 10;
+    }
+
+    .card0{
+      animation: card0Move 0.3s linear 2.5s forwards;
+    }
+    .card1{
+      animation: card1Move 0.3s linear 2.5s forwards;
+    }
+    .card2{
+      animation: card2Move 0.3s linear 2s forwards;
+    }
+    .card3{
+      animation: card3Move 0.3s linear 2s forwards;
+    }
+    .card4{
+      animation: card4Move 0.3s linear 1.5s forwards;
+    }
+    .card5{
+      animation: card5Move 0.3s linear 1.5s forwards;
+    }
+    .card6{
+      animation: card6Move 0.3s linear 1s forwards;
+    }
+    .card7{
+      animation: card7Move 0.3s linear 1s forwards;
+    }
+    .card8{
+      animation: card8Move 0.3s linear 0.5s forwards;
+    }
+    .card9{
+      animation: card9Move 0.3s linear 0.5s forwards;
+    }
+  }
+  .card-list.active{
+    animation: cardsMove 0.3s linear forwards;
+  }
+}
+@keyframes cardsMove {
+  0%{
+    left: 100%;
+    opacity: 0;
+  }
+  100%{
+    left: 60%;
+    opacity: 1;
+  }
+}
+@keyframes card0Move {
+  0%{
+    left: 30%;
+    bottom: 180px;
+  }
+  100%{
+    left: 0%;
+    bottom: 460px;
+  }
+}
+@keyframes card1Move {
+  0%{
+    left: 35%;
+    bottom: 180px;
+  }
+  100%{
+    left: 5%;
+    bottom: 460px;
+  }
+}
+@keyframes card2Move {
+  0%{
+    left: 40%;
+    bottom: 180px;
+  }
+  100%{
+    left: 80%;
+    bottom: 460px;
+  }
+}
+@keyframes card3Move {
+  0%{
+    left: 45%;
+    bottom: 180px;
+  }
+  100%{
+    left: 85%;
+    bottom: 460px;
+  }
+}
+@keyframes card4Move {
+  0%{
+    left: 50%;
+    bottom: 180px;
+  }
+  100%{
+    left: 0%;
+    bottom: 180px;
+  }
+}
+@keyframes card5Move {
+  0%{
+    left: 55%;
+    bottom: 180px;
+  }
+  100%{
+    left: 5%;
+    bottom: 180px;
+  }
+}
+@keyframes card6Move {
+  0%{
+    left: 60%;
+    bottom: 180px;
+  }
+  100%{
+    left: 80%;
+    bottom: 180px;
+  }
+}
+@keyframes card7Move {
+  0%{
+    left: 65%;
+    bottom: 180px;
+  }
+  100%{
+    left: 85%;
+    bottom: 180px;
+  }
+}
+@keyframes card8Move {
+  0%{
+    left: 70%;
+    bottom: 180px;
+  }
+  100%{
+    left: 40%;
+    bottom: 0;
+  }
+}
+@keyframes card9Move {
+  0%{
+    left: 75%;
+    bottom: 180px;
+  }
+  100%{
+    left: 45%;
+    bottom: 0;
   }
 }
 </style>

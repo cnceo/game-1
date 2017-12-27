@@ -226,7 +226,7 @@
     :isOwner="isMaster" :ds="gameDatas" :cardBg="cardBg"
     @on-close="closeDj"></dj-game>
     <!-- 清推 -->
-    <qt-game :qt="showQt" @on-close="closeQt"></qt-game>
+    <qt-game :qt="showQt" :cardBg="cardBg" @on-close="closeQt"></qt-game>
     <!-- 混推 -->
     <ht-game :ht="showHt" @on-close="closeHt"></ht-game>
     <!-- 代开 -->
@@ -259,7 +259,7 @@ export default {
       showQt: false,
       showHt: false,
       showTip: false,
-      tipMsg: '房卡不在',
+      tipMsg: '房卡不存在',
       showDkModal: false,
       tabs: [
         {
@@ -657,7 +657,7 @@ export default {
     createRoom (e) {
       this.$audio.play(this.$audio.btn)
       this.showCreateRoom = true
-     // this.createRoomData.substitute = false
+      this.createRoomData.substitute = false
     },
     // 创建房间类型切换（清推、混推、大九）
     changeRoom (index, e) {

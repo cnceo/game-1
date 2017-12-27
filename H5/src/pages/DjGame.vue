@@ -65,15 +65,15 @@
               <img src="../assets/imgs/img_Room_ready.png" alt="" width="100%" height="100%">
             </span>
          </div>
-        <div class="card status" :class="{'l-site': (index !== 0) && (index % 2 !== 0),
+        <!-- <div class="card status" :class="{'l-site': (index !== 0) && (index % 2 !== 0),
          'r-site': (index % 2 === 0), 'c-site': (index === 0)}">
-         <!-- 发牌区域 -->
+         
             <ul class="card-list" v-show="cardList.length > 0">
               <li v-for="(item, index) in cardList" :key="index">
                 <img :src="item.img" alt="">
               </li>
             </ul>
-         </div>
+         </div> -->
         <div class="xz-tip">
           <span v-show="item.xz === 0">
             <img src="../assets/imgs/img_Bet_qingxiazhu.png" alt="" width="100%" height="100%">
@@ -87,6 +87,34 @@
           <span class="num">222</span>
         </div>
       </div>
+    </div>
+    <!-- 发牌区域 -->
+     <div class="cards" v-show="showCards">
+      <ul class="card-list" ref="card" v-show="showCards"
+         :class="{'active': showCards}">
+        <li v-for="(item, index) in cardList" :key="index"
+        v-show="index === 1 || index === 3 || index === 5
+        || index === 7 || index === 9"
+        :class="{'card0': index === 0, 'card1': index === 1, 
+        'card2': index === 2, 'card3': index === 3, 
+        'card4': index === 4, 'card5': index === 5, 
+        'card6': index === 6, 'card7': index === 7, 
+        'card8': index === 8, 'card9': index === 9, 'reverse': checkResult}">
+          <img :src="item.img" alt="" class="front">
+          <img src="../assets/cards/img-Box-11.png" alt="" class="back">
+        </li>
+        <li v-for="(item, index) in cardList" :key="index"
+        v-show="index === 0 || index === 2 || index === 4
+        || index === 6 || index === 8"
+        :class="{'card0': index === 0, 'card1': index === 1, 
+        'card2': index === 2, 'card3': index === 3, 
+        'card4': index === 4, 'card5': index === 5, 
+        'card6': index === 6, 'card7': index === 7, 
+        'card8': index === 8, 'card9': index === 9}">
+          <!-- <img :src="item.img" alt="" class="front"> -->
+          <img src="../assets/cards/img-Box-11.png" alt="" class="no-back">
+        </li>
+      </ul>
     </div>
     <!-- 游戏桌面 -->
     <div class="game-table">
@@ -157,31 +185,38 @@
       <div class="chu g-flex" v-for="(item, index) in tbg" :key="index"
       :class="{'chu': index === 0, 'tian': index === 1, 'kan': index === 2}">
         <img :src="item" alt="" height="100%">
+        <div class="coin-box" v-show="index === 0">
+          <div class="coins chu-coins" v-show="chuType">
+            <span v-for="(item, index) in coins" :key="index" :class="{'coin0': index === 0,
+            'coin1': index === 1, 'coin2': index === 2, 'coin3': index === 3, 'coin4': index === 4,
+            'coin5': index === 5, 'coin6': index === 6, 'coin7': index === 7, 'active': chuType}" 
+            >
+            <img :src="item" alt="" width="100%">
+            </span>
+          </div>
+        </div>
+        <div class="coin-box" v-show="index === 1">
+          <div class="coins tian-coins" v-show="tianType">
+            <span v-for="(item, index) in coins" :key="index" :class="{'coin0': index === 0,
+            'coin1': index === 1, 'coin2': index === 2, 'coin3': index === 3, 'coin4': index === 4,
+            'coin5': index === 5, 'coin6': index === 6, 'coin7': index === 7, 'active': tianType}" 
+            >
+            <img :src="item" alt="" width="100%">
+            </span>
+          </div>
+        </div>
+        <div class="coin-box" v-show="index === 2">
+          <div class="coins kan-coins" v-show="kanType">
+              <span v-for="(item, index) in coins" :key="index" :class="{'coin0': index === 0,
+              'coin1': index === 1, 'coin2': index === 2, 'coin3': index === 3, 'coin4': index === 4,
+              'coin5': index === 5, 'coin6': index === 6, 'coin7': index === 7, 'active': kanType}" 
+              >
+              <img :src="item" alt="" width="100%">
+              </span>
+          </div>
+        </div>
       </div>
-      <div class="coins chu-coins" v-show="roomType == 1">
-          <span v-for="(item, index) in coins" :key="index" :class="{'coin0': index === 0,
-          'coin1': index === 1, 'coin2': index === 2, 'coin3': index === 3, 'coin4': index === 4,
-          'coin5': index === 5, 'coin6': index === 6, 'coin7': index === 7, 'active': roomType == 1}" 
-          >
-          <img :src="item" alt="" width="100%">
-          </span>
-      </div>
-      <div class="coins tian-coins" v-show="roomType == 2">
-          <span v-for="(item, index) in coins" :key="index" :class="{'coin0': index === 0,
-          'coin1': index === 1, 'coin2': index === 2, 'coin3': index === 3, 'coin4': index === 4,
-          'coin5': index === 5, 'coin6': index === 6, 'coin7': index === 7, 'active': roomType == 2}" 
-          >
-          <img :src="item" alt="" width="100%">
-          </span>
-      </div>
-      <div class="coins kan-coins" v-show="roomType == 3">
-          <span v-for="(item, index) in coins" :key="index" :class="{'coin0': index === 0,
-          'coin1': index === 1, 'coin2': index === 2, 'coin3': index === 3, 'coin4': index === 4,
-          'coin5': index === 5, 'coin6': index === 6, 'coin7': index === 7, 'active': roomType == 3}" 
-          >
-          <img :src="item" alt="" width="100%">
-          </span>
-      </div>
+
     </div>
     <!-- <div style="padding: 60px;">
     <span style="display: block;width: 50px;height: 50px; background: #eee;" class="win" v-show="showCoins"></span>
@@ -439,8 +474,52 @@ export default {
       releaseReadyText: '', // 游戏中解散房间提示文字
       isCurUserReady: false,
       curCardBg: '',
-      cardList: [],
-      roomType: '', // 投注的类型,
+      cardList: [
+        {
+          img: tabImgs.cards[3],
+          show: true
+        },
+        {
+          img: tabImgs.cards[3],
+          show: false
+        },
+        {
+          img: tabImgs.cards[3],
+          show: true
+        },
+        {
+          img: tabImgs.cards[3],
+          show: false
+        },
+        {
+          img: tabImgs.cards[3],
+          show: true
+        },
+        {
+          img: tabImgs.cards[3],
+          show: false
+        },
+        {
+          img: tabImgs.cards[3],
+          show: true
+        },
+        {
+          img: tabImgs.cards[3],
+          show: false
+        },
+        {
+          img: tabImgs.cards[3],
+          show: true
+        },
+        {
+          img: tabImgs.cards[3],
+          show: false
+        }
+      ],
+      checkResult: false, // 查看结果，翻牌
+      chuType: false, // 投注类型：出门
+      tianType: false, // 投注类型：天门
+      kanType: false, // 投注类型：坎门
       coinList: [] // 投注列表
     }
   },
@@ -821,7 +900,7 @@ export default {
     },
     // 退出房间
     exitRoom () {
-     // this.$router.push({path: '/', query: {'id': ''}})
+      // this.$router.push({path: '/', query: {'id': ''}})
       this.exitText = '您确定要退出房间吗？'
       this.showExitModal = true
     },
@@ -1513,6 +1592,7 @@ export default {
     transform: translate(-50%, -50%);
     z-index: 30;
     .chu,.tian,.kan{
+      position: relative;
       height: 340px;
     }
     .coins{
@@ -1525,141 +1605,143 @@ export default {
         width: 70px;
         height: 56px;
         border-radius: 50%;
+        z-index: 9999;
       }
       .coin0{
+        left: 60px;
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin0.active{
         animation: coinMove0 0.1s linear forwards;
       }
       .coin1{
-       
+       left: 150px;
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin1.active{
         animation: coinMove1 0.1s linear forwards;
       }
       .coin2{
-       
+       left: 70px;
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin2.active{
         animation: coinMove2 0.1s linear forwards;
       }
       .coin3{
-       
+       left: 120px;
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin3.active{
        animation: coinMove3 0.1s linear forwards;
       }
       .coin4{
-        
+        left: 140px;
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin4.active{
         animation: coinMove4 0.2s linear forwards;
       }
       .coin5{
-       
+       left: 50px;
        box-shadow: 5px 5px 15px 2px #333;
       }
       .coin5.active{
         animation: coinMove5 0.1s linear forwards;
       }
       .coin6{
-        
+        left: 20px;
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin6.active{
        animation: coinMove6 0.1s linear forwards;
       }
       .coin7{
-        
+        left: 180px;
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin7.active{
        animation: coinMove7 0.2s linear forwards;
       }
     }
-    .chu-coins{
-      .coin0 {
-        left: 160px;
-      }
-      .coin1 {
-         left: 30px;
-      }
-      .coin2 {
-         left: 70px;
-      }
-      .coin3 {
-         left: 120px;
-      }
-      .coin4 {
-        left: 140px;
-      }
-      .coin5 {
-        left: 50px;
-      }
-      .coin6 {
-        left: 20px;
-      }
-      .coin7 {
-        left: 180px;
-      }
-    }
-    .tian-coins{
-      .coin0 {
-        left: 310px;
-      }
-      .coin1 {
-         left: 180px;
-      }
-      .coin2 {
-         left: 220px;
-      }
-      .coin3 {
-         left: 270px;
-      }
-      .coin4 {
-        left: 220px;
-      }
-      .coin5 {
-        left: 200px;
-      }
-      .coin6 {
-        left: 170px;
-      }
-      .coin7 {
-        left: 330px;
-      }
-    }
-    .chu-coins{
-      .coin0 {
-        left: 460px;
-      }
-      .coin1 {
-         left: 330px;
-      }
-      .coin2 {
-         left: 370px;
-      }
-      .coin3 {
-         left: 40px;
-      }
-      .coin4 {
-        left: 370px;
-      }
-      .coin5 {
-        left: 350px;
-      }
-      .coin6 {
-        left: 320px;
-      }
-      .coin7 {
-        left: 480px;
-      }
-    }
+    // .chu-coins{
+    //   .coin0 {
+    //     left: 60px;
+    //   }
+    //   .coin1 {
+    //      left: 30px;
+    //   }
+    //   .coin2 {
+    //      left: 70px;
+    //   }
+    //   .coin3 {
+    //      left: 120px;
+    //   }
+    //   .coin4 {
+    //     left: 140px;
+    //   }
+    //   .coin5 {
+    //     left: 50px;
+    //   }
+    //   .coin6 {
+    //     left: 20px;
+    //   }
+    //   .coin7 {
+    //     left: 180px;
+    //   }
+    // }
+    // .tian-coins{
+    //   .coin0 {
+    //     left: 310px;
+    //   }
+    //   .coin1 {
+    //      left: 180px;
+    //   }
+    //   .coin2 {
+    //      left: 220px;
+    //   }
+    //   .coin3 {
+    //      left: 270px;
+    //   }
+    //   .coin4 {
+    //     left: 220px;
+    //   }
+    //   .coin5 {
+    //     left: 200px;
+    //   }
+    //   .coin6 {
+    //     left: 170px;
+    //   }
+    //   .coin7 {
+    //     left: 330px;
+    //   }
+    // }
+    // .chu-coins{
+    //   .coin0 {
+    //     left: 460px;
+    //   }
+    //   .coin1 {
+    //      left: 330px;
+    //   }
+    //   .coin2 {
+    //      left: 370px;
+    //   }
+    //   .coin3 {
+    //      left: 40px;
+    //   }
+    //   .coin4 {
+    //     left: 370px;
+    //   }
+    //   .coin5 {
+    //     left: 350px;
+    //   }
+    //   .coin6 {
+    //     left: 320px;
+    //   }
+    //   .coin7 {
+    //     left: 480px;
+    //   }
+    // }
   }
   .yq-friend{
     position: absolute;
@@ -1795,7 +1877,7 @@ export default {
     }
   }
 }
-/**动画**/
+/**下注动画**/
 
 @keyframes coinMove0 {
   0% {
@@ -1942,6 +2024,7 @@ export default {
     opacity: 1;
   }
 }
+/**输赢动画**/
 @keyframes win {
   0% {
     opacity: 0;
@@ -1968,5 +2051,250 @@ export default {
     transform: scale(1)
   }
 }
+/**发牌动画**/
+.cards{
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+  
+  .card-list{
+    position: relative;
+    bottom: -75%;
+    width: 60%;
+    height: 60px;
+    left: 50%;
+    transform: translateX(-70%);
+    -webkit-perspective: 500;
+    -moz-perspective: 500;
+    -ms-perspective: 500;
+    perspective: 500;
+    -ms-transform: perspective(500px);
+    -moz-transform: perspective(500px); /*重要*/
+    li{
+      display: inline-block;
+      list-style: none;
+      position: absolute;
+      left: 25%;
+      bottom: 180px;
+      width: 12%;
+      height: 60px;
+      border: 1px solid #ddd;
+      z-index: 1;
+      transform-style: preserve-3d; /*重要*/
+      transition: 0.6s;
+      transform-style: preserve-3d; /*重要*/
+      img{
+        width: 100%;
+      }
+      .front ,.back{
+        position: absolute;
+        left: 0;
+        top: 0;
+        backface-visibility: hidden;  /*重要*/
+        width: 100%;
+        // height: 100%;
+      }
+      .front {
+          transform: rotateY(0deg);
+          z-index: 2;
+      }
+      .back {
+          transform: rotateY(-180deg);
+      }
+    }
+    li:nth-child(2) {
+      left: 30%;
+      z-index: 2;
+    }
+    li:nth-child(3) {
+      left: 35%;
+      z-index: 3;
+    }
+    li:nth-child(4) {
+      left: 40%;
+      z-index: 4;
+    }
+    li:nth-child(5) {
+      left: 45%;
+      z-index: 5;
+    }
+    li:nth-child(6) {
+      left: 50%;
+      z-index: 6;
+    } 
+    li:nth-child(7) {
+      left: 55%;
+      z-index: 7;
+    }
+     li:nth-child(8) {
+      left: 60%;
+      z-index: 8;
+    }
+    li:nth-child(9) {
+      left: 67%;
+      z-index: 9;
+    }
+    li:nth-child(10) {
+      left: 70%;
+      z-index: 10;
+    }
+    .reverse{
+       transform: rotateY(180deg);
+    }
+    .card0{
+      animation: card0Move 0.3s linear 2.5s forwards;
+    }
+    .card1{
+      animation: card1Move 0.3s linear 2.5s forwards;
+    }
+    .card2{
+      animation: card2Move 0.3s linear 2s forwards;
+    }
+    .card3{
+      animation: card3Move 0.3s linear 2s forwards;
+    }
+    .card4{
+      animation: card4Move 0.3s linear 1.5s forwards;
+    }
+    .card5{
+      animation: card5Move 0.3s linear 1.5s forwards;
+    }
+    .card6{
+      animation: card6Move 0.3s linear 1s forwards;
+    }
+    .card7{
+      animation: card7Move 0.3s linear 1s forwards;
+    }
+    .card8{
+      animation: card8Move 0.3s linear 0.5s forwards;
+    }
+    .card9{
+      animation: card9Move 0.3s linear 0.5s forwards;
+    }
+  }
+  .card-list.active{
+    animation: cardsMove 0.3s linear forwards;
+  }
+}
+@keyframes reverseCard {
+  0%{
+    transform: rotateY(0deg)
+  }
+  100%{
+    transform: rotateY(180deg)
+  }
+}
 
+@keyframes cardsMove {
+  0%{
+    left: 100%;
+    opacity: 0;
+  }
+  100%{
+    left: 60%;
+    opacity: 1;
+  }
+}
+@keyframes card0Move {
+  0%{
+    left: 30%;
+    bottom: 180px;
+  }
+  100%{
+    left: 0%;
+    bottom: 460px;
+  }
+}
+@keyframes card1Move {
+  0%{
+    left: 35%;
+    bottom: 180px;
+  }
+  100%{
+    left: 5%;
+    bottom: 460px;
+  }
+}
+@keyframes card2Move {
+  0%{
+    left: 40%;
+    bottom: 180px;
+  }
+  100%{
+    left: 80%;
+    bottom: 460px;
+  }
+}
+@keyframes card3Move {
+  0%{
+    left: 45%;
+    bottom: 180px;
+  }
+  100%{
+    left: 85%;
+    bottom: 460px;
+  }
+}
+@keyframes card4Move {
+  0%{
+    left: 50%;
+    bottom: 180px;
+  }
+  100%{
+    left: 0%;
+    bottom: 180px;
+  }
+}
+@keyframes card5Move {
+  0%{
+    left: 55%;
+    bottom: 180px;
+  }
+  100%{
+    left: 5%;
+    bottom: 180px;
+  }
+}
+@keyframes card6Move {
+  0%{
+    left: 60%;
+    bottom: 180px;
+  }
+  100%{
+    left: 80%;
+    bottom: 180px;
+  }
+}
+@keyframes card7Move {
+  0%{
+    left: 65%;
+    bottom: 180px;
+  }
+  100%{
+    left: 85%;
+    bottom: 180px;
+  }
+}
+@keyframes card8Move {
+  0%{
+    left: 70%;
+    bottom: 180px;
+  }
+  100%{
+    left: 40%;
+    bottom: 0;
+  }
+}
+@keyframes card9Move {
+  0%{
+    left: 75%;
+    bottom: 180px;
+  }
+  100%{
+    left: 45%;
+    bottom: 0;
+  }
+}
 </style>
