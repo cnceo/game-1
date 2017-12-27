@@ -361,7 +361,7 @@ export default {
       loadDj: false,
       isFirstDj: true,
       gameType: 1,
-      cardBg: ''
+      cardBg: tabImgs.cards.card4
     }
   },
   created () {

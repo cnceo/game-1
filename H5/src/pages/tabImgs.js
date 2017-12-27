@@ -72,6 +72,337 @@ import tmax20 from '../assets/imgs/img_max_score_20.jpg'
 import tmax50 from '../assets/imgs/img_max_score_50.jpg'
 import tmax100 from '../assets/imgs/img_max_score_100.jpg'
 import tmax200 from '../assets/imgs/img_max_score_200.jpg'
+
+// 游戏中大九牌型匹配
+// 1~13数值分别代表A~K 牌类型 1:梅花 2:方块 3:黑桃4:红桃
+
+import D1_1 from '../assets/cards/img-Plumblossom-1.png'
+import D1_2 from '../assets/cards/img-Plumblossom-2.png'
+import D1_3 from '../assets/cards/img-Plumblossom-3.png'
+import D1_4 from '../assets/cards/img-Plumblossom-4.png'
+import D1_5 from '../assets/cards/img-Plumblossom-5.png'
+import D1_6 from '../assets/cards/img-Plumblossom-6.png'
+import D1_7 from '../assets/cards/img-Plumblossom-7.png'
+import D1_8 from '../assets/cards/img-Plumblossom-8.png'
+import D1_9 from '../assets/cards/img-Plumblossom-9.png'
+import D1_10 from '../assets/cards/img-Plumblossom-10.png'
+import D1_11 from '../assets/cards/img-Plumblossom-11.png'
+import D1_12 from '../assets/cards/img-Plumblossom-12.png'
+import D1_13 from '../assets/cards/img-Plumblossom-13.png'
+
+import D2_1 from '../assets/cards/img-Box-1.png'
+import D2_2 from '../assets/cards/img-Box-2.png'
+import D2_3 from '../assets/cards/img-Box-3.png'
+import D2_4 from '../assets/cards/img-Box-4.png'
+import D2_5 from '../assets/cards/img-Box-5.png'
+import D2_6 from '../assets/cards/img-Box-6.png'
+import D2_7 from '../assets/cards/img-Box-7.png'
+import D2_8 from '../assets/cards/img-Box-8.png'
+import D2_9 from '../assets/cards/img-Box-9.png'
+import D2_10 from '../assets/cards/img-Box-10.png'
+import D2_11 from '../assets/cards/img-Box-11.png'
+import D2_12 from '../assets/cards/img-Box-12.png'
+import D2_13 from '../assets/cards/img-Box-13.png'
+
+import D3_1 from '../assets/cards/img-Spades-1.png'
+import D3_2 from '../assets/cards/img-Spades-2.png'
+import D3_3 from '../assets/cards/img-Spades-3.png'
+import D3_4 from '../assets/cards/img-Spades-4.png'
+import D3_5 from '../assets/cards/img-Spades-5.png'
+import D3_6 from '../assets/cards/img-Spades-6.png'
+import D3_7 from '../assets/cards/img-Spades-7.png'
+import D3_8 from '../assets/cards/img-Spades-8.png'
+import D3_9 from '../assets/cards/img-Spades-9.png'
+import D3_10 from '../assets/cards/img-Spades-10.png'
+import D3_11 from '../assets/cards/img-Spades-11.png'
+import D3_12 from '../assets/cards/img-Spades-12.png'
+import D3_13 from '../assets/cards/img-Spades-13.png'
+
+import D4_1 from '../assets/cards/img-Redpeach-1.png'
+import D4_2 from '../assets/cards/img-Redpeach-2.png'
+import D4_3 from '../assets/cards/img-Redpeach-3.png'
+import D4_4 from '../assets/cards/img-Redpeach-4.png'
+import D4_5 from '../assets/cards/img-Redpeach-5.png'
+import D4_6 from '../assets/cards/img-Redpeach-6.png'
+import D4_7 from '../assets/cards/img-Redpeach-7.png'
+import D4_8 from '../assets/cards/img-Redpeach-8.png'
+import D4_9 from '../assets/cards/img-Redpeach-9.png'
+import D4_10 from '../assets/cards/img-Redpeach-10.png'
+import D4_11 from '../assets/cards/img-Redpeach-11.png'
+import D4_12 from '../assets/cards/img-Redpeach-12.png'
+import D4_13 from '../assets/cards/img-Redpeach-13.png'
+
+let arrs = [
+  {
+    type: 1,
+    value: '1',
+    img: D1_1
+  },
+  {
+    type: 1,
+    value: 2,
+    img: D1_2
+  },
+  {
+    type: 1,
+    value: 3,
+    img: D1_3
+  },
+  {
+    type: 1,
+    value: 4,
+    img: D1_4
+  },
+  {
+    type: 1,
+    value: 5,
+    img: D1_5
+  },
+  {
+    type: 1,
+    value: 6,
+    img: D1_6
+  },
+  {
+    type: 1,
+    value: 7,
+    img: D1_7
+  },
+  {
+    type: 1,
+    value: 8,
+    img: D1_8
+  },
+  {
+    type: 1,
+    value: 9,
+    img: D1_9
+  },
+  {
+    type: 1,
+    value: 10,
+    img: D1_10
+  },
+  {
+    type: 1,
+    value: 11,
+    img: D1_11
+  },
+  {
+    type: 1,
+    value: 12,
+    img: D1_12
+  },
+  {
+    type: 1,
+    value: 13,
+    img: D1_13
+  },
+  {
+    type: 2,
+    value: 1,
+    img: D2_1
+  },
+  {
+    type: 2,
+    value: 2,
+    img: D2_2
+  },
+  {
+    type: 2,
+    value: 3,
+    img: D2_3
+  },
+  {
+    type: 2,
+    value: 4,
+    img: D2_4
+  },
+  {
+    type: 2,
+    value: 5,
+    img: D2_5
+  },
+  {
+    type: 2,
+    value: 6,
+    img: D2_6
+  },
+  {
+    type: 2,
+    value: 7,
+    img: D2_7
+  },
+  {
+    type: 2,
+    value: 8,
+    img: D2_8
+  },
+  {
+    type: 2,
+    value: 9,
+    img: D2_9
+  },
+  {
+    type: 2,
+    value: 10,
+    img: D2_10
+  },
+  {
+    type: 2,
+    value: 11,
+    img: D2_11
+  },
+  {
+    type: 2,
+    value: 12,
+    img: D2_12
+  },
+  {
+    type: 2,
+    value: 13,
+    img: D2_13
+  },
+  {
+    type: 3,
+    value: 1,
+    img: D3_1
+  },
+  {
+    type: 3,
+    value: 2,
+    img: D3_2
+  },
+  {
+    type: 3,
+    value: 3,
+    img: D3_3
+  },
+  {
+    type: 3,
+    value: 4,
+    img: D3_4
+  },
+  {
+    type: 3,
+    value: 5,
+    img: D3_5
+  },
+  {
+    type: 3,
+    value: 6,
+    img: D3_6
+  },
+  {
+    type: 3,
+    value: 7,
+    img: D3_7
+  },
+  {
+    type: 3,
+    value: 8,
+    img: D3_8
+  },
+  {
+    type: 3,
+    value: 9,
+    img: D3_9
+  },
+  {
+    type: 3,
+    value: 10,
+    img: D3_10
+  },
+  {
+    type: 3,
+    value: 11,
+    img: D3_11
+  },
+  {
+    type: 3,
+    value: 12,
+    img: D3_12
+  },
+  {
+    type: 3,
+    value: 13,
+    img: D3_13
+  },
+  {
+    type: 4,
+    value: 1,
+    img: D4_1
+  },
+  {
+    type: 4,
+    value: 2,
+    img: D4_2
+  },
+  {
+    type: 4,
+    value: 3,
+    img: D4_3
+  },
+  {
+    type: 4,
+    value: 4,
+    img: D4_4
+  },
+  {
+    type: 4,
+    value: 5,
+    img: D4_5
+  },
+  {
+    type: 4,
+    value: 6,
+    img: D4_6
+  },
+  {
+    type: 4,
+    value: 7,
+    img: D4_7
+  },
+  {
+    type: 4,
+    value: 8,
+    img: D4_8
+  },
+  {
+    type: 4,
+    value: 9,
+    img: D4_9
+  },
+  {
+    type: 4,
+    value: 10,
+    img: D4_10
+  },
+  {
+    type: 4,
+    value: 11,
+    img: D4_11
+  },
+  {
+    type: 4,
+    value: 12,
+    img: D4_12
+  },
+  {
+    type: 4,
+    value: 13,
+    img: D4_13
+  }]
+// let djCards = []
+// for (let i = 1; i <= 4; i++) {
+//   for (let j = 1; j <= 13; j++) {
+//     let obj = {}
+//     obj.type = i
+//     obj.value = j
+//     obj.img = 'D' + i + '_' + j
+//     djCards.push(obj)
+//   }
+// }
 const tabsImgs = {
   imgs: [img1, img2, img3],
   hoverImgs: [img1Hover, img2Hover, img3Hover],
@@ -119,7 +450,8 @@ const tabsImgs = {
       img: tmax200,
       value: 200
     }
-  ]
+  ],
+  djCards: arrs
 }
 
 export default tabsImgs

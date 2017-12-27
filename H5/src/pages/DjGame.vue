@@ -60,6 +60,7 @@
             <span v-show="item.ready == 'false' && item.roomOwner == 'true' && isFriends && isFirst == true" @click="startGame">
               <img src="../assets/imgs/img_Setup_Exchangeaccount.png" alt="" width="100%" height="100%">
             </span>
+          
             <span v-show="item.ready == 'false' && item.roomOwner == 'true' && item.curUser && isFirst == false" @click="startReady">
               <img src="../assets/imgs/img_Room_ready.png" alt="" width="100%" height="100%">
             </span>
@@ -67,6 +68,11 @@
         <div class="card status" :class="{'l-site': (index !== 0) && (index % 2 !== 0),
          'r-site': (index % 2 === 0), 'c-site': (index === 0)}">
          <!-- 发牌区域 -->
+            <ul class="card-list" v-show="cardList.length > 0">
+              <li v-for="(item, index) in cardList" :key="index">
+                <img :src="item.img" alt="">
+              </li>
+            </ul>
          </div>
         <div class="xz-tip">
           <span v-show="item.xz === 0">
@@ -152,14 +158,29 @@
       :class="{'chu': index === 0, 'tian': index === 1, 'kan': index === 2}">
         <img :src="item" alt="" height="100%">
       </div>
-      <div class="coins">
+      <div class="coins chu-coins" v-show="roomType == 1">
           <span v-for="(item, index) in coins" :key="index" :class="{'coin0': index === 0,
           'coin1': index === 1, 'coin2': index === 2, 'coin3': index === 3, 'coin4': index === 4,
-          'coin5': index === 5, 'coin6': index === 6, 'coin7': index === 7, 'active': showCoins}" 
-          v-show="showCoins">
-          <img :src="item" alt="" width="100%" v-if="showCoins">
+          'coin5': index === 5, 'coin6': index === 6, 'coin7': index === 7, 'active': roomType == 1}" 
+          >
+          <img :src="item" alt="" width="100%">
           </span>
-            
+      </div>
+      <div class="coins tian-coins" v-show="roomType == 2">
+          <span v-for="(item, index) in coins" :key="index" :class="{'coin0': index === 0,
+          'coin1': index === 1, 'coin2': index === 2, 'coin3': index === 3, 'coin4': index === 4,
+          'coin5': index === 5, 'coin6': index === 6, 'coin7': index === 7, 'active': roomType == 2}" 
+          >
+          <img :src="item" alt="" width="100%">
+          </span>
+      </div>
+      <div class="coins kan-coins" v-show="roomType == 3">
+          <span v-for="(item, index) in coins" :key="index" :class="{'coin0': index === 0,
+          'coin1': index === 1, 'coin2': index === 2, 'coin3': index === 3, 'coin4': index === 4,
+          'coin5': index === 5, 'coin6': index === 6, 'coin7': index === 7, 'active': roomType == 3}" 
+          >
+          <img :src="item" alt="" width="100%">
+          </span>
       </div>
     </div>
     <!-- <div style="padding: 60px;">
@@ -338,58 +359,7 @@ export default {
       showDj: false,
       showAccount: false,
       qz: false,
-      users: [
-        // {
-        //   name: '小乐',
-        //   avatar: '',
-        //   money: 3000,
-        //   master: true,
-        //   result: 0,
-        //   status: 0,
-        //   card: null,
-        //   xz: 0
-        // },
-        // {
-        //   name: '小刚',
-        //   avatar: '',
-        //   money: 3000,
-        //   master: true,
-        //   result: 1,
-        //   status: 1,
-        //   card: null,
-        //   xz: 1
-        // },
-        // {
-        //   name: '小王',
-        //   avatar: '',
-        //   money: 3000,
-        //   master: false,
-        //   result: 1,
-        //   status: 1,
-        //   card: null,
-        //   xz: 0
-        // },
-        // {
-        //   name: '小李',
-        //   avatar: '',
-        //   money: 3000,
-        //   master: false,
-        //   result: 2,
-        //   status: 2,
-        //   card: null,
-        //   xz: 1
-        // },
-        // {
-        //   name: '小张',
-        //   avatar: '',
-        //   money: 3000,
-        //   master: true,
-        //   result: 0,
-        //   status: 0,
-        //   card: null,
-        //   xz: 0
-        // }
-      ],
+      users: [],
       showSetModal: false,
       socket: null,
       id: '',
@@ -468,7 +438,10 @@ export default {
       showReleaseReadyModal: false,
       releaseReadyText: '', // 游戏中解散房间提示文字
       isCurUserReady: false,
-      curCardBg: ''
+      curCardBg: '',
+      cardList: [],
+      roomType: '', // 投注的类型,
+      coinList: [] // 投注列表
     }
   },
   props: {
@@ -649,6 +622,8 @@ export default {
                 // 房间创建者可以邀请好友
              //   vm.isMaster = true
               }
+              vm.playCards()
+            //  vm.showXzModal = true
               if (item.ready.toString() === 'true') {
                 vm.isCurUserReady = true
               }
@@ -700,6 +675,7 @@ export default {
               vm.isFriends = true
             }
             vm.playCards()
+            vm.showXzModal = true
             // 其他玩家点击准备按钮,判断是否都已经准备就绪
             console.log('ddddddddddddddddddddddd')
             if (vm.isAllUserReady(vm.users)) {
@@ -722,6 +698,7 @@ export default {
         // 将原生带来的参数，显示在show标签位置
         vm.cards = vm.$hds.handler(data)
         console.log('ssssssssssssssssss')
+        vm.cardList = []
         console.log(window.JSON.stringify(vm.cards))
         vm.showDj = false
         vm.$emit('on-close', vm.showDj)
@@ -762,8 +739,10 @@ export default {
       })
       // 投注后更新结果
       this.$JsBridge.registerHandler('updateResult', function (data, responseCallback) {
+        console.log('投注结果收到了')
         // 将原生带来的参数，显示在show标签位置
-        vm.users = vm.$hds.handler(data)
+        vm.coinList = []
+        vm.coinList = vm.$hds.handler(data)
         // 调用responseCallback方法可以带传参数到原生
         responseCallback('')
       })
@@ -1548,60 +1527,137 @@ export default {
         border-radius: 50%;
       }
       .coin0{
-        left: 160px;
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin0.active{
         animation: coinMove0 0.1s linear forwards;
       }
       .coin1{
-        left: 30px;
+       
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin1.active{
         animation: coinMove1 0.1s linear forwards;
       }
       .coin2{
-        left: 70px;
+       
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin2.active{
         animation: coinMove2 0.1s linear forwards;
       }
       .coin3{
-        left: 120px;
+       
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin3.active{
        animation: coinMove3 0.1s linear forwards;
       }
       .coin4{
-        left: 140px;
+        
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin4.active{
         animation: coinMove4 0.2s linear forwards;
       }
       .coin5{
-       left: 50px;
+       
        box-shadow: 5px 5px 15px 2px #333;
       }
       .coin5.active{
         animation: coinMove5 0.1s linear forwards;
       }
       .coin6{
-        left: 20px;
+        
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin6.active{
        animation: coinMove6 0.1s linear forwards;
       }
       .coin7{
-        left: 180px;
+        
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin7.active{
        animation: coinMove7 0.2s linear forwards;
+      }
+    }
+    .chu-coins{
+      .coin0 {
+        left: 160px;
+      }
+      .coin1 {
+         left: 30px;
+      }
+      .coin2 {
+         left: 70px;
+      }
+      .coin3 {
+         left: 120px;
+      }
+      .coin4 {
+        left: 140px;
+      }
+      .coin5 {
+        left: 50px;
+      }
+      .coin6 {
+        left: 20px;
+      }
+      .coin7 {
+        left: 180px;
+      }
+    }
+    .tian-coins{
+      .coin0 {
+        left: 310px;
+      }
+      .coin1 {
+         left: 180px;
+      }
+      .coin2 {
+         left: 220px;
+      }
+      .coin3 {
+         left: 270px;
+      }
+      .coin4 {
+        left: 220px;
+      }
+      .coin5 {
+        left: 200px;
+      }
+      .coin6 {
+        left: 170px;
+      }
+      .coin7 {
+        left: 330px;
+      }
+    }
+    .chu-coins{
+      .coin0 {
+        left: 460px;
+      }
+      .coin1 {
+         left: 330px;
+      }
+      .coin2 {
+         left: 370px;
+      }
+      .coin3 {
+         left: 40px;
+      }
+      .coin4 {
+        left: 370px;
+      }
+      .coin5 {
+        left: 350px;
+      }
+      .coin6 {
+        left: 320px;
+      }
+      .coin7 {
+        left: 480px;
       }
     }
   }

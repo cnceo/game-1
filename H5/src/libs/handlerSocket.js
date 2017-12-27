@@ -45,4 +45,10 @@ handler.handler = function (data) {
   return res
 }
 
+handler.format = function (data) {
+  return window.JSON.parse(data.replace(/[a-zA-Z0-9-]+/g, function (match, index, str) {
+    return '"' + match + '"'
+  }).replace(/=/g, ':'))
+}
+
 export default handler
