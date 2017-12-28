@@ -100,8 +100,8 @@
         'card4': index === 4, 'card5': index === 5, 
         'card6': index === 6, 'card7': index === 7, 
         'card8': index === 8, 'card9': index === 9, 'reverse': checkResult}">
-          <img :src="item.img" alt="" class="front">
-          <img src="../assets/cards/img-Box-11.png" alt="" class="back">
+          <img :src="item.bImg" alt="" class="front">
+          <img :src="item.fImg" alt="" class="back">
         </li>
         <li v-for="(item, index) in cardList" :key="index"
         v-show="index === 0 || index === 2 || index === 4
@@ -112,7 +112,7 @@
         'card6': index === 6, 'card7': index === 7, 
         'card8': index === 8, 'card9': index === 9}">
           <!-- <img :src="item.img" alt="" class="front"> -->
-          <img src="../assets/cards/img-Box-11.png" alt="" class="no-back">
+          <img :src="item.fImg" alt="" class="no-back">
         </li>
       </ul>
     </div>
@@ -448,7 +448,6 @@ export default {
       }],
       showCoins: false,
       isFirst: true,
-      cards: [],
       gameMsg: {},
       cmScore: 0, // 出门下注分数
       tmScore: 0, // 天门下注分数
@@ -474,45 +473,56 @@ export default {
       releaseReadyText: '', // 游戏中解散房间提示文字
       isCurUserReady: false,
       curCardBg: '',
+      cards: tabImgs.cards, // 所有的牌组合方式
       cardList: [
         {
-          img: tabImgs.cards[3],
+          bImg: tabImgs.cards[3],
+          fImg: tabImgs.djCards[0].img,
           show: true
         },
         {
-          img: tabImgs.cards[3],
+          bImg: tabImgs.cards[3],
+          fImg: tabImgs.djCards[0].img,
           show: false
         },
         {
-          img: tabImgs.cards[3],
+          bImg: tabImgs.cards[3],
+          fImg: tabImgs.djCards[0].img,
           show: true
         },
         {
-          img: tabImgs.cards[3],
+          bImg: tabImgs.cards[3],
+          fImg: tabImgs.djCards[0].img,
           show: false
         },
         {
-          img: tabImgs.cards[3],
+          bImg: tabImgs.cards[3],
+          fImg: tabImgs.djCards[0].img,
           show: true
         },
         {
-          img: tabImgs.cards[3],
+          bImg: tabImgs.cards[3],
+          fImg: tabImgs.djCards[0].img,
           show: false
         },
         {
-          img: tabImgs.cards[3],
+          bImg: tabImgs.cards[3],
+          fImg: tabImgs.djCards[0].img,
           show: true
         },
         {
-          img: tabImgs.cards[3],
+          bImg: tabImgs.cards[3],
+          fImg: tabImgs.djCards[0].img,
           show: false
         },
         {
-          img: tabImgs.cards[3],
+          bImg: tabImgs.cards[3],
+          fImg: tabImgs.djCards[0].img,
           show: true
         },
         {
-          img: tabImgs.cards[3],
+          bImg: tabImgs.cards[3],
+          fImg: tabImgs.djCards[0].img,
           show: false
         }
       ],
@@ -649,7 +659,7 @@ export default {
   methods: {
     registerFn () {
       let vm = this
-      // 获取加入游戏的用户列表
+      // 系统更新加入游戏的用户列表
       this.$JsBridge.registerHandler('updateUsers', function (data, responseCallback) {
         console.log('游戏中用户列表更新了')
         console.log(data)
@@ -753,8 +763,6 @@ export default {
               console.log('eeeeee')
               vm.isFriends = true
             }
-            vm.playCards()
-            vm.showXzModal = true
             // 其他玩家点击准备按钮,判断是否都已经准备就绪
             console.log('ddddddddddddddddddddddd')
             if (vm.isAllUserReady(vm.users)) {
@@ -772,26 +780,112 @@ export default {
         // 调用responseCallback方法可以带传参数到原生
         responseCallback('')
       })
-      // 游戏未开始解散房间
+      // 系统发牌
       this.$JsBridge.registerHandler('updateCards', function (data, responseCallback) {
         // 将原生带来的参数，显示在show标签位置
-        vm.cards = vm.$hds.handler(data)
-        console.log('ssssssssssssssssss')
+        console.log('获取到系统发牌')
         vm.cardList = []
-        console.log(window.JSON.stringify(vm.cards))
-        vm.showDj = false
-        vm.$emit('on-close', vm.showDj)
+      //  let list = vm.$hds.handler(data)
+        console.log('ssssssssssssssssss')
+        let list = [
+          {
+            doorNum: 0,
+            block: false,
+            pokerList: [
+              {
+                type: 0,
+                value: 0
+              }
+            ],
+            roomId: '111111'
+          },
+          {
+            doorNum: 1,
+            block: false,
+            pokerList: [
+              {
+                type: 1,
+                value: 1
+              }
+            ],
+            roomId: '222222'
+          },
+          {
+            doorNum: 2,
+            block: false,
+            pokerList: [
+              {
+                type: 2,
+                value: 2
+              }
+            ],
+            roomId: '333333'
+          },
+          {
+            doorNum: 3,
+            block: false,
+            pokerList: [
+              {
+                type: 3,
+                value: 3
+              }
+            ],
+            roomId: '444444'
+          }
+        ]
+        // 当前系统默认背景curCardBg, bImg, 类型 fImg
+        // 还需要匹配当前用户
+        // Number(item.userId)
+       // let listSort = []
+        // vm.users.forEach((item) => {
+        //   for (let i = 0; i < list.length; i++) {
+        //     if (item.userId.toString() === list[i].userId.toString()) {
+        //       listSort.unshift(list[i])
+        //     } else {
+        //       listSort.push(list[i])
+        //     }
+        //   }
+        // })
+        list.forEach((item) => {
+          // 大九
+          if (item.pokerList.length === 1) {
+            let arr1 = []
+            for (let key in item.pokerList) {
+              if (key !== 'img') {
+                arr1.push(item.pokerList[key])
+              }
+            }
+            for (let i = 0; i < vm.cards.length; i++) {
+              let arr2 = []
+              if (vm.cards[i] instanceof Object) {
+                for (let key in vm.cards[i]) {
+                  arr2.push(vm.cards[i][key])
+                }
+              }
+               // 匹配对应的牌
+              if (vm.regCard(arr1, arr2)) {
+                vm.cardList.push({
+                  bImg: vm.curCardBg,
+                  fImg: vm.cards[i].img
+                })
+              }
+            }
+          }
+        })
+        console.log(window.JSON.stringify(vm.cardList))
+        // vm.showDj = false
+        // vm.$emit('on-close', vm.showDj)
         // 调用responseCallback方法可以带传参数到原生
         responseCallback('')
       })
-      // 游戏未开始解散房间
+      // 系统更新投注结果
       this.$JsBridge.registerHandler('updateCoins', function (data, responseCallback) {
         // 将原生带来的参数，显示在show标签位置
         vm.cards = vm.$hds.handler(data)
-        console.log('ssssssssssssssssss')
+        console.log('投注结果收到了')
         console.log(window.JSON.stringify(vm.cards))
-        vm.showDj = false
-        vm.$emit('on-close', vm.showDj)
+        // vm.showDj = false
+        // vm.$emit('on-close', vm.showDj)
         // 调用responseCallback方法可以带传参数到原生
         responseCallback('')
       })
@@ -825,6 +919,18 @@ export default {
         // 调用responseCallback方法可以带传参数到原生
         responseCallback('')
       })
+    },
+    // 判断两个数组所包含内容是否相同
+    regCard (arr1, arr2) {
+      if (arr1.length !== arr2.length) {
+        return false
+      }
+      for (let i = 0; i < arr1.length; i++) {
+        if (arr1[i].toString() !== arr2[i].toString()) {
+          return false
+        }
+      }
+      return true
     },
     getRoomMsg () {
       console.log(this.lowz)
