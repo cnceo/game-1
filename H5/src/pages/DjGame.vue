@@ -528,6 +528,7 @@ export default {
       ],
       showCards: false,
       checkResult: false, // 查看结果，翻牌
+      isDown: false, // 是否已经下注过
       chuType: false, // 投注类型：出门
       tianType: false, // 投注类型：天门
       kanType: false, // 投注类型：坎门
@@ -752,7 +753,7 @@ export default {
           })
        //   console.log(window.JSON.stringify(vm.users))
           console.log('bbbbbbbbbbbbbbbbbbbbb')
-          vm.playCards()
+        //  vm.playCards()
           // 显示准备按钮
           if (!vm.isStartReady) {
             console.log('cccccccccccccccc')
@@ -762,7 +763,8 @@ export default {
             console.log(vm.isOtherReady(vm.users))
             if (vm.isOtherReady(vm.users)) {
               console.log('eeeeee')
-              vm.isFriends = true
+             // vm.isFriends = true
+              vm.playCards()
             }
             // 其他玩家点击准备按钮,判断是否都已经准备就绪
             console.log('ddddddddddddddddddddddd')
@@ -873,6 +875,7 @@ export default {
             }
           }
         })
+        vm.showCards = true
         console.log(window.JSON.stringify(vm.cardList))
         // vm.showDj = false
         // vm.$emit('on-close', vm.showDj)
@@ -1177,6 +1180,9 @@ export default {
     },
     // 确定下注
     xzOk () {
+      if (this.isDown) {
+        return
+      }
       this.kanType = true
       this.checkResult = true
       let userDoorVOList = []
@@ -1210,13 +1216,14 @@ export default {
           }
         }
       })
-      // let vm = this
+      let vm = this
       this.$JsBridge.callHandler(
         'downCoin' // 原生的方法名
         , {'param': params} // 带个原生方法的参数
         , function (responseData) { // 响应原生回调方法
-          this.showXzModal = false
-          this.showCoins = true
+          vm.showXzModal = false
+          vm.showCoins = true
+          vm.isDown = true
           // if (Number(window.JSON.parse(responseData)) === 200) {
           //   vm.$router.push({path: router, params: {}})
           // }
@@ -1307,8 +1314,8 @@ export default {
           }
         }
       })
-      this.showXzModal = true
-      this.showCards = true
+      // this.showXzModal = true
+      // this.showCards = true
       // let vm = this
       this.$JsBridge.callHandler(
         'delayRoom' // 原生的方法名
