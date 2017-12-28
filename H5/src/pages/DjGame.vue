@@ -23,13 +23,13 @@
             <img src="../assets/imgs/img_Room_owner.png" alt="" width="100%" height="100%">
            </div>
           <div class="result" :class="{'cur-user': index === 0}">
-            <span v-show="item.status === 0" class="lost">
+            <span v-show="item.status === 0 && gameEnd" class="lost">
               <img :src="result[1]" alt="" width="100%">
             </span>
-            <span v-show="item.status === 1" class="tie">
+            <span v-show="item.status === 1 && gameEnd" class="tie">
               <img :src="result[2]" alt="" width="100%">
             </span>
-            <span v-show="item.status === 2" class="win">
+            <span v-show="item.status === 2 && gameEnd" class="win">
               <img :src="result[0]" alt="" width="100%">
             </span>
           </div>
@@ -526,11 +526,13 @@ export default {
           show: false
         }
       ],
+      showCards: false,
       checkResult: false, // 查看结果，翻牌
       chuType: false, // 投注类型：出门
       tianType: false, // 投注类型：天门
       kanType: false, // 投注类型：坎门
-      coinList: [] // 投注列表
+      coinList: [], // 投注列表
+      gameEnd: false // 显示游戏结束结果字样
     }
   },
   props: {
@@ -711,8 +713,6 @@ export default {
                 // 房间创建者可以邀请好友
              //   vm.isMaster = true
               }
-              vm.playCards()
-            //  vm.showXzModal = true
               if (item.ready.toString() === 'true') {
                 vm.isCurUserReady = true
               }
@@ -752,6 +752,7 @@ export default {
           })
        //   console.log(window.JSON.stringify(vm.users))
           console.log('bbbbbbbbbbbbbbbbbbbbb')
+          vm.playCards()
           // 显示准备按钮
           if (!vm.isStartReady) {
             console.log('cccccccccccccccc')
@@ -933,6 +934,9 @@ export default {
       return true
     },
     getRoomMsg () {
+      if (this.lowz.length >= 4) {
+        return
+      }
       console.log(this.lowz)
       if (Number(this.gameMsg.baseScore) === 20) {
         this.lowz.push(this.lowzMax[0])
@@ -1173,6 +1177,8 @@ export default {
     },
     // 确定下注
     xzOk () {
+      this.kanType = true
+      this.checkResult = true
       let userDoorVOList = []
       if (this.cmScore) {
         userDoorVOList.push({
@@ -1301,6 +1307,8 @@ export default {
           }
         }
       })
+      this.showXzModal = true
+      this.showCards = true
       // let vm = this
       this.$JsBridge.callHandler(
         'delayRoom' // 原生的方法名
