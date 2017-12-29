@@ -93,26 +93,18 @@
       <ul class="card-list" ref="card" v-show="showCards"
          :class="{'active': showCards}">
         <li v-for="(item, index) in cardList" :key="index"
-        v-show="index === 1 || index === 3 || index === 5
-        || index === 7 || index === 9"
-        :class="{'card0': index === 0, 'card1': index === 1, 
-        'card2': index === 2, 'card3': index === 3, 
-        'card4': index === 4, 'card5': index === 5, 
-        'card6': index === 6, 'card7': index === 7, 
-        'card8': index === 8, 'card9': index === 9, 'reverse': checkResult}">
+        v-if="index === 1 || index === 3 || index === 5"
+        :class="{'card1': index === 1, 'card3': index === 3, 
+        'card5': index === 5, 'reverse': checkResult1}">
           <img :src="item.bImg" alt="" class="front">
           <img :src="item.fImg" alt="" class="back">
         </li>
         <li v-for="(item, index) in cardList" :key="index"
-        v-show="index === 0 || index === 2 || index === 4
-        || index === 6 || index === 8"
-        :class="{'card0': index === 0, 'card1': index === 1, 
-        'card2': index === 2, 'card3': index === 3, 
-        'card4': index === 4, 'card5': index === 5, 
-        'card6': index === 6, 'card7': index === 7, 
-        'card8': index === 8, 'card9': index === 9}">
-          <!-- <img :src="item.img" alt="" class="front"> -->
-          <img :src="item.fImg" alt="" class="no-back">
+        v-if="index === 0 || index === 2 || index === 4"
+        :class="{'card0': index === 0, 'card2': index === 2,
+        'card4': index === 4, 'reverse': checkResult2}">
+          <img :src="item.bImg" alt="" class="front">
+          <img :src="item.fImg" alt="" class="back">
         </li>
       </ul>
     </div>
@@ -504,30 +496,31 @@ export default {
           bImg: tabImgs.cards[3],
           fImg: tabImgs.djCards[0].img,
           show: false
-        },
-        {
-          bImg: tabImgs.cards[3],
-          fImg: tabImgs.djCards[0].img,
-          show: true
-        },
-        {
-          bImg: tabImgs.cards[3],
-          fImg: tabImgs.djCards[0].img,
-          show: false
-        },
-        {
-          bImg: tabImgs.cards[3],
-          fImg: tabImgs.djCards[0].img,
-          show: true
-        },
-        {
-          bImg: tabImgs.cards[3],
-          fImg: tabImgs.djCards[0].img,
-          show: false
         }
+        // {
+        //   bImg: tabImgs.cards[3],
+        //   fImg: tabImgs.djCards[0].img,
+        //   show: true
+        // },
+        // {
+        //   bImg: tabImgs.cards[3],
+        //   fImg: tabImgs.djCards[0].img,
+        //   show: false
+        // },
+        // {
+        //   bImg: tabImgs.cards[3],
+        //   fImg: tabImgs.djCards[0].img,
+        //   show: true
+        // },
+        // {
+        //   bImg: tabImgs.cards[3],
+        //   fImg: tabImgs.djCards[0].img,
+        //   show: false
+        // }
       ],
       showCards: false,
-      checkResult: false, // 查看结果，翻牌
+      checkResult1: false, // 查看结果，翻牌
+      checkResult2: false, // 查看结果，翻牌
       isDown: false, // 是否已经下注过
       chuType: false, // 投注类型：出门
       tianType: false, // 投注类型：天门
@@ -670,7 +663,8 @@ export default {
         vm.users = []
         let arr = []
         // let val = []
-        arr = vm.$hds.handler(data)
+        // arr = vm.$hds.handler(data)
+        arr = window.JSON.parse(data)
         // val.forEach((item) => {
         //   if (item instanceof Object) {
         //     item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
@@ -792,7 +786,7 @@ export default {
         // 将原生带来的参数，显示在show标签位置
         console.log('获取到系统发牌')
         vm.cardList = []
-      //  let list = vm.$hds.handler(data)
+      //  let list = window.JSON.parse(data)
         console.log('ssssssssssssssssss')
         let list = [
           {
@@ -880,6 +874,9 @@ export default {
           }
         })
         vm.showCards = true
+        setTimeout(() => {
+          vm.checkResult1 = true
+        }, 2000)
         console.log(window.JSON.stringify(vm.cardList))
         // vm.showDj = false
         // vm.$emit('on-close', vm.showDj)
@@ -889,7 +886,7 @@ export default {
       // 系统更新投注结果
       this.$JsBridge.registerHandler('updateCoins', function (data, responseCallback) {
         // 将原生带来的参数，显示在show标签位置
-        vm.cards = vm.$hds.handler(data)
+        vm.cards = window.JSON.parse(data)
         console.log('投注结果收到了')
         console.log(window.JSON.stringify(vm.cards))
         // vm.showDj = false
@@ -901,7 +898,7 @@ export default {
       this.$JsBridge.registerHandler('releaseWait', function (data, responseCallback) {
         console.log('游戏未开始解散房间')
         // 将原生带来的参数，显示在show标签位置
-        vm.users = vm.$hds.handler(data)
+        vm.users = window.JSON.parse(data)
         vm.showDj = false
         vm.$emit('on-close', vm.showDj)
         // 调用responseCallback方法可以带传参数到原生
@@ -911,7 +908,7 @@ export default {
       this.$JsBridge.registerHandler('releaseReady', function (data, responseCallback) {
         // 将原生带来的参数，显示在show标签位置
         console.log('游戏中解散房间')
-        vm.users = vm.$hds.handler(data)
+        vm.users = window.JSON.parse(data)
         vm.disbandType = 2
         vm.releaseReadyText = '有用户在解散房间，您是否同意？'
         vm.showReleaseReadyModal = true
@@ -923,7 +920,7 @@ export default {
         console.log('投注结果收到了')
         // 将原生带来的参数，显示在show标签位置
         vm.coinList = []
-        vm.coinList = vm.$hds.handler(data)
+        vm.coinList = window.JSON.parse(data)
         // 调用responseCallback方法可以带传参数到原生
         responseCallback('')
       })
@@ -2183,10 +2180,10 @@ export default {
   width: 100%;
   height: 100%;
   z-index: 999;
-  
   .card-list{
     position: relative;
-    bottom: -75%;
+   /* bottom: -75%; */
+    top: 15%;
     width: 60%;
     height: 60px;
     left: 50%;
@@ -2202,7 +2199,8 @@ export default {
       list-style: none;
       position: absolute;
       left: 25%;
-      bottom: 180px;
+    /*  bottom: 180px; */
+      top: -20px;
       width: 12%;
       height: 60px;
       border: 1px solid #ddd;
@@ -2229,74 +2227,42 @@ export default {
           transform: rotateY(-180deg);
       }
     }
-    li:nth-child(2) {
-      left: 30%;
-      z-index: 2;
-    }
-    li:nth-child(3) {
-      left: 35%;
-      z-index: 3;
-    }
-    li:nth-child(4) {
-      left: 40%;
-      z-index: 4;
-    }
-    li:nth-child(5) {
-      left: 45%;
-      z-index: 5;
-    }
-    li:nth-child(6) {
-      left: 50%;
-      z-index: 6;
-    } 
-    li:nth-child(7) {
-      left: 55%;
-      z-index: 7;
-    }
-     li:nth-child(8) {
-      left: 60%;
-      z-index: 8;
-    }
-    li:nth-child(9) {
-      left: 67%;
-      z-index: 9;
-    }
-    li:nth-child(10) {
-      left: 70%;
-      z-index: 10;
-    }
     .reverse{
-       transform: rotateY(180deg);
+      transform: rotateY(180deg);
     }
-    .card0{
-      animation: card0Move 0.3s linear 2.5s forwards;
+    .fanzhuan{
+      transform: rotateY(180deg);
+     // animation: reverseCard 0.3s linear 2s forwards;
+    }
+   .card0{
+      left: 35%;
+      z-index: 0;
+      animation: card0Move 0.3s linear 0.5s forwards;
     }
     .card1{
-      animation: card1Move 0.3s linear 2.5s forwards;
+      left: 40%;
+      z-index: 1;
+      animation: card1Move 0.3s linear 0.5s forwards;
     }
     .card2{
-      animation: card2Move 0.3s linear 2s forwards;
+      left: 45%;
+      z-index: 2;
+      animation: card2Move 0.3s linear 1s forwards;
     }
     .card3{
-      animation: card3Move 0.3s linear 2s forwards;
+      left: 50%;
+      z-index: 3;
+      animation: card3Move 0.3s linear 1s forwards;
     }
     .card4{
+      left: 55%;
+      z-index: 4;
       animation: card4Move 0.3s linear 1.5s forwards;
     }
     .card5{
+      left: 60%;
+      z-index: 5;
       animation: card5Move 0.3s linear 1.5s forwards;
-    }
-    .card6{
-      animation: card6Move 0.3s linear 1s forwards;
-    }
-    .card7{
-      animation: card7Move 0.3s linear 1s forwards;
-    }
-    .card8{
-      animation: card8Move 0.3s linear 0.5s forwards;
-    }
-    .card9{
-      animation: card9Move 0.3s linear 0.5s forwards;
     }
   }
   .card-list.active{
@@ -2324,64 +2290,104 @@ export default {
 }
 @keyframes card0Move {
   0%{
-    left: 30%;
-    bottom: 180px;
+    left: 35%;
+    top: -20px;
   }
   100%{
-    left: 0%;
-    bottom: 460px;
+    left: 13%;
+    top: 300px;
   }
 }
 @keyframes card1Move {
   0%{
-    left: 35%;
-    bottom: 180px;
+    left: 40%;
+    top: -20px;
   }
   100%{
-    left: 5%;
-    bottom: 460px;
+    left: 18%;
+    top: 300px;
   }
 }
 @keyframes card2Move {
   0%{
-    left: 40%;
-    bottom: 180px;
+    left: 45%;
+    top: -20px;
   }
   100%{
-    left: 80%;
-    bottom: 460px;
+    left: 45%;
+    top: 300px;
   }
 }
 @keyframes card3Move {
   0%{
-    left: 45%;
-    bottom: 180px;
+    left: 50%;
+    top: -20px;
   }
   100%{
-    left: 85%;
-    bottom: 460px;
+    left: 50%;
+    top: 300px;
   }
 }
 @keyframes card4Move {
   0%{
-    left: 50%;
-    bottom: 180px;
+    left: 55%;
+    top: -20px;
   }
   100%{
-    left: 0%;
-    bottom: 180px;
+    left: 77%;
+    top: 300px;
   }
 }
 @keyframes card5Move {
   0%{
-    left: 55%;
-    bottom: 180px;
+    left: 60%;
+    top: -20px;
   }
   100%{
-    left: 5%;
-    bottom: 180px;
+    left: 82%;
+    top: 300px;
   }
 }
+// @keyframes card2Move {
+//   0%{
+//     left: 40%;
+//     bottom: 180px;
+//   }
+//   100%{
+//     left: 80%;
+//     bottom: 460px;
+//   }
+// }
+// @keyframes card3Move {
+//   0%{
+//     left: 45%;
+//     bottom: 180px;
+//   }
+//   100%{
+//     left: 85%;
+//     bottom: 460px;
+//   }
+// }
+// @keyframes card4Move {
+//   0%{
+//     left: 50%;
+//     bottom: 180px;
+//   }
+//   100%{
+//     left: 0%;
+//     bottom: 180px;
+//   }
+// }
+// @keyframes card5Move {
+//   0%{
+//     left: 55%;
+//     bottom: 180px;
+//   }
+//   100%{
+//     left: 5%;
+//     bottom: 180px;
+//   }
+// }
 @keyframes card6Move {
   0%{
     left: 60%;

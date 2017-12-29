@@ -58,7 +58,9 @@
     <div class="z-bg" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1">
       <img src="../assets/imgs/background.png" alt=""  width="100%">
     </div>
-
+    <div class="z-bg" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; background: rgba(0, 0, 0, .5)" v-show="loadRoom">
+      <img src="../assets/imgs/loading.gif" alt=""  style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%)" width="120px" height="120px">
+    </div>
     <!--规则-->
     <Modal :showModal="showRuleModal"
     @on-close="closeRuleModal"
@@ -361,7 +363,8 @@ export default {
       loadDj: false,
       isFirstDj: true,
       gameType: 1,
-      cardBg: tabImgs.cards.card4
+      cardBg: tabImgs.cards.card4,
+      loadRoom: false
     }
   },
   created () {
@@ -706,6 +709,7 @@ export default {
     },
     // 创建房间
     createGameRoom (e) {
+      this.loadRoom = true
       this.$audio.play(this.$audio.btn)
       let selectData = {}
       let type = null
@@ -833,6 +837,7 @@ export default {
         this.roomNums.forEach((item) => {
           str += item
         })
+        this.loadRoom = true
         this.startEnterRoom(str)
       }
     },
@@ -899,7 +904,8 @@ export default {
         , {'param': ajaxParams} // 带个原生方法的参数
         , function (responseData) { // 响应原生回调方法
           console.log('加入房间socket成功')
-          let data = vm.$hds.handler(responseData)
+          vm.loadRoom = false
+          let data = window.JSON.parse(responseData)
           vm.$store.dispatch('saveUsers', data)
           // this.showDj = true
           if (vm.gameType === 1) {
