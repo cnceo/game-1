@@ -700,6 +700,10 @@ export default {
         //     arr.push(obj)
         //   }
         // })
+        // 游戏开始，禁止用户加入
+        // if (vm.isGameStart) {
+        //   return
+        // }
         // 如果人数最少2人，即可开始游戏
         if (arr.length < MIN_USER) {
           console.log('aaaaaaaaaaaaaaaaaaaa')
