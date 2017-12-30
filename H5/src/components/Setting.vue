@@ -261,17 +261,22 @@ export default {
       margin-top: 30px;
       .set-box{
         .row {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            margin: 30px 0;
-            .label{
-            // flex: 0 0 180px;
-             width: 20%;
-             margin-top: 10px;
-             vertical-align: middle;
-            }
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          margin: 30px 0;
+          .label{
+          // flex: 0 0 180px;
+            width: 20%;
+            margin-top: 10px;
+            vertical-align: middle;
           }
+        }
+        .row:last-child {
+          .label{
+            width: 23%;
+          }
+        }
       }
     }
     .toggle{

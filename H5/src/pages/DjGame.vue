@@ -15,11 +15,11 @@
             <img :src="item.headimgurl" alt="" width="100%" height="100%">
           </div>
           <div class="master" :class="{'l-site': (index === 0) || (index % 2 !== 0),
-           'r-site': (index !== 0) && (index % 2 === 0)}" v-show="item.roomOwner == 'true'">
+           'r-site': (index !== 0) && (index % 2 === 0)}" v-show="item.roomOwner == true">
             <img src="../assets/imgs/img_Room_owner.png" alt="" width="100%" height="100%">
            </div>
            <div class="zuja" :class="{'l-site': (index === 0) || (index % 2 !== 0),
-           'r-site': (index !== 0) && (index % 2 === 0)}" v-show="item.Banker == 'true'">
+           'r-site': (index !== 0) && (index % 2 === 0)}" v-show="item.Banker == true">
             <img src="../assets/imgs/img_Room_owner.png" alt="" width="100%" height="100%">
            </div>
           <div class="result" :class="{'cur-user': index === 0}">
@@ -51,17 +51,17 @@
         </div>
         <div class="status" :class="{'l-site': (index !== 0) && (index % 2 !== 0),
          'r-site': (index % 2 === 0), 'c-site': (index === 0)}">
-            <span v-show="item.ready == 'false' && item.roomOwner == 'false' && item.curUser" @click="startReady">
+            <span v-show="item.ready == false && item.roomOwner == false && item.curUser" @click="startReady">
               <img src="../assets/imgs/img_Room_ready.png" alt="" width="100%" height="100%">
             </span>
-            <span v-show="item.ready == 'true' && (item.roomOwner == 'false' ||  isFirst == false) && isStartReady">
+            <span v-show="item.ready == true && (item.roomOwner == false ||  isFirst == false) && isStartReady">
               <img src="../assets/imgs/img_Room_readying.png" alt="" width="100%" height="100%">
             </span>
-            <span v-show="item.ready == 'false' && item.roomOwner == 'true' && isFriends && isFirst == true" @click="startGame">
+            <span v-show="item.ready == false && item.roomOwner == true && isFriends && isFirst == true" @click="startGame">
               <img src="../assets/imgs/img_Setup_Exchangeaccount.png" alt="" width="100%" height="100%">
             </span>
           
-            <span v-show="item.ready == 'false' && item.roomOwner == 'true' && item.curUser && isFirst == false" @click="startReady">
+            <span v-show="item.ready == false && item.roomOwner == true && item.curUser && isFirst == false" @click="startReady">
               <img src="../assets/imgs/img_Room_ready.png" alt="" width="100%" height="100%">
             </span>
          </div>
@@ -173,7 +173,7 @@
       </div>
     </div>
     <!-- 牌面 -->
-    <div class="card-table g-flex-row">
+    <div class="card-table g-flex-row" v-show="isGameStart">
       <div class="chu g-flex" v-for="(item, index) in tbg" :key="index"
       :class="{'chu': index === 0, 'tian': index === 1, 'kan': index === 2}">
         <img :src="item" alt="" height="100%">
@@ -762,7 +762,7 @@ export default {
             if (vm.isOtherReady(vm.users)) {
               console.log('eeeeee')
              // vm.isFriends = true
-              vm.playCards()
+           //   vm.playCards()
             }
             // 其他玩家点击准备按钮,判断是否都已经准备就绪
             console.log('ddddddddddddddddddddddd')
@@ -876,6 +876,14 @@ export default {
         vm.showCards = true
         setTimeout(() => {
           vm.checkResult1 = true
+          vm.users.forEach((item) => {
+            if (Number(item.userId) === Number(vm.userId)) {
+              item.xz = 0
+            } else {
+              item.xz = 1
+            }
+          })
+          vm.showXzModal = true
         }, 2000)
         console.log(window.JSON.stringify(vm.cardList))
         // vm.showDj = false
@@ -978,6 +986,7 @@ export default {
     },
     // 抢庄
     isQz () {
+      this.$audio.play(this.$audio.ui)
       // 若是都准备就绪，禁止抢庄
       if (this.isCurUserReady) {
         return false
@@ -1010,19 +1019,23 @@ export default {
     },
     // 设置
     setting () {
+      this.$audio.play(this.$audio.ui)
       this.$refs.setting.openSetModal()
     },
     // 退出房间
     exitRoom () {
+      this.$audio.play(this.$audio.ui)
       // this.$router.push({path: '/', query: {'id': ''}})
       this.exitText = '您确定要退出房间吗？'
       this.showExitModal = true
     },
     exitRoomCancel () {
+      this.$audio.play(this.$audio.btn)
       this.showExitModal = false
     },
     // 确定退出房间
     exitRoomOk () {
+      this.$audio.play(this.$audio.btn)
       let params = window.JSON.stringify({
         host: this.$url,
         path: this.$interface['/app'],
@@ -1051,6 +1064,7 @@ export default {
     },
     // 解散房间
     releaseRoom () {
+      this.$audio.play(this.$audio.ui)
      // this.$router.push({path: '/', query: {'id': ''}})
       if (this.isGameStart) {
         // 游戏中解散房间
@@ -1065,10 +1079,12 @@ export default {
       this.showReleaseWaitModal = true
     },
     releaseWaitCancel () {
+      this.$audio.play(this.$audio.btn)
       this.showReleaseWaitModal = false
     },
     // 游戏还没开始解散房间
     releaseWaitOk () {
+      this.$audio.play(this.$audio.btn)
       let params = window.JSON.stringify({
         host: this.$url,
         path: this.$interface['/app'],
@@ -1101,10 +1117,12 @@ export default {
       this.showReleaseReadyModal = true
     },
     releaseReadyCancel () {
+      this.$audio.play(this.$audio.btn)
       this.showReleaseReadyModal = false
     },
     // 游戏进行中解散房间
     releaseReadyOk () {
+      this.$audio.play(this.$audio.btn)
       let params = window.JSON.stringify({
         host: this.$url,
         path: this.$interface['/app'],
@@ -1139,6 +1157,7 @@ export default {
     },
     // 出门投注分数
     selectCmScore (val) {
+      this.$audio.play(this.$audio.ui)
       this.cmType = 1
       this.cmScore += val
       if (this.cmScore >= 50) {
@@ -1148,11 +1167,13 @@ export default {
     },
     // 删除出门投注分数
     deleteCmScore () {
+      this.$audio.play(this.$audio.ui)
       this.cmType = 0
       this.cmScore = 0
     },
     // 天门投注分数
     selectTmScore (val) {
+      this.$audio.play(this.$audio.ui)
       this.tmType = 2
       this.tmScore += val
       if (this.tmScore >= 50) {
@@ -1162,11 +1183,13 @@ export default {
     },
     // 删除天门投注分数
     deleteTmScore () {
+      this.$audio.play(this.$audio.ui)
       this.tmType = 0
       this.tmScore = 0
     },
     // 投注坎门
     selectKmScore (val) {
+      this.$audio.play(this.$audio.ui)
       this.kmType = 3
       this.kmScore += val
       if (this.kmScore >= 50) {
@@ -1176,11 +1199,13 @@ export default {
     },
     // 删除坎门投注分数
     deleteKmScore () {
+      this.$audio.play(this.$audio.ui)
       this.kmType = 0
       this.kmScore = 0
     },
     // 确定下注
     xzOk () {
+      this.$audio.play(this.$audio.btn)
       if (this.isDown) {
         return
       }
@@ -1235,6 +1260,7 @@ export default {
     },
     // 邀请好友
     invateFriend () {
+      this.$audio.play(this.$audio.btn)
       let params = window.JSON.stringify({
         numId: this.gameMsg.numId,
         baseScore: this.gameMsg.baseScore,
@@ -1254,6 +1280,7 @@ export default {
     },
     // 开始游戏
     startGame () {
+      this.$audio.play(this.$audio.btn)
       let params = window.JSON.stringify({
         host: this.$url,
         path: this.$interface['/app'],
@@ -1279,6 +1306,7 @@ export default {
     },
     // 开始准备
     startReady () {
+      this.$audio.play(this.$audio.btn)
       let params = window.JSON.stringify({
         host: this.$url,
         path: this.$interface['/app'],
@@ -1668,7 +1696,7 @@ export default {
         left: 50%;
       }
       .rate{
-         top: 31%;
+         top: 33%;
       }
       .room-num{
         top: 6%;
@@ -1709,18 +1737,19 @@ export default {
   }
   .card-table{
     position: absolute;
-    top: 50%;
+    top: 49%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 30;
     .chu,.tian,.kan{
       position: relative;
-      height: 340px;
+      height: 320px;
     }
     .coins{
       position: absolute;
       top: 0;
       left: 0;
+      z-index: 1000;
       span{
         position: absolute;
         display: block;
@@ -2003,146 +2032,146 @@ export default {
 
 @keyframes coinMove0 {
   0% {
-    top: -50px;
+    top: -200px;
     opacity: 0;
   }
   60% {
-    top: 150px;
+    top: -100px;
     opacity: 0.5;
   }
   80% {
-    top: 120px;
+    top: -30px;
     opacity: 1;
   }
   100% {
-    top: 150px;
+    top: 0px;
     opacity: 1;
   }
 }
 
 @keyframes coinMove1 {
   0% {
-    top: -10px;
+    top: -160px;
     opacity: 0.5;
   }
   60% {
-    top: 130px;
+    top: -100px;
     opacity: 1;
   }
   80% {
-    top: 80px;
+    top: -70px;
     opacity: 1;
   }
   100% {
-    top: 130px;
+    top: -20px;
     opacity: 1;
   }
 }
 @keyframes coinMove2 {
   0% {
-    top: -10px;
+    top: -160px;
     opacity: 0.5;
   }
   60% {
-    top: 180px;
+    top: -70px;
     opacity: 1;
   }
   80% {
-    top: 140px;
+    top: -10px;
     opacity: 1;
   }
   100% {
-    top: 180px;
+    top: 60px;
     opacity: 1;
   }
 }
 @keyframes coinMove3 {
   0% {
-    top: 0px;
+    top: -150px;
     opacity: 0.5;
   }
   60% {
-    top: 250px;
+    top: -100px;
     opacity: 1;
   }
   80% {
-    top: 200px;
+    top: 60px;
     opacity: 1;
   }
   100% {
-    top: 250px;
+    top: 100px;
     opacity: 1;
   }
 }
 @keyframes coinMove4 {
   0% {
-    top: -50px;
+    top: -200px;
     opacity: 0.5;
   }
   60% {
-    top: 200px;
+    top: -40px;
     opacity: 1;
   }
   80% {
-    top: 180px;
+    top: 30px;
     opacity: 1;
   }
   100% {
-    top: 200px;
+    top: 40px;
     opacity: 1;
   }
 }
 @keyframes coinMove5 {
   0% {
-    top: 0px;
+    top: -90px;
     opacity: 0.5;
   }
   60% {
-    top: 260px;
+    top: 10px;
     opacity: 1;
   }
   80% {
-    top: 210px;
+    top: 60px;
     opacity: 1;
   }
   100% {
-    top: 260px;
+    top: 110px;
     opacity: 1;
   }
 }
 @keyframes coinMove6 {
   0% {
-    top: -10px;
+    top: -160px;
     opacity: 0.5;
   }
   60% {
-    top: 200px;
+    top: -50px;
     opacity: 1;
   }
   80% {
-    top: 160px;
+    top: 10px;
     opacity: 1;
   }
   100% {
-    top: 200px;
+    top: 50px;
     opacity: 1;
   }
 }
 @keyframes coinMove7 {
   0% {
-    top: -30px;
+    top: -180px;
     opacity: 0.5;
   }
   60% {
-    top: 240px;
+    top: -90px;
     opacity: 1;
   }
   80% {
-    top: 200px;
+    top: 50px;
     opacity: 1;
   }
   100% {
-    top: 240px;
+    top: 90px;
     opacity: 1;
   }
 }
@@ -2294,8 +2323,8 @@ export default {
     top: -20px;
   }
   100%{
-    left: 13%;
-    top: 300px;
+    left: 15%;
+    top: 280px;
   }
 }
 @keyframes card1Move {
@@ -2304,8 +2333,8 @@ export default {
     top: -20px;
   }
   100%{
-    left: 18%;
-    top: 300px;
+    left: 20%;
+    top: 280px;
   }
 }
 @keyframes card2Move {
@@ -2315,7 +2344,7 @@ export default {
   }
   100%{
     left: 45%;
-    top: 300px;
+    top: 280px;
   }
 }
 @keyframes card3Move {
@@ -2325,7 +2354,7 @@ export default {
   }
   100%{
     left: 50%;
-    top: 300px;
+    top: 280px;
   }
 }
 @keyframes card4Move {
@@ -2334,8 +2363,8 @@ export default {
     top: -20px;
   }
   100%{
-    left: 77%;
-    top: 300px;
+    left: 75%;
+    top: 280px;
   }
 }
 @keyframes card5Move {
@@ -2344,8 +2373,8 @@ export default {
     top: -20px;
   }
   100%{
-    left: 82%;
-    top: 300px;
+    left: 80%;
+    top: 280px;
   }
 }
 // @keyframes card2Move {

@@ -38,6 +38,8 @@
         <div id="horse">
           <div class="box">{{dtMsg}}</div>
           <div class="box">{{dtMsg}}</div>
+          <!-- <div class="box">红苹果游戏麻将上线了，欢迎大家前来游戏！</div>
+          <div class="box">红苹果游戏麻将上线了，欢迎大家前来游戏！</div> -->
         </div>
       </div>
       <span class="s-icon"></span>
@@ -59,7 +61,7 @@
       <img src="../assets/imgs/background.png" alt=""  width="100%">
     </div>
     <div class="z-bg" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; background: rgba(0, 0, 0, .5)" v-show="loadRoom">
-      <img src="../assets/imgs/loading.gif" alt=""  style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%)" width="120px" height="120px">
+      <img src="../assets/imgs/loading.gif" alt=""  style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%)" width="80px" height="80px">
     </div>
     <!--规则-->
     <Modal :showModal="showRuleModal"
@@ -402,25 +404,6 @@ export default {
     // this.registerFn()
   },
   mounted () {
-    let vm = this
-    let ajaxParams2 = window.JSON.stringify({
-      host: this.$url,
-      path: this.$interface['/get/notice'],
-      params: this.$sign({})
-    })
-    // 调用android原生内部方法
-    setTimeout(() => {
-      this.$JsBridge.callHandler(
-        'getPublic' // 原生的方法名
-        , {'param': ajaxParams2} // 带个原生方法的参数
-        , function (responseData) { // 响应原生回调方法
-          let data = window.JSON.parse(responseData)
-          vm.dtMsg = data.model
-          document.getElementById('horse').style.width = vm.dtMsg.toString().length * 50 + 'px'
-          vm.$store.dispatch('publicAjax', data)
-        }
-      )
-    }, 1500)
   },
   computed: mapGetters({
     userMsg: 'listenWxUser',
@@ -464,6 +447,24 @@ export default {
           }
         )
       }, 800)
+      let ajaxParams2 = window.JSON.stringify({
+        host: this.$url,
+        path: this.$interface['/get/notice'],
+        params: this.$sign({})
+      })
+      // 调用android原生内部方法
+      setTimeout(() => {
+        this.$JsBridge.callHandler(
+          'getPublic' // 原生的方法名
+          , {'param': ajaxParams2} // 带个原生方法的参数
+          , function (responseData) { // 响应原生回调方法
+            let data = window.JSON.parse(responseData)
+            vm.dtMsg = data.model
+            document.getElementById('horse').style.width = vm.dtMsg.toString().length * 50 + 'px'
+            vm.$store.dispatch('publicAjax', data)
+          }
+        )
+      }, 1200)
     },
     // curUser (val) {
     //   console.log('更新嘻嘻嘻嘻嘻嘻嘻嘻嘻嘻嘻嘻嘻嘻嘻嘻嘻')
@@ -789,6 +790,7 @@ export default {
             // })
            // vm.$router.push({path: vm.router, params: {userId: vm.userId, roomId: vm.roomId}})
           } else {
+            vm.loadRoom = false
             vm.showTip = true
             vm.tipMsg = data.message
             setTimeout(() => {
@@ -858,13 +860,7 @@ export default {
         , function (responseData) { // 响应原生回调方法
           console.log('加入房间成功')
           let data = window.JSON.parse(responseData)
-          vm.roomNums.forEach((item, index) => {
-            vm.$set(vm.roomNums, index, '')
-          })
-          vm.numIndex = 0
           if (Number(data.code) === 200) {
-            vm.showCreateRoom = false
-            vm.showJoinRoom = false
             vm.gameDatas.numId = data.model.numId
             vm.gameDatas.baseScore = data.model.baseScore
             vm.gameDatas.baseRound = data.model.baseRound
@@ -876,19 +872,21 @@ export default {
             console.log(vm.roomId)
             vm.enterRoom()
           } else {
+            vm.loadRoom = false
             vm.showTip = true
             vm.tipMsg = data.message
             setTimeout(() => {
               vm.showTip = false
+              vm.roomNums.forEach((item, index) => {
+                vm.$set(vm.roomNums, index, '')
+              })
+              vm.numIndex = 0
             }, 1000)
           }
         }
       )
     },
     enterRoom () {
-      // 后期需要注释
-      // this.showJoinRoom = false
-      // this.showDj = true
       console.log(this.roomId)
       let ajaxParams = window.JSON.stringify({
         host: this.$url,
@@ -904,7 +902,13 @@ export default {
         , {'param': ajaxParams} // 带个原生方法的参数
         , function (responseData) { // 响应原生回调方法
           console.log('加入房间socket成功')
+          vm.showCreateRoom = false
+          vm.showJoinRoom = false
           vm.loadRoom = false
+          vm.roomNums.forEach((item, index) => {
+            vm.$set(vm.roomNums, index, '')
+          })
+          vm.numIndex = 0
           let data = window.JSON.parse(responseData)
           vm.$store.dispatch('saveUsers', data)
           // this.showDj = true
