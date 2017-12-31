@@ -18,13 +18,13 @@
            'r-site': (index !== 0) && (index % 2 === 0)}" v-show="item.roomOwner == true">
             <img src="../assets/imgs/img_Room_owner.png" alt="" width="100%" height="100%">
            </div>
-           {{item.banker == true}}
+           <!-- {{item.banker == true}} -->
            <div class="zuja" :class="{'l-site': (index === 0) || (index % 2 !== 0),
            'r-site': (index !== 0) && (index % 2 === 0)}" v-show="item.banker == true">
-           {{item.banker == true}}
+           <!-- {{item.banker == true}} -->
             <img src="../assets/imgs/img_Setuphualun.png" alt="" width="100%" height="100%">
            </div>
-          <div class="result" :class="{'cur-user': index === 0}">
+          <!-- <div class="result" :class="{'cur-user': index === 0}">
             <span v-show="item.status === 0 && gameEnd" class="lost">
               <img :src="result[1]" alt="" width="100%">
             </span>
@@ -34,7 +34,7 @@
             <span v-show="item.status === 2 && gameEnd" class="win">
               <img :src="result[0]" alt="" width="100%">
             </span>
-          </div>
+          </div> -->
         </div>
         <div class="msg" :class="{'g-inline': index === 0,'l-msg': (index !== 0) && (index % 2 !== 0),
          'r-msg': (index === 0) || (index % 2 === 0)}">
@@ -84,16 +84,51 @@
             </ul>
          </div> -->
         <div class="xz-tip">
-          <span v-show="item.xz === 0 && isDownSu == false">
+          <span v-show="item.xz === 0 && item.banker == false && isDownSu == false">
             <img src="../assets/imgs/img_Bet_qingxiazhu.png" alt="" width="100%" height="100%">
           </span>
-          <span v-show="item.xz === 1 && isDownSu == false">
+          <span v-show="item.xz === 1 && item.banker == false && isDownSu == false">
             <img src="../assets/imgs/img_Bet_zhengzaixiazhu.png" alt="" width="100%" height="100%">
           </span>
         </div>
-        <div class="xz-tip score">
-          <span class="sign">+</span>
-          <span class="num">222</span>
+      </div>
+    </div>
+    <div class="user-site">
+      <div class="user-item" v-for="(item, index) in scores" :key="index"
+      :class="{'site0': index === 0, 'site1': index === 1, 'site2': index === 2,
+      'site3': index === 3, 'site4': index === 4}">
+        <div class="avater">
+          <div class="result" :class="{'cur-user': index === 0}">
+            <span v-show="item.winScore < 0 " :class="{'lost': item.winScore < 0}">
+              <img :src="result[1]" alt="" width="100%">
+            </span>
+            <span v-show="item.winScore == 0" :class="{'tie': item.winScore == 0}">
+              <img :src="result[2]" alt="" width="100%">
+            </span>
+            <span v-show="item.winScore > 0" :class="{'win': item.winScore > 0}">
+              <img :src="result[0]" alt="" width="100%">
+            </span>
+          </div>
+          <div class="xz-tip score">
+            <span class="sign" v-show="item.winScore >= 0">+</span>
+            <span class="sign" v-show="item.winScore < 0">-</span>
+            <span class="num">{{item.winScore < 0 ? (-item.winScore) : item.winScore}}</span>
+          </div>
+          <div class="men-list">
+            <ul v-if ="item.banker == false && item.userDoorVOList.length && item.userDoorVOList.length > 0">
+              <li v-for="(its, index) in item.userDoorVOList" :key="index">
+                <span v-show="its.doorNum == 1">
+                  <img src="../assets/imgs/img-Chips-chu.png" alt="">
+                </span>
+                <span v-show="its.doorNum == 2">
+                  <img src="../assets/imgs/img-Chips-tian.png" alt="">
+                </span>
+                <span v-show="its.doorNum == 3">
+                  <img src="../assets/imgs/img-Chips-kan.png" alt="">
+                </span>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -102,16 +137,16 @@
       <ul class="card-list" ref="card" v-show="showCards"
          :class="{'active': showCards}">
         <li v-for="(item, index) in cardList" :key="index"
-        v-if="index === 1 || index === 3 || index === 5"
-        :class="{'card1': index === 1, 'card3': index === 3, 
-        'card5': index === 5, 'reverse': checkResult1}">
+        v-if="index === 0 || index === 2 || index === 4 || index === 6"
+        :class="{'card0': index === 0, 'card2': index === 2,
+        'card4': index === 4, 'card6': index === 6, 'reverse': checkResult1}">
           <img :src="item.bImg" alt="" class="front">
           <img :src="item.fImg" alt="" class="back">
         </li>
         <li v-for="(item, index) in cardList" :key="index"
-        v-if="index === 0 || index === 2 || index === 4"
-        :class="{'card0': index === 0, 'card2': index === 2,
-        'card4': index === 4, 'reverse': checkResult2}">
+        v-if="index === 1 || index === 3 || index === 5 || index === 7"
+        :class="{'card1': index === 1, 'card3': index === 3, 
+        'card5': index === 5, 'card7': index === 7, 'reverse': checkResult2}">
           <img :src="item.bImg" alt="" class="front">
           <img :src="item.fImg" alt="" class="back">
         </li>
@@ -474,60 +509,9 @@ export default {
       showReleaseReadyModal: false,
       releaseReadyText: '', // 游戏中解散房间提示文字
       isCurUserReady: false,
-      curCardBg: '',
-      cards: tabImgs.cards, // 所有的牌组合方式
-      cardList: [
-        {
-          bImg: tabImgs.cards[3],
-          fImg: tabImgs.djCards[0].img,
-          show: true
-        },
-        {
-          bImg: tabImgs.cards[3],
-          fImg: tabImgs.djCards[0].img,
-          show: false
-        },
-        {
-          bImg: tabImgs.cards[3],
-          fImg: tabImgs.djCards[0].img,
-          show: true
-        },
-        {
-          bImg: tabImgs.cards[3],
-          fImg: tabImgs.djCards[0].img,
-          show: false
-        },
-        {
-          bImg: tabImgs.cards[3],
-          fImg: tabImgs.djCards[0].img,
-          show: true
-        },
-        {
-          bImg: tabImgs.cards[3],
-          fImg: tabImgs.djCards[0].img,
-          show: false
-        }
-        // {
-        //   bImg: tabImgs.cards[3],
-        //   fImg: tabImgs.djCards[0].img,
-        //   show: true
-        // },
-        // {
-        //   bImg: tabImgs.cards[3],
-        //   fImg: tabImgs.djCards[0].img,
-        //   show: false
-        // },
-        // {
-        //   bImg: tabImgs.cards[3],
-        //   fImg: tabImgs.djCards[0].img,
-        //   show: true
-        // },
-        // {
-        //   bImg: tabImgs.cards[3],
-        //   fImg: tabImgs.djCards[0].img,
-        //   show: false
-        // }
-      ],
+      curCardBg: tabImgs.cards[3],
+      cards: tabImgs.djCards, // 所有的牌组合方式
+      cardList: [],
       showCards: false,
       checkResult1: false, // 查看结果，翻牌
       checkResult2: false, // 查看结果，翻牌
@@ -537,7 +521,8 @@ export default {
       tianType: false, // 投注类型：天门
       kanType: false, // 投注类型：坎门
       coinList: [], // 投注列表
-      gameEnd: false // 显示游戏结束结果字样
+      gameEnd: false, // 显示游戏结束结果字样
+      scores: [] // 最终结果
     }
   },
   props: {
@@ -661,6 +646,8 @@ export default {
     this.users = this.ds
     this.gameMsg = this.ds
     this.curCardBg = this.cardBg
+    console.log('hahahahahahahah我是北极光图')
+    console.log(this.curCardBg)
     // 注册交互事件
     this.registerFn()
   },
@@ -729,14 +716,20 @@ export default {
               if (item.roomOwner) {
                 console.log('我是房主')
                 vm.isMaster = true
+              } else {
+                vm.isMaster = false
               }
                // 当前玩家若是庄家，不显示下注
               if (item.banker === true) {
                 vm.isShowXz = false
+              } else {
+                vm.isShowXz = true
               }
               // 当前玩家准备后不可以抢庄
               if (item.ready === true) {
                 vm.isCurUserReady = true
+              } else {
+                vm.isCurUserReady = false
               }
               console.log('我在测试1')
               item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
@@ -761,15 +754,21 @@ export default {
               if (item.roomOwner) {
                 console.log('我是房主')
                 vm.isMaster = true
+              } else {
+                vm.isMaster = false
               }
                // 当前玩家若是庄家，不显示下注
               if (item.banker === true) {
                 vm.isShowXz = false
+              } else {
+                vm.isShowXz = true
               }
               // 当前玩家准备后不可以抢庄
               if (item.ready === true) {
                 console.log('1111')
                 vm.isCurUserReady = true
+              } else {
+                vm.isCurUserReady = false
               }
               console.log('2222')
               vm.users.unshift(item)
@@ -821,125 +820,53 @@ export default {
         // 将原生带来的参数，显示在show标签位置
         console.log('获取到系统发牌')
         console.log(window.JSON.parse(data))
-        vm.cardList = [
-          {
-            bImg: tabImgs.cards[3],
-            fImg: tabImgs.djCards[0].img,
-            show: true
-          },
-          {
-            bImg: tabImgs.cards[3],
-            fImg: tabImgs.djCards[0].img,
-            show: false
-          },
-          {
-            bImg: tabImgs.cards[3],
-            fImg: tabImgs.djCards[0].img,
-            show: true
-          },
-          {
-            bImg: tabImgs.cards[3],
-            fImg: tabImgs.djCards[0].img,
-            show: false
-          },
-          {
-            bImg: tabImgs.cards[3],
-            fImg: tabImgs.djCards[0].img,
-            show: true
-          },
-          {
-            bImg: tabImgs.cards[3],
-            fImg: tabImgs.djCards[0].img,
-            show: false
+        vm.cardList = []
+        let res = []
+        let obj = {}
+        let list = window.JSON.parse(data)
+        list.forEach((item, index) => {
+          if (Number(item.doorNum) === 0) {
+            obj = item
+          } else {
+            res.push(item)
           }
-        ]
-      //  let list = window.JSON.parse(data)
-        console.log('ssssssssssssssssss')
-        // let list = [
-        //   {
-        //     doorNum: 0,
-        //     block: false,
-        //     pokerList: [
-        //       {
-        //         type: 0,
-        //         value: 0
-        //       }
-        //     ],
-        //     roomId: '111111'
-        //   },
-        //   {
-        //     doorNum: 1,
-        //     block: false,
-        //     pokerList: [
-        //       {
-        //         type: 1,
-        //         value: 1
-        //       }
-        //     ],
-        //     roomId: '222222'
-        //   },
-        //   {
-        //     doorNum: 2,
-        //     block: false,
-        //     pokerList: [
-        //       {
-        //         type: 2,
-        //         value: 2
-        //       }
-        //     ],
-        //     roomId: '333333'
-        //   },
-        //   {
-        //     doorNum: 3,
-        //     block: false,
-        //     pokerList: [
-        //       {
-        //         type: 3,
-        //         value: 3
-        //       }
-        //     ],
-        //     roomId: '444444'
-        //   }
-        // ]
-        // 当前系统默认背景curCardBg, bImg, 类型 fImg
-        // 还需要匹配当前用户
-        // Number(item.userId)
-       // let listSort = []
-        // vm.users.forEach((item) => {
-        //   for (let i = 0; i < list.length; i++) {
-        //     if (item.userId.toString() === list[i].userId.toString()) {
-        //       listSort.unshift(list[i])
-        //     } else {
-        //       listSort.push(list[i])
-        //     }
-        //   }
-        // })
-        // list.forEach((item) => {
-        //   // 大九
-        //   if (item.pokerList.length === 1) {
-        //     let arr1 = []
-        //     for (let key in item.pokerList) {
-        //       if (key !== 'img') {
-        //         arr1.push(item.pokerList[key])
-        //       }
-        //     }
-        //     for (let i = 0; i < vm.cards.length; i++) {
-        //       let arr2 = []
-        //       if (vm.cards[i] instanceof Object) {
-        //         for (let key in vm.cards[i]) {
-        //           arr2.push(vm.cards[i][key])
-        //         }
-        //       }
-        //        // 匹配对应的牌
-        //       if (vm.regCard(arr1, arr2)) {
-        //         vm.cardList.push({
-        //           bImg: vm.curCardBg,
-        //           fImg: vm.cards[i].img
-        //         })
-        //       }
-        //     }
-        //   }
-        // })
+        })
+        res.push(obj)
+        res.forEach((item, index) => {
+          console.log(window.JSON.stringify(item))
+         // let i = index * 2
+         // let j = index * 2 + 1
+          // 大九
+          if (item.pokerList.length === 1) {
+            let arr1 = []
+            for (let key in item.pokerList[0]) {
+              arr1.push(item.pokerList[0][key])
+            }
+            for (let i = 0; i < vm.cards.length; i++) {
+              let arr2 = []
+              if (vm.cards[i] instanceof Object) {
+                for (let key in vm.cards[i]) {
+                  if (key !== 'img') {
+                    arr2.push(vm.cards[i][key])
+                  }
+                }
+              }
+               // 匹配对应的牌
+              if (vm.regCard(arr1, arr2)) {
+                console.log('当前匹配的牌')
+                console.log(vm.curCardBg)
+                vm.cardList.push({
+                  bImg: vm.curCardBg,
+                  fImg: vm.cards[i].img
+                })
+                vm.cardList.push({
+                  bImg: vm.curCardBg,
+                  fImg: vm.curCardBg
+                })
+              }
+            }
+          }
+        })
         vm.showCards = true
         setTimeout(() => {
           vm.checkResult1 = true
@@ -950,12 +877,17 @@ export default {
               } else {
                 item.xz = 1
               }
+              // if (item.banker === true) {
+              //   item.isXz = false
+              // } else {
+              //   item.isXz = true
+              // }
             })
             if (vm.isShowXz) {
               vm.showXzModal = true
             }
           }, 500)
-        }, 2000)
+        }, 2500)
         console.log(window.JSON.stringify(vm.cardList))
         // vm.showDj = false
         // vm.$emit('on-close', vm.showDj)
@@ -1000,11 +932,34 @@ export default {
         // 将原生带来的参数，显示在show标签位置
         vm.coinList = []
        // vm.isDownSu = true
-        vm.coinList = window.JSON.parse(data)
+        let res = window.JSON.parse(data)
+        let result = res.userGameVOList // 结果
+       // let cards = res.doorVOList // 第二张牌
+        let status = []
+        res.userGameVOList.forEach((item) => {
+          if ((Number(item.userId) !== Number(vm.userId)) && (item.betting === true)) {
+            status.push(item.betting)
+          }
+        })
+        if (status.length === result.length - 1) {
+          // 最后一个人完成投注
+          vm.scores = []
+          vm.users.forEach((item) => {
+            for (let i = 0; i < result.length; i++) {
+              if (Number(item.userId) === Number(result[i].userId)) {
+                vm.scores.push(item)
+              }
+            }
+          })
+          vm.gameEnd = true
+        }
         // 调用responseCallback方法可以带传参数到原生
         responseCallback('')
       })
     },
+    // regCard (data) {
+
+    // },
     // 判断两个数组所包含内容是否相同
     regCard (arr1, arr2) {
       if (arr1.length !== arr2.length) {
@@ -1518,6 +1473,12 @@ export default {
           height: 32px;
           z-index: -1;
         }
+        .zuja.l-site{
+          left: -110px; 
+        }
+        .zuja.r-site{
+          right: -90px; 
+        }
         .master{
           position: absolute;
           top: 12px;
@@ -1768,7 +1729,7 @@ export default {
         left: 50%;
       }
       .rate{
-         top: 33%;
+         top: 38%;
       }
       .room-num{
         top: 6%;
@@ -2287,7 +2248,7 @@ export default {
     top: 15%;
     width: 60%;
     height: 60px;
-    left: 50%;
+    left: 56%;
     transform: translateX(-70%);
     -webkit-perspective: 500;
     -moz-perspective: 500;
@@ -2301,7 +2262,7 @@ export default {
       position: absolute;
       left: 25%;
     /*  bottom: 180px; */
-      top: -20px;
+      top: -50px;
       width: 12%;
       height: 60px;
       border: 1px solid #ddd;
@@ -2365,6 +2326,16 @@ export default {
       z-index: 5;
       animation: card5Move 0.3s linear 1.5s forwards;
     }
+    .card6{
+      left: 65%;
+      z-index: 6;
+      animation: card6Move 0.3s linear 2s forwards;
+    }
+    .card7{
+      left: 70%;
+      z-index: 7;
+      animation: card7Move 0.3s linear 2s forwards;
+    }
   }
   .card-list.active{
     animation: cardsMove 0.3s linear forwards;
@@ -2385,68 +2356,88 @@ export default {
     opacity: 0;
   }
   100%{
-    left: 60%;
+    left: 56%;
     opacity: 1;
   }
 }
 @keyframes card0Move {
   0%{
     left: 35%;
-    top: -20px;
+    top: -50px;
   }
   100%{
-    left: 15%;
+    left: 21%;
     top: 280px;
   }
 }
 @keyframes card1Move {
   0%{
     left: 40%;
-    top: -20px;
+    top: -50px;
   }
   100%{
-    left: 20%;
+    left: 26%;
     top: 280px;
   }
 }
 @keyframes card2Move {
   0%{
     left: 45%;
-    top: -20px;
+    top: -50px;
   }
   100%{
-    left: 45%;
+    left: 51%;
     top: 280px;
   }
 }
 @keyframes card3Move {
   0%{
     left: 50%;
-    top: -20px;
+    top: -50px;
   }
   100%{
-    left: 50%;
+    left: 56%;
     top: 280px;
   }
 }
 @keyframes card4Move {
   0%{
     left: 55%;
-    top: -20px;
+    top: -50px;
   }
   100%{
-    left: 75%;
+    left: 81%;
     top: 280px;
   }
 }
 @keyframes card5Move {
   0%{
     left: 60%;
+    top: -50px;
+  }
+  100%{
+    left: 86%;
+    top: 280px;
+  }
+}
+@keyframes card6Move {
+  0%{
+    left: 65%;
     top: -20px;
   }
   100%{
-    left: 80%;
-    top: 280px;
+    left: 50%;
+    top: -50px;
+  }
+}
+@keyframes card7Move {
+  0%{
+    left: 70%;
+    top: -50px;
+  }
+  100%{
+    left: 55%;
+    top: -50px;
   }
 }
 // @keyframes card2Move {
@@ -2489,44 +2480,44 @@ export default {
 //     bottom: 180px;
 //   }
 // }
-@keyframes card6Move {
-  0%{
-    left: 60%;
-    bottom: 180px;
-  }
-  100%{
-    left: 80%;
-    bottom: 180px;
-  }
-}
-@keyframes card7Move {
-  0%{
-    left: 65%;
-    bottom: 180px;
-  }
-  100%{
-    left: 85%;
-    bottom: 180px;
-  }
-}
-@keyframes card8Move {
-  0%{
-    left: 70%;
-    bottom: 180px;
-  }
-  100%{
-    left: 40%;
-    bottom: 0;
-  }
-}
-@keyframes card9Move {
-  0%{
-    left: 75%;
-    bottom: 180px;
-  }
-  100%{
-    left: 45%;
-    bottom: 0;
-  }
-}
+// @keyframes card6Move {
+//   0%{
+//     left: 60%;
+//     bottom: 180px;
+//   }
+//   100%{
+//     left: 80%;
+//     bottom: 180px;
+//   }
+// }
+// @keyframes card7Move {
+//   0%{
+//     left: 65%;
+//     bottom: 180px;
+//   }
+//   100%{
+//     left: 85%;
+//     bottom: 180px;
+//   }
+// }
+// @keyframes card8Move {
+//   0%{
+//     left: 70%;
+//     bottom: 180px;
+//   }
+//   100%{
+//     left: 40%;
+//     bottom: 0;
+//   }
+// }
+// @keyframes card9Move {
+//   0%{
+//     left: 75%;
+//     bottom: 180px;
+//   }
+//   100%{
+//     left: 45%;
+//     bottom: 0;
+//   }
+// }
 </style>

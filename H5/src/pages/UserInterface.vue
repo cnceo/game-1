@@ -365,7 +365,7 @@ export default {
       loadDj: false,
       isFirstDj: true,
       gameType: 1,
-      cardBg: tabImgs.cards.card4,
+      cardBg: tabImgs.cards[3],
       loadRoom: false
     }
   },
@@ -400,6 +400,7 @@ export default {
     this.handleArray([this.gameTabs, this.createRoomTabs], this.tabs)
     this.handleArray([this.ds1_1, this.ds2_1, this.ds3_1], this.ds1)
     this.handleArray([this.ds1_2, this.ds2_2, this.ds3_2], this.ds2)
+    this.cardBg = tabImgs.cards[3]
     // 注册交互时间
     // this.registerFn()
   },
