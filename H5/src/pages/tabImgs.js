@@ -420,7 +420,7 @@ const tabsImgs = {
   mtype: [cm, tm, km],
   tbg: [cbg, tbg, kbg],
   result: [win, lose, tie],
-  coins: [five, one, ten, five, ten, one, five, one],
+  coins: [five, one, ten, five, ten, one, five, one, ten, one],
   lowz: [{
     img: tone,
     value: 1

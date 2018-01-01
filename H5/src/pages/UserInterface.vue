@@ -953,8 +953,13 @@ export default {
       this.showJoinRoom = false
     },
     // 玩大九游戏
-    closeDj () {
+    closeDj (msg) {
       this.showDj = false
+      this.showTip = true
+      this.tipMsg = msg
+      setTimeout(() => {
+        this.showTip = false
+      }, 1000)
     },
     // 玩清推游戏
     closeQt () {

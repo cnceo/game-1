@@ -93,12 +93,13 @@
         </div>
       </div>
     </div>
+    <!--最终结果页面-->
     <div class="user-site">
       <div class="user-item" v-for="(item, index) in scores" :key="index"
       :class="{'site0': index === 0, 'site1': index === 1, 'site2': index === 2,
       'site3': index === 3, 'site4': index === 4}">
         <div class="avater">
-          <div class="result" :class="{'cur-user': index === 0}">
+          <div class="result" :class="{'cur-user': index == 0}">
             <span v-show="item.winScore < 0 " :class="{'lost': item.winScore < 0}">
               <img :src="result[1]" alt="" width="100%">
             </span>
@@ -109,12 +110,13 @@
               <img :src="result[0]" alt="" width="100%">
             </span>
           </div>
-          <div class="xz-tip score">
+          <div class="score" v-show="showScore" :class="{'showRes': showScore}">
             <span class="sign" v-show="item.winScore >= 0">+</span>
             <span class="sign" v-show="item.winScore < 0">-</span>
-            <span class="num">{{item.winScore < 0 ? (-item.winScore) : item.winScore}}</span>
+            <span class="num" v-show="item.winScore >= 0">{{item.winScore}}</span>
+            <span class="num" v-show="item.winScore < 0">{{-item.winScore}}</span>
           </div>
-          <div class="men-list">
+          <!-- <div class="men-list">
             <ul v-if ="item.banker == false && item.userDoorVOList.length && item.userDoorVOList.length > 0">
               <li v-for="(its, index) in item.userDoorVOList" :key="index">
                 <span v-show="its.doorNum == 1">
@@ -128,7 +130,7 @@
                 </span>
               </li>
             </ul>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -137,16 +139,18 @@
       <ul class="card-list" ref="card" v-show="showCards"
          :class="{'active': showCards}">
         <li v-for="(item, index) in cardList" :key="index"
-        v-if="index === 0 || index === 2 || index === 4 || index === 6"
-        :class="{'card0': index === 0, 'card2': index === 2,
-        'card4': index === 4, 'card6': index === 6, 'reverse': checkResult1}">
+        v-if="index === 0 || index === 1 || index === 2 || index === 3"
+        :class="{'card0': index === 0, 'card1': index === 1,
+        'card2': index === 2, 'card3': index === 3, 'reverse': checkResult1}"
+        >
           <img :src="item.bImg" alt="" class="front">
           <img :src="item.fImg" alt="" class="back">
         </li>
         <li v-for="(item, index) in cardList" :key="index"
-        v-if="index === 1 || index === 3 || index === 5 || index === 7"
-        :class="{'card1': index === 1, 'card3': index === 3, 
-        'card5': index === 5, 'card7': index === 7, 'reverse': checkResult2}">
+        v-if="index === 4 || index === 5 || index === 6 || index === 7"
+        :class="{'card4': index === 4, 'card5': index === 5, 
+        'card6': index === 6, 'card7': index === 7, 'reverse': checkResult2}"
+        >
           <img :src="item.bImg" alt="" class="front">
           <img :src="item.fImg" alt="" class="back">
         </li>
@@ -222,32 +226,35 @@
       :class="{'chu': index === 0, 'tian': index === 1, 'kan': index === 2}">
         <img :src="item" alt="" height="100%">
         <div class="coin-box" v-show="index === 0">
-          <div class="coins chu-coins" v-show="chuType">
+          <div class="coins chu-coins" v-show="menType && isShowXz">
             <span v-for="(item, index) in coins" :key="index" :class="{'coin0': index === 0,
             'coin1': index === 1, 'coin2': index === 2, 'coin3': index === 3, 'coin4': index === 4,
-            'coin5': index === 5, 'coin6': index === 6, 'coin7': index === 7, 'active': chuType}" 
+            'coin5': index === 5, 'coin6': index === 6, 'coin7': index === 7, 'coin8': index === 8, 'coin9': index === 9, 'active': menType,
+            'move': item.show == 'move', 'hide': item.show == 'hide'}" 
             >
-            <img :src="item" alt="" width="100%">
+            <img :src="item.value" alt="" width="100%">
             </span>
           </div>
         </div>
         <div class="coin-box" v-show="index === 1">
-          <div class="coins tian-coins" v-show="tianType">
+          <div class="coins tian-coins" v-show="menType && isShowXz">
             <span v-for="(item, index) in coins" :key="index" :class="{'coin0': index === 0,
             'coin1': index === 1, 'coin2': index === 2, 'coin3': index === 3, 'coin4': index === 4,
-            'coin5': index === 5, 'coin6': index === 6, 'coin7': index === 7, 'active': tianType}" 
+            'coin5': index === 5, 'coin6': index === 6, 'coin7': index === 7, 'coin8': index === 8, 'coin9': index === 9, 'active': menType,
+            'move': item.show == 'move', 'hide': item.show == 'hide'}" 
             >
-            <img :src="item" alt="" width="100%">
+            <img :src="item.value" alt="" width="100%">
             </span>
           </div>
         </div>
         <div class="coin-box" v-show="index === 2">
-          <div class="coins kan-coins" v-show="kanType">
+          <div class="coins kan-coins" v-show="menType && isShowXz">
               <span v-for="(item, index) in coins" :key="index" :class="{'coin0': index === 0,
               'coin1': index === 1, 'coin2': index === 2, 'coin3': index === 3, 'coin4': index === 4,
-              'coin5': index === 5, 'coin6': index === 6, 'coin7': index === 7, 'active': kanType}" 
+              'coin5': index === 5, 'coin6': index === 6, 'coin7': index === 7, 'coin8': index === 8, 'coin9': index === 9, 'active': menType,
+               'move': item.show == 'move', 'hide': item.show == 'hide'}" 
               >
-              <img :src="item" alt="" width="100%">
+              <img :src="item.value" alt="" width="100%">
               </span>
           </div>
         </div>
@@ -409,28 +416,97 @@
         </div>
       </div>
     </Modal>
+    <!-- 单局结束分享页 -->
+    <Modal :showModal="showShareModal"
+    class="share-modal">
+    <div slot="modal-bg" class="modal-bg">
+      <img src="../assets/imgs/img-Stoppingdoor-background.png" alt=""  width="100%" height="100%">
+    </div>
+      <!-- <div slot="title" class="xz-title title-active">
+         <img src="../assets/imgs/img_Bet_title.png" alt=""  width="100%">
+      </div> -->
+      <div slot="body" class="share-body">
+         <ul>
+           <li v-for="(item, index) in allScores" :key="index">
+             <p>
+               <img :src="item.headimgurl" />
+             </p>
+             <p>昵称：{{item.nickname}}</p>
+             <p>ID{{item.userId}}</p>
+             <p>赢的次数：{{item.winNum}}</p>
+             <p>输的次数：{{item.loseNum}}</p>
+             <p>和的次数：{{item.heNum}}</p>
+             <p>坐庄次数：{{item.bankerNum}}</p>
+             <p>总得分：{{item.userWincore}}</p>
+           </li>
+         </ul>                                                                 
+      </div>
+      <div slot="foot" class="share-foot">
+        <div class="ok share-btn" @touchstart="share">
+           <img src="../assets/imgs/img-Stoppingdoor-confirm.png" alt=""  width="100%">
+        </div>
+      </div>
+    </Modal>
   </div>
 </template>
 
 <script>
 import tabImgs from './tabImgs'
 import {mapGetters} from 'vuex'
-
+// import avatar from '../assets/imgs/head_img.jpg'
 const HEAD_IMG_SIZE = 0
 const MIN_USER = 2
 export default {
   name: 'app',
   data () {
-    let hours = new Date().getHours()
-    let minutes = new Date().getMinutes()
-    let curHours = hours < 10 ? ('0' + hours) : hours
-    let curMinutes = minutes < 10 ? ('0' + minutes) : minutes
     return {
-      date: curHours + '：' + curMinutes,
+      date: '',
+      timer: null,
       showDj: false,
       showAccount: false,
       qz: false,
-      users: [],
+      users: [
+        // {
+        //   nickname: 'tom',
+        //   headimgurl: avatar,
+        //   ready: true,
+        //   roomOwner: true,
+        //   banker: true,
+        //   score: 1000
+        // },
+        // {
+        //   nickname: 'tom4',
+        //   headimgurl: avatar,
+        //   ready: false,
+        //   roomOwner: false,
+        //   banker: false,
+        //   score: 1000
+        // },
+        // {
+        //   nickname: 'tom3',
+        //   headimgurl: avatar,
+        //   ready: false,
+        //   roomOwner: false,
+        //   banker: false,
+        //   score: 1000
+        // },
+        // {
+        //   nickname: 'tom2',
+        //   headimgurl: avatar,
+        //   ready: false,
+        //   roomOwner: false,
+        //   banker: false,
+        //   score: 1000
+        // },
+        // {
+        //   nickname: 'tom1',
+        //   headimgurl: avatar,
+        //   ready: false,
+        //   roomOwner: false,
+        //   banker: false,
+        //   score: 1000
+        // }
+      ],
       showSetModal: false,
       socket: null,
       id: '',
@@ -453,7 +529,48 @@ export default {
       ],
       tbg: tabImgs.tbg,
       result: tabImgs.result,
-      coins: tabImgs.coins,
+      coins: [
+        {
+          value: tabImgs.coins[0],
+          show: ''
+        },
+        {
+          value: tabImgs.coins[1],
+          show: ''
+        },
+        {
+          value: tabImgs.coins[2],
+          show: ''
+        },
+        {
+          value: tabImgs.coins[3],
+          show: ''
+        },
+        {
+          value: tabImgs.coins[4],
+          show: ''
+        },
+        {
+          value: tabImgs.coins[5],
+          show: ''
+        },
+        {
+          value: tabImgs.coins[6],
+          show: ''
+        },
+        {
+          value: tabImgs.coins[7],
+          show: ''
+        },
+        {
+          value: tabImgs.coins[8],
+          show: ''
+        },
+        {
+          value: tabImgs.coins[9],
+          show: ''
+        }
+      ],
       lowz: [{
         img: tabImgs.lowz[0].img,
         value: tabImgs.lowz[0].value
@@ -511,7 +628,40 @@ export default {
       isCurUserReady: false,
       curCardBg: tabImgs.cards[3],
       cards: tabImgs.djCards, // 所有的牌组合方式
-      cardList: [],
+      cardList: [
+        // {
+        //   bImg: tabImgs.cards[3],
+        //   fImg: tabImgs.cards[3]
+        // },
+        // {
+        //   bImg: tabImgs.cards[3],
+        //   fImg: tabImgs.cards[3]
+        // },
+        // {
+        //   bImg: tabImgs.cards[3],
+        //   fImg: tabImgs.cards[3]
+        // },
+        // {
+        //   bImg: tabImgs.cards[3],
+        //   fImg: tabImgs.cards[3]
+        // },
+        // {
+        //   bImg: tabImgs.cards[3],
+        //   fImg: tabImgs.cards[3]
+        // },
+        // {
+        //   bImg: tabImgs.cards[3],
+        //   fImg: tabImgs.cards[3]
+        // },
+        // {
+        //   bImg: tabImgs.cards[3],
+        //   fImg: tabImgs.cards[3]
+        // },
+        // {
+        //   bImg: tabImgs.cards[3],
+        //   fImg: tabImgs.cards[3]
+        // }
+      ],
       showCards: false,
       checkResult1: false, // 查看结果，翻牌
       checkResult2: false, // 查看结果，翻牌
@@ -520,9 +670,30 @@ export default {
       chuType: false, // 投注类型：出门
       tianType: false, // 投注类型：天门
       kanType: false, // 投注类型：坎门
+      menType: false,
       coinList: [], // 投注列表
       gameEnd: false, // 显示游戏结束结果字样
-      scores: [] // 最终结果
+      scores: [
+        // {
+        //   winScore: +100
+        // },
+        // {
+        //   winScore: 0
+        // },
+        // {
+        //   winScore: +300
+        // },
+        // {
+        //   winScore: -400
+        // },
+        // {
+        //   winScore: +500
+        // }
+      ], // 最终结果
+      showScore: false,
+      collCoins: [true, true, true, true, true],
+      showShareModal: false,
+      allScores: []
     }
   },
   props: {
@@ -650,8 +821,26 @@ export default {
     console.log(this.curCardBg)
     // 注册交互事件
     this.registerFn()
+    // 获取当前时间
+    this.updateTime()
+  },
+  destroyed () {
+    this.closeTime()
   },
   methods: {
+    closeTime () {
+      clearInterval(this.timer)
+      this.timer = null
+    },
+    updateTime () {
+      this.timer = setInterval(() => {
+        let hours = new Date().getHours()
+        let minutes = new Date().getMinutes()
+        let curHours = hours < 10 ? ('0' + hours) : hours
+        let curMinutes = minutes < 10 ? ('0' + minutes) : minutes
+        this.date = curHours + '：' + curMinutes
+      }, 1000)
+    },
     registerFn () {
       let vm = this
       // 系统更新加入游戏的用户列表
@@ -834,8 +1023,6 @@ export default {
         res.push(obj)
         res.forEach((item, index) => {
           console.log(window.JSON.stringify(item))
-         // let i = index * 2
-         // let j = index * 2 + 1
           // 大九
           if (item.pokerList.length === 1) {
             let arr1 = []
@@ -853,15 +1040,12 @@ export default {
               }
                // 匹配对应的牌
               if (vm.regCard(arr1, arr2)) {
-                console.log('当前匹配的牌')
+                console.log(arr1.join('-'))
+                console.log(arr2.join('-'))
                 console.log(vm.curCardBg)
                 vm.cardList.push({
                   bImg: vm.curCardBg,
                   fImg: vm.cards[i].img
-                })
-                vm.cardList.push({
-                  bImg: vm.curCardBg,
-                  fImg: vm.curCardBg
                 })
               }
             }
@@ -877,41 +1061,198 @@ export default {
               } else {
                 item.xz = 1
               }
-              // if (item.banker === true) {
-              //   item.isXz = false
-              // } else {
-              //   item.isXz = true
-              // }
             })
             if (vm.isShowXz) {
               vm.showXzModal = true
             }
           }, 500)
-        }, 2500)
+        }, 3000)
         console.log(window.JSON.stringify(vm.cardList))
         // vm.showDj = false
         // vm.$emit('on-close', vm.showDj)
         // 调用responseCallback方法可以带传参数到原生
         responseCallback('')
       })
-      // 系统更新投注结果
-      this.$JsBridge.registerHandler('updateCoins', function (data, responseCallback) {
-        // 将原生带来的参数，显示在show标签位置
-        vm.cards = window.JSON.parse(data)
+      // // 系统更新投注结果
+      // this.$JsBridge.registerHandler('updateCoins', function (data, responseCallback) {
+      //   // 将原生带来的参数，显示在show标签位置
+      //   vm.cards = window.JSON.parse(data)
+      //   console.log('投注结果收到了')
+      //   console.log(window.JSON.stringify(vm.cards))
+      //   // vm.showDj = false
+      //   // vm.$emit('on-close', vm.showDj)
+      //   // 调用responseCallback方法可以带传参数到原生
+      //   responseCallback('')
+      // })
+      // 投注后更新结果
+      this.$JsBridge.registerHandler('updateResult', function (data, responseCallback) {
         console.log('投注结果收到了')
-        console.log(window.JSON.stringify(vm.cards))
-        // vm.showDj = false
-        // vm.$emit('on-close', vm.showDj)
+        // 将原生带来的参数，显示在show标签位置
+        vm.coinList = []
+        let res = window.JSON.parse(data)
+        let result = res.userGameVOList // 结果
+        let list = res.doorVOList // 第二张牌
+        let scds = []
+        let status = []
+        let coins = []
+        let obj = {}
+        console.log('aaaa')
+        result.forEach((item) => {
+          if ((item.banker === false) && (item.betting === true)) {
+            status.push(item.betting)
+          }
+        })
+        console.log('bbb')
+        console.log(status.length)
+        console.log(result.length)
+        list.forEach((item, index) => {
+          if (Number(item.doorNum) === 0) {
+            obj = item
+          } else {
+            scds.push(item)
+          }
+        })
+        scds.push(obj)
+        if (status.length === result.length - 1) {
+          console.log('最后一个人瓦策不过投注')
+          // 最后一个人完成投注
+          scds.forEach((item) => {
+            let arr1 = []
+            for (let key in item.pokerList[1]) {
+              arr1.push(item.pokerList[1][key])
+            }
+            for (let i = 0; i < vm.cards.length; i++) {
+              let arr2 = []
+              if (vm.cards[i] instanceof Object) {
+                for (let key in vm.cards[i]) {
+                  if (key !== 'img') {
+                    arr2.push(vm.cards[i][key])
+                  }
+                }
+              }
+               // 匹配对应的牌
+              console.log(arr1.join('-'))
+              console.log(arr2.join('-'))
+              if (vm.regCard(arr1, arr2)) {
+                console.log('更新第二张牌')
+                console.log(arr1.join('-'))
+                console.log(arr2.join('-'))
+                console.log(vm.curCardBg)
+                vm.cardList.push({
+                  bImg: vm.curCardBg,
+                  fImg: vm.cards[i].img
+                })
+              }
+            }
+          })
+          vm.isDownSu = true
+          vm.menType = true
+          setTimeout(() => {
+            vm.checkResult2 = true
+            vm.scores = []
+            console.log(vm.scores.length + '床都')
+            vm.showScore = true
+            vm.users.forEach((item) => {
+              for (let i = 0; i < result.length; i++) {
+                if (Number(item.userId) === Number(result[i].userId)) {
+                  console.log('cidhdshdsdsds')
+                  vm.scores.push(result[i])
+                }
+              }
+            })
+            // 硬币动画 //coins 0, 1, 2, 3, 4
+            let winer = false
+            let bankerId = ''
+            let curIndex = ''
+            result.forEach((item) => {
+              // 庄家赢了
+              if (item.banker === true) {
+                bankerId = item.userId
+                if (item.winScore > 0) {
+                  winer = true
+                }
+              }
+              // 庄家输了
+            })
+            // 获取庄家位置
+            vm.users.forEach((item, index) => {
+              if (Number(item.userId) === Number(bankerId)) {
+                curIndex = index
+              }
+            })
+            // 庄家赢了
+            setTimeout(() => {
+              if (winer) {
+                console.log('庄家赢了')
+                console.log(bankerId)
+                console.log(curIndex)
+                if (Number(bankerId) === Number(vm.userId)) {
+                  console.log('是当前玩家')
+                  for (let i = 0; i < 10; i++) {
+                    if (i === 0 || i === 1) {
+                      coins[i] = 'move'
+                    } else {
+                      coins[i] = 'hide'
+                    }
+                  }
+                } else {
+                  console.log('不是当前玩家')
+                  for (let i = 0; i < 10; i++) {
+                    if ((i === (curIndex * 2)) || (i === (curIndex * 2 + 1))) {
+                      coins[i] = 'move'
+                    } else {
+                      coins[i] = 'hide'
+                    }
+                  }
+                }
+              } else {
+                // 闲家赢了
+                console.log('闲家赢了')
+                console.log(bankerId)
+                console.log(curIndex)
+                for (let i = 0; i < 10; i++) {
+                  if ((i === (curIndex * 2)) || (i === (curIndex * 2 + 1)) || i >= (result.length * 2)) {
+                    coins[i] = 'hide'
+                  } else {
+                    coins[i] = 'move'
+                  }
+                }
+              }
+              console.log(coins.join('-'))
+              vm.coins.forEach((item, index) => {
+                item.show = coins[index]
+              })
+            }, 6000)
+            setTimeout(() => {
+              vm.gameOver()
+            }, 8000)
+          //  setTimeout(() => {
+              // vm.showScore = true
+              // vm.users.forEach((item) => {
+              //   for (let i = 0; i < result.length; i++) {
+              //     if (Number(item.userId) === Number(result[i].userId)) {
+              //       console.log('cidhdshdsdsds')
+              //       vm.scores.push(result[i])
+              //     }
+              //   }
+              // })
+              // setTimeout(() => {
+              //   vm.gameOver()
+              // }, 500)
+           // }, 500)
+          }, 3500)
+        }
         // 调用responseCallback方法可以带传参数到原生
         responseCallback('')
       })
-      // 游戏未开始解散房间
+       // 游戏未开始解散房间
       this.$JsBridge.registerHandler('releaseWait', function (data, responseCallback) {
         console.log('游戏未开始解散房间')
         // 将原生带来的参数，显示在show标签位置
         vm.users = window.JSON.parse(data)
-        vm.showDj = false
-        vm.$emit('on-close', vm.showDj)
+        let msg = '房主解散了房间'
+        vm.closeTime()
+        vm.$emit('on-close', msg)
         // 调用responseCallback方法可以带传参数到原生
         responseCallback('')
       })
@@ -919,47 +1260,16 @@ export default {
       this.$JsBridge.registerHandler('releaseReady', function (data, responseCallback) {
         // 将原生带来的参数，显示在show标签位置
         console.log('游戏中解散房间')
-        vm.users = window.JSON.parse(data)
-        vm.disbandType = 2
-        vm.releaseReadyText = '有用户在解散房间，您是否同意？'
-        vm.showReleaseReadyModal = true
-        // 调用responseCallback方法可以带传参数到原生
-        responseCallback('')
-      })
-      // 投注后更新结果
-      this.$JsBridge.registerHandler('updateResult', function (data, responseCallback) {
-        console.log('投注结果收到了')
-        // 将原生带来的参数，显示在show标签位置
-        vm.coinList = []
-       // vm.isDownSu = true
-        let res = window.JSON.parse(data)
-        let result = res.userGameVOList // 结果
-       // let cards = res.doorVOList // 第二张牌
-        let status = []
-        res.userGameVOList.forEach((item) => {
-          if ((Number(item.userId) !== Number(vm.userId)) && (item.betting === true)) {
-            status.push(item.betting)
-          }
-        })
-        if (status.length === result.length - 1) {
-          // 最后一个人完成投注
-          vm.scores = []
-          vm.users.forEach((item) => {
-            for (let i = 0; i < result.length; i++) {
-              if (Number(item.userId) === Number(result[i].userId)) {
-                vm.scores.push(item)
-              }
-            }
-          })
-          vm.gameEnd = true
+        let user = window.JSON.parse(data)
+        if (Number(user.disbandType) === 1) {
+          vm.disbandType = 2
+          vm.releaseReadyText = user.userId + '用户在解散房间，您是否同意？'
+          vm.showReleaseReadyModal = true
         }
         // 调用responseCallback方法可以带传参数到原生
         responseCallback('')
       })
     },
-    // regCard (data) {
-
-    // },
     // 判断两个数组所包含内容是否相同
     regCard (arr1, arr2) {
       if (arr1.length !== arr2.length) {
@@ -1013,6 +1323,36 @@ export default {
     },
     // 抢庄
     isQz () {
+      // this.showShareModal = true
+      // this.scores = [
+      //   {
+      //     winScore: +100
+      //   },
+      //   {
+      //     winScore: 0
+      //   },
+      //   {
+      //     winScore: +300
+      //   },
+      //   {
+      //     winScore: -400
+      //   },
+      //   {
+      //     winScore: +500
+      //   }
+      // ]
+      // this.showScore = true
+      // this.isGameStart = true
+      // this.menType = true
+      // this.isShowXz = true
+      // this.coins.forEach((item, index) => {
+      //   item.show = 'move'
+      //   // if (index === 2 || index === 3) {
+      //   //   item.show = 'hide'
+      //   // } else {
+      //   //   item.show = 'move'
+      //   // }
+      // })
       this.$audio.play(this.$audio.ui)
       // 若是都准备就绪，禁止抢庄
       if (this.isCurUserReady) {
@@ -1236,8 +1576,6 @@ export default {
       if (this.isDown) {
         return
       }
-      this.kanType = true
-      this.checkResult = true
       let userDoorVOList = []
       if (this.cmScore) {
         userDoorVOList.push({
@@ -1393,7 +1731,7 @@ export default {
       let ajaxParams = window.JSON.stringify({
         host: this.$url,
         path: this.$interface['/gameover/statistics'],
-        params: this.$sign({params})
+        params: this.$sign(params)
       })
       console.log(ajaxParams)
       // 调用android原生内部方法
@@ -1402,12 +1740,17 @@ export default {
         , {'param': ajaxParams} // 带个原生方法的参数
         , function (responseData) { // 响应原生回调方法
           let data = window.JSON.parse(responseData)
-          console.log('游戏结束统计')
-          console.log(data)
-          vm.publics = data.model
-          vm.$store.dispatch('newsAjax', data)
+          data.model.forEach((item) => {
+            item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
+          })
+          vm.allScores = data.model
+          vm.showShareModal = true
         }
       )
+    },
+    // 单局结束分享
+    share () {
+      //
     }
   }
 }
@@ -1497,24 +1840,48 @@ export default {
         .result{
           position: absolute;
           top: 0;
-          left: 0;
+       //   left: 0;
           width: 100%;
           height: 100%;
           z-index: 99;
         }
-        .result.cur-user{
-          left: 200px;
-        }
+        
         .result .win{
           display: block;
           width: 100%;
-          animation: win 0.2s linear forwards;
+          opacity: 0;
+          animation: lost 0.3s linear 5s forwards;
         }
         .result .lost{
-          animation: lost 0.2s linear forwards;
+          opacity: 0;
+          animation: lost 0.3s linear 5s forwards;
         }
         .result .tie{
-          animation: lost 0.2s linear forwards;
+          opacity: 0;
+          animation: lost 0.3s linear 5s forwards;
+        }
+        .result.cur-user .win{
+          opacity: 0;
+        //  left: 200px;
+          animation: win 0.3s linear 5s forwards;
+        }
+        .result.cur-user .lost{
+          opacity: 0;
+        //  left: 200px;
+           animation: win 0.3s linear 5s forwards;
+        }
+        .result.cur-user .tie{
+          opacity: 0;
+        //  left: 200px;
+          animation: win 0.3s linear 5s forwards;
+        }
+        .score{
+          position: absolute;
+          z-index: 98;
+        }
+        .score .sign, .score .num{
+          font-size: 48px;
+          color: #fff;
         }
       }
       .msg{
@@ -1592,9 +1959,7 @@ export default {
           height: 40px;
         }
       }
-      .score {
-
-      }
+      
     }
     .site0{
       left: 40%;
@@ -1612,6 +1977,18 @@ export default {
         top: -50px;
         left: -30px;
       }
+      .score{
+        top: -40px;
+        right: 0px; // -50
+        opacity: 0;
+      }
+      .score.showRes{
+         animation: scores0 0.3s linear 4s forwards;
+      }
+      .avater .result{
+        top: -60px;
+        right: -240px;
+      }
     }
     .site1{
       right: 0px;
@@ -1620,6 +1997,18 @@ export default {
         position: absolute;
         top: 50px;
         left: -200px;
+      }
+      .score{
+        top: -60px;
+        left: -300px; // -200 
+        opacity: 0;
+      }
+      .score.showRes{
+         animation: scores1 0.3s linear 4s forwards;
+      }
+      .avater .result{
+        top: -90px;
+        left: -50px;
       }
     }
     .site2{
@@ -1630,6 +2019,18 @@ export default {
         top: 50px;
         right: -150px;
       }
+      .score{
+        top: -60px;
+        right: -200px; // -150
+        opacity: 0;
+      }
+      .score.showRes{
+         animation: scores2 0.3s linear 4s forwards;
+      }
+      .avater .result{
+        top: -90px;
+        right: 0px;
+      }
     }
     .site3{
       right: 0px;
@@ -1639,6 +2040,18 @@ export default {
         top: 50px;
         left: -200px;
       }
+      .score{
+        top: 20px;
+        left: -300px; // -200
+        opacity: 0;
+      }
+      .score.showRes{
+         animation: scores3 0.3s linear 4s forwards;
+      }
+      .avater .result{
+        top: 0px;
+        left: -50px;
+      }
     }
     .site4{
       left: 50px;
@@ -1647,6 +2060,18 @@ export default {
         position: absolute;
         top: 50px;
         right: -150px;
+      }
+      .score{
+        top: 20px;
+        right: -200px; // -150
+        opacity: 0;
+      }
+      .score.showRes{
+         animation: scores4 0.3s linear 4s forwards;
+      }
+      .avater .result{
+        top: 0px;
+        right: 0px;
       }
     }
   }
@@ -1773,7 +2198,7 @@ export default {
     top: 49%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 30;
+    z-index: 999;
     .chu,.tian,.kan{
       position: relative;
       height: 320px;
@@ -1796,28 +2221,47 @@ export default {
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin0.active{
-        animation: coinMove0 0.1s linear forwards;
+        animation: coinMove0 0.2s linear forwards;
+      }
+      .coin0.hide{
+        display: none;
+        opacity: 0;
       }
       .coin1{
        left: 150px;
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin1.active{
-        animation: coinMove1 0.1s linear forwards;
+        animation: coinMove1 0.2s linear forwards;
+      }
+      .coin1.hide{
+        display: none;
+        opacity: 0;
       }
       .coin2{
        left: 70px;
         box-shadow: 5px 5px 15px 2px #333;
       }
+      
       .coin2.active{
-        animation: coinMove2 0.1s linear forwards;
+        animation: coinMove2 0.2s linear forwards;
+      }
+      
+      .coin2.hide{
+        display: none;
+        opacity: 0;
       }
       .coin3{
        left: 120px;
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin3.active{
-       animation: coinMove3 0.1s linear forwards;
+       animation: coinMove3 0.2s linear forwards;
+      }
+      
+      .coin3.hide{
+        display: none;
+        opacity: 0;
       }
       .coin4{
         left: 140px;
@@ -1826,19 +2270,34 @@ export default {
       .coin4.active{
         animation: coinMove4 0.2s linear forwards;
       }
+      
+      .coin4.hide{
+        display: none;
+        opacity: 0;
+      }
       .coin5{
        left: 50px;
        box-shadow: 5px 5px 15px 2px #333;
       }
       .coin5.active{
-        animation: coinMove5 0.1s linear forwards;
+        animation: coinMove5 0.2s linear forwards;
+      }
+      
+      .coin5.hide{
+        display: none;
+        opacity: 0;
       }
       .coin6{
         left: 20px;
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin6.active{
-       animation: coinMove6 0.1s linear forwards;
+       animation: coinMove6 0.2s linear forwards;
+      }
+      
+      .coin6.hide{
+        display: none;
+        opacity: 0;
       }
       .coin7{
         left: 180px;
@@ -1846,6 +2305,134 @@ export default {
       }
       .coin7.active{
        animation: coinMove7 0.2s linear forwards;
+      }
+      
+      .coin7.hide{
+        display: none;
+        opacity: 0;
+      }
+      .coin8{
+        left: 150px;
+        box-shadow: 5px 5px 15px 2px #333;
+      }
+      .coin8.active{
+       animation: coinMove8 0.2s linear forwards;
+      }
+      
+      .coin8.hide{
+        display: none;
+        opacity: 0;
+      }
+      .coin9{
+        left: 160px;
+        box-shadow: 5px 5px 15px 2px #333;
+      }
+      .coin9.active{
+       animation: coinMove9 0.2s linear forwards;
+      }
+      
+      .coin9.hide{
+        display: none;
+        opacity: 0;
+      }
+    }
+    .chu-coins{
+       .coin0.move{
+        animation: Move0_0 0.3s linear forwards;
+      }
+      
+      .coin1.move{
+        animation: Move0_1 0.3s linear forwards;
+      }
+      .coin2.move{
+        animation: Move0_2 0.3s linear forwards;
+      }
+      .coin3.move{
+        animation: Move0_3 0.3s linear forwards;
+      }
+      .coin4.move{
+        animation: Move0_4 0.3s linear forwards;
+      }
+      .coin5.move{
+        animation: Move0_5 0.3s linear forwards;
+      }
+      .coin6.move{
+        animation: Move0_6 0.3s linear forwards;
+      }
+      .coin7.move{
+        animation: Move0_7 0.3s linear forwards;
+      }
+      .coin8.move{
+        animation: Move0_8 0.3s linear forwards;
+      }
+      .coin9.move{
+        animation: Move0_9 0.3s linear forwards;
+      }
+    }
+    .tian-coins{
+       .coin0.move{
+        animation: Move1_0 0.3s linear forwards;
+      }
+      
+      .coin1.move{
+        animation: Move1_1 0.3s linear forwards;
+      }
+      .coin2.move{
+        animation: Move1_2 0.3s linear forwards;
+      }
+      .coin3.move{
+        animation: Move1_3 0.3s linear forwards;
+      }
+      .coin4.move{
+        animation: Move1_4 0.3s linear forwards;
+      }
+      .coin5.move{
+        animation: Move1_5 0.3s linear forwards;
+      }
+      .coin6.move{
+        animation: Move1_6 0.3s linear forwards;
+      }
+      .coin7.move{
+        animation: Move1_7 0.3s linear forwards;
+      }
+      .coin8.move{
+        animation: Move1_8 0.3s linear forwards;
+      }
+       .coin9.move{
+        animation: Move1_9 0.3s linear forwards;
+      }
+    }
+    .kan-coins{
+       .coin0.move{
+        animation: Move2_0 0.3s linear forwards;
+      }
+      
+      .coin1.move{
+        animation: Move2_1 0.3s linear forwards;
+      }
+      .coin2.move{
+        animation: Move2_2 0.3s linear forwards;
+      }
+      .coin3.move{
+        animation: Move2_3 0.3s linear forwards;
+      }
+      .coin4.move{
+        animation: Move2_4 0.3s linear forwards;
+      }
+      .coin5.move{
+        animation: Move2_5 0.3s linear forwards;
+      }
+      .coin6.move{
+        animation: Move2_6 0.3s linear forwards;
+      }
+      .coin7.move{
+        animation: Move2_7 0.3s linear forwards;
+      }
+      .coin8.move{
+        animation: Move2_8 0.3s linear forwards;
+      }
+       .coin9.move{
+        animation: Move2_9 0.3s linear forwards;
       }
     }
     // .chu-coins{
@@ -2061,6 +2648,24 @@ export default {
     }
   }
 }
+.share-modal{
+  .share-body{
+    padding: 86px 0;
+    color: #fff;
+    font-size: 48px;
+  }
+  .share-foot{
+     display: flex;
+     flex-direction: row;
+     padding: 0 10%;
+     justify-content: space-between;
+     text-align: center;
+    .share-btn{
+      flex: 0 0 32%;
+      margin: 0 auto;
+    }
+  }
+}
 /**下注动画**/
 
 @keyframes coinMove0 {
@@ -2208,6 +2813,424 @@ export default {
     opacity: 1;
   }
 }
+@keyframes coinMove8 {
+  0% {
+    top: -120px;
+    opacity: 0.5;
+  }
+  60% {
+    top: -60px;
+    opacity: 1;
+  }
+  80% {
+    top: 20px;
+    opacity: 1;
+  }
+  100% {
+    top: 150px;
+    opacity: 1;
+  }
+}
+@keyframes coinMove9 {
+  0% {
+    top: -100px;
+    opacity: 0.5;
+  }
+  60% {
+    top: -60px;
+    opacity: 1;
+  }
+  80% {
+    top: 20px;
+    opacity: 1;
+  }
+  100% {
+    top: 120px;
+    opacity: 1;
+  }
+}
+/**分钱动画**/
+@keyframes Move0_0 {
+  0% {
+    top: 0px;
+    left: 60px;
+  }
+  100% {
+    top: 400px;
+    left: 20px;
+  //  opacity: 0;
+  }
+}
+@keyframes Move1_0 {
+  0% {
+    top: 0px;
+    left: 60px;
+  }
+  100% {
+    top: 380px;
+    left: -160px;
+  //  opacity: 0;
+  }
+}
+@keyframes Move2_0 {
+  0% {
+    top: 0px;
+    left: 60px;
+  }
+  100% {
+    top: 400px;
+    left: -360px;
+  //  opacity: 0;
+  }
+}
+@keyframes Move0_1 {
+  0% {
+    top: 150px;
+    left: 100px;
+  }
+  100% {
+    top: 360px;
+    left: 20px;
+  //  opacity: 0;
+  }
+}
+@keyframes Move1_1 {
+  0% {
+   top: 150px;
+    left: 100px;
+  }
+  100% {
+    top: 360px;
+    left: -120px;
+  //  opacity: 0;
+  }
+}
+@keyframes Move2_1 {
+  0% {
+    top: 150px;
+    left: 100px;
+  }
+  100% {
+    top: 420px;
+    left: -420px;
+  //  opacity: 0;
+  }
+}
+@keyframes Move0_2 {
+  0% {
+    top: -20px;
+    left: 150px;
+  }
+  100% {
+    top: 200px;
+    left: 900px;
+   // opacity: 0;
+  }
+}
+@keyframes Move1_2 {
+  0% {
+    top: -20px;
+    left: 150px;
+  }
+  100% {
+    top: 160px;
+    left: 600px;
+   // opacity: 0;
+  }
+}
+@keyframes Move2_2 {
+  0% {
+    top: -20px;
+    left: 150px;
+  }
+  100% {
+    top: 210px;
+    left: 300px;
+   // opacity: 0;
+  }
+}
+@keyframes Move0_3 {
+  0% {
+    top: 60px;
+    left: 70px;
+  }
+  100% {
+    top: 230px;
+    left: 900px;
+   // opacity: 0;
+  }
+}
+@keyframes Move1_3 {
+  0% {
+    top: 60px;
+    left: 70px;
+  }
+  100% {
+    top: 230px;
+    left: 600px;
+   // opacity: 0;
+  }
+}
+@keyframes Move2_3 {
+  0% {
+    top: 60px;
+    left: 70px;
+  }
+  100% {
+    top: 180px;
+    left: 300px;
+   // opacity: 0;
+  }
+}
+@keyframes Move0_4 {
+  0% {
+    top: 100px;
+    left: 120px;
+  }
+  100% {
+    top: 200px;
+    left: -200px;
+   // opacity: 0;
+  }
+}
+@keyframes Move1_4 {
+  0% {
+     top: 100px;
+    left: 120px;
+  }
+  100% {
+    top: 160px;
+    left: -480px;
+   // opacity: 0;
+  }
+}
+@keyframes Move2_4 {
+  0% {
+    top: 100px;
+    left: 120px;
+  }
+  100% {
+    top: 210px;
+    left: -640px;
+   // opacity: 0;
+  }
+}
+@keyframes Move0_5 {
+  0% {
+    top: 40px;
+    left: 140px;
+  }
+  100% {
+    top: 240px;
+    left: -160px;
+   // opacity: 0;
+  }
+}
+@keyframes Move1_5 {
+  0% {
+    top: 40px;
+    left: 140px;
+  }
+  100% {
+    top: 250px;
+    left: -480px;
+   // opacity: 0;
+  }
+}
+@keyframes Move2_5 {
+  0% {
+    top: 40px;
+    left: 140px;
+  }
+  100% {
+    top: 160px;
+    left: -640px;
+   // opacity: 0;
+  }
+}
+@keyframes Move0_6 {
+  0% {
+    top: 110px;
+    left: 50px;
+  }
+  100% {
+    top: -50px;
+    left: 900px;
+   // opacity: 0;
+  }
+}
+@keyframes Move1_6 {
+  0% {
+    top: 110px;
+    left: 50px;
+  }
+  100% {
+    top: -80px;
+    left: 600px;
+   // opacity: 0;
+  }
+}
+@keyframes Move2_6 {
+  0% {
+    top: 110px;
+    left: 50px;
+  }
+  100% {
+    top: -50px;
+    left: 300px;
+   // opacity: 0;
+  }
+}
+@keyframes Move0_7 {
+  0% {
+    top: 50px;
+    left: 20px;
+  }
+  100% {
+    top: -90px;
+    left: 900px;
+   // opacity: 0;
+  }
+}
+@keyframes Move1_7 {
+  0% {
+    top: 50px;
+    left: 20px;
+  }
+  100% {
+    top: -30px;
+    left: 600px;
+   // opacity: 0;
+  }
+}
+@keyframes Move2_7 {
+  0% {
+     top: 50px;
+    left: 20px;
+  }
+  100% {
+    top: -110px;
+    left: 320px;
+   // opacity: 0;
+  }
+}
+@keyframes Move0_8 {
+  0% {
+    top: 90px;
+    left: 180px;
+  }
+  100% {
+    top: -50px;
+    left: -200px;
+   // opacity: 0;
+  }
+}
+@keyframes Move1_8 {
+  0% {
+     top: 90px;
+    left: 180px;
+  }
+  100% {
+    top: -100px;
+    left: -520px;
+   // opacity: 0;
+  }
+}
+@keyframes Move2_8 {
+  0% {
+    top: 90px;
+    left: 180px;
+  }
+  100% {
+    top: -50px;
+    left: -640px;
+   // opacity: 0;
+  }
+}
+@keyframes Move0_9 {
+  0% {
+    top: 150px;
+    left: 150px;
+  }
+  100% {
+    top: -90px;
+    left: -180px;
+   // opacity: 0;
+  }
+}
+@keyframes Move1_9 {
+  0% {
+     top: 150px;
+    left: 150px;
+  }
+  100% {
+    top: -30px;
+    left: -480px;
+   // opacity: 0;
+  }
+}
+@keyframes Move2_9 {
+  0% {
+     top: 150px;
+    left: 150px;
+  }
+  100% {
+    top: -110px;
+    left: -640px;
+   // opacity: 0;
+  }
+}
+/**分数动画**/
+@keyframes scores0 {
+  0% {
+    right: -50px;
+    opacity: 0;
+  }
+  100%{
+    right: -50px;
+    opacity: 1;
+  }
+}
+@keyframes scores1 {
+  0% {
+    left: -300px;
+    opacity: 0;
+  }
+  100%{
+    left: -250px;
+    opacity: 1;
+  }
+}
+@keyframes scores2 {
+  0% {
+    right: -150px;
+    opacity: 0;
+  }
+  100%{
+    right: -200px;
+    opacity: 1;
+  }
+}
+@keyframes scores3 {
+  0% {
+    left: -300px;
+    opacity: 0;
+  }
+  100%{
+    left: -250px;
+    opacity: 1;
+  }
+}
+@keyframes scores4 {
+  0% {
+    right: -150px;
+    opacity: 0;
+  }
+  100%{
+    right: -200px;
+    opacity: 1;
+  }
+}
 /**输赢动画**/
 @keyframes win {
   0% {
@@ -2238,10 +3261,10 @@ export default {
 /**发牌动画**/
 .cards{
   position: absolute;
-  bottom: 0;
+  top: 10%;
   width: 100%;
-  height: 100%;
-  z-index: 999;
+  height: 35%;
+  z-index: 1000;
   .card-list{
     position: relative;
    /* bottom: -75%; */
@@ -2304,32 +3327,32 @@ export default {
     .card1{
       left: 40%;
       z-index: 1;
-      animation: card1Move 0.3s linear 0.5s forwards;
+      animation: card1Move 0.3s linear 1s forwards;
     }
     .card2{
       left: 45%;
       z-index: 2;
-      animation: card2Move 0.3s linear 1s forwards;
+      animation: card2Move 0.3s linear 1.5s forwards;
     }
     .card3{
       left: 50%;
       z-index: 3;
-      animation: card3Move 0.3s linear 1s forwards;
+      animation: card3Move 0.3s linear 2s forwards;
     }
     .card4{
       left: 55%;
       z-index: 4;
-      animation: card4Move 0.3s linear 1.5s forwards;
+      animation: card4Move 0.3s linear 0.5s forwards;
     }
     .card5{
       left: 60%;
       z-index: 5;
-      animation: card5Move 0.3s linear 1.5s forwards;
+      animation: card5Move 0.3s linear 1s forwards;
     }
     .card6{
       left: 65%;
       z-index: 6;
-      animation: card6Move 0.3s linear 2s forwards;
+      animation: card6Move 0.3s linear 1.5s forwards;
     }
     .card7{
       left: 70%;
@@ -2376,7 +3399,8 @@ export default {
     top: -50px;
   }
   100%{
-    left: 26%;
+   // left: 26%;
+    left: 52%;
     top: 280px;
   }
 }
@@ -2386,7 +3410,8 @@ export default {
     top: -50px;
   }
   100%{
-    left: 51%;
+   // left: 51%;
+    left: 82%;
     top: 280px;
   }
 }
@@ -2396,8 +3421,9 @@ export default {
     top: -50px;
   }
   100%{
-    left: 56%;
-    top: 280px;
+   // left: 56%;
+    left: 50%;
+    top: -50px;
   }
 }
 @keyframes card4Move {
@@ -2406,7 +3432,8 @@ export default {
     top: -50px;
   }
   100%{
-    left: 81%;
+   // left: 81%;
+    left: 26%;
     top: 280px;
   }
 }
@@ -2416,7 +3443,8 @@ export default {
     top: -50px;
   }
   100%{
-    left: 86%;
+   // left: 86%;
+    left: 57%;
     top: 280px;
   }
 }
@@ -2426,8 +3454,9 @@ export default {
     top: -20px;
   }
   100%{
-    left: 50%;
-    top: -50px;
+   // left: 50%;
+    left: 87%;
+    top: 280px;
   }
 }
 @keyframes card7Move {
