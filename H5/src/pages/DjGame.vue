@@ -1877,7 +1877,7 @@ export default {
         }
         .score{
           position: absolute;
-          z-index: 98;
+          z-index: 1001;
         }
         .score .sign, .score .num{
           font-size: 48px;
