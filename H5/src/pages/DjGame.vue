@@ -18,23 +18,10 @@
            'r-site': (index !== 0) && (index % 2 === 0)}" v-show="item.roomOwner == true">
             <img src="../assets/imgs/img_Room_owner.png" alt="" width="100%" height="100%">
            </div>
-           <!-- {{item.banker == true}} -->
            <div class="zuja" :class="{'l-site': (index === 0) || (index % 2 !== 0),
            'r-site': (index !== 0) && (index % 2 === 0)}" v-show="item.banker == true">
-           <!-- {{item.banker == true}} -->
             <img src="../assets/imgs/img_Setuphualun.png" alt="" width="100%" height="100%">
            </div>
-          <!-- <div class="result" :class="{'cur-user': index === 0}">
-            <span v-show="item.status === 0 && gameEnd" class="lost">
-              <img :src="result[1]" alt="" width="100%">
-            </span>
-            <span v-show="item.status === 1 && gameEnd" class="tie">
-              <img :src="result[2]" alt="" width="100%">
-            </span>
-            <span v-show="item.status === 2 && gameEnd" class="win">
-              <img :src="result[0]" alt="" width="100%">
-            </span>
-          </div> -->
         </div>
         <div class="msg" :class="{'g-inline': index === 0,'l-msg': (index !== 0) && (index % 2 !== 0),
          'r-msg': (index === 0) || (index % 2 === 0)}">
@@ -59,14 +46,9 @@
             <span v-show="item.ready == true && item.roomOwner == false && isStartReady">
               <img src="../assets/imgs/img_Room_readying.png" alt="" width="100%" height="100%">
             </span>
-            <!-- {{item.ready == false }}
-            {{item.roomOwner == true}}
-            {{isFriends == true}}
-            {{isFirst == true}} -->
             <span v-show="item.ready == false && item.roomOwner == true && isFriends == true && isFirst == true" @click="startGame">
               <img src="../assets/imgs/img_Setup_Exchangeaccount.png" alt="" width="100%" height="100%">
             </span>
-          
             <span v-show="item.ready == false && item.roomOwner == true && isFirst == false && item.curUser == true" @click="startReady">
               <img src="../assets/imgs/img_Room_ready.png" alt="" width="100%" height="100%">
             </span>
@@ -74,15 +56,6 @@
               <img src="../assets/imgs/img_Room_readying.png" alt="" width="100%" height="100%">
             </span>
          </div>
-        <!-- <div class="card status" :class="{'l-site': (index !== 0) && (index % 2 !== 0),
-         'r-site': (index % 2 === 0), 'c-site': (index === 0)}">
-         
-            <ul class="card-list" v-show="cardList.length > 0">
-              <li v-for="(item, index) in cardList" :key="index">
-                <img :src="item.img" alt="">
-              </li>
-            </ul>
-         </div> -->
         <div class="xz-tip">
           <span v-show="item.xz === 0 && item.banker == false && isDownSu == false">
             <img src="../assets/imgs/img_Bet_qingxiazhu.png" alt="" width="100%" height="100%">
@@ -97,7 +70,7 @@
     <div class="user-site">
       <div class="user-item" v-for="(item, index) in scores" :key="index"
       :class="{'site0': index === 0, 'site1': index === 1, 'site2': index === 2,
-      'site3': index === 3, 'site4': index === 4}">
+      'site3': index === 3, 'site4': index === 4}" v-show="scores.length > 0">
         <div class="avater">
           <div class="result" :class="{'cur-user': index == 0}">
             <span v-show="item.winScore < 0 " :class="{'lost': item.winScore < 0}">
@@ -220,7 +193,7 @@
         <span>{{gameMsg.baseScore}}分封顶</span>
       </div>
     </div>
-    <!-- 牌面 -->
+    <!-- 下注筹码 -->
     <div class="card-table g-flex-row" v-show="isGameStart">
       <div class="chu g-flex" v-for="(item, index) in tbg" :key="index"
       :class="{'chu': index === 0, 'tian': index === 1, 'kan': index === 2}">
@@ -261,14 +234,9 @@
       </div>
 
     </div>
-    <!-- <div style="padding: 60px;">
-    <span style="display: block;width: 50px;height: 50px; background: #eee;" class="win" v-show="showCoins"></span>
-    <div style="padding: 60px;"></div>
-    <span style="display: block;width: 50px;height: 50px; background: #eee;" class="lost" v-show="showCoins"></span>
-    </div>
-    <button @click="xzOk">点击</button> -->
+
     <!-- 邀请好友 -->
-    <div class="yq-friend g-flex-row" @touchstart="invateFriend" v-show="isMaster">
+    <div class="yq-friend g-flex-row" @touchstart="invateFriend" v-show="isMaster && isFirst == true ">
       <img src="../assets/imgs/img_Room_lnvitefriends.png" alt="" width= "100%">
     </div>
     <!-- 交流 -->
@@ -429,7 +397,7 @@
          <ul>
            <li v-for="(item, index) in allScores" :key="index">
              <p>
-               <img :src="item.headimgurl" />
+               <img :src="item.headimgurl" width="60px" height="60px"/>
              </p>
              <p>昵称：{{item.nickname}}</p>
              <p>ID{{item.userId}}</p>
@@ -460,59 +428,20 @@ export default {
   name: 'app',
   data () {
     return {
-      date: '',
-      timer: null,
-      showDj: false,
-      showAccount: false,
-      qz: false,
-      users: [
-        // {
-        //   nickname: 'tom',
-        //   headimgurl: avatar,
-        //   ready: true,
-        //   roomOwner: true,
-        //   banker: true,
-        //   score: 1000
-        // },
-        // {
-        //   nickname: 'tom4',
-        //   headimgurl: avatar,
-        //   ready: false,
-        //   roomOwner: false,
-        //   banker: false,
-        //   score: 1000
-        // },
-        // {
-        //   nickname: 'tom3',
-        //   headimgurl: avatar,
-        //   ready: false,
-        //   roomOwner: false,
-        //   banker: false,
-        //   score: 1000
-        // },
-        // {
-        //   nickname: 'tom2',
-        //   headimgurl: avatar,
-        //   ready: false,
-        //   roomOwner: false,
-        //   banker: false,
-        //   score: 1000
-        // },
-        // {
-        //   nickname: 'tom1',
-        //   headimgurl: avatar,
-        //   ready: false,
-        //   roomOwner: false,
-        //   banker: false,
-        //   score: 1000
-        // }
-      ],
-      showSetModal: false,
-      socket: null,
-      id: '',
-      showXzModal: false,
-      showClose: false,
-      site: true,
+      date: '', // 当前时间
+      timer: null, // 定时器
+      timer1: null,
+      timer2: null,
+      timer3: null,
+      timer4: null,
+      timer5: null,
+      showDj: false, // 是否显示该游戏桌面
+      showAccount: false, // 是否显示设置中的切换账号功能
+      qz: false, // 抢庄切换
+      users: [], // 游戏中玩家列表
+      showXzModal: false, // 是否显示下注弹窗
+      showClose: false, // 是否显示弹窗关闭按钮
+      site: true, // 弹窗显示位置
       mType: [
         {
           img: tabImgs.mtype[0],
@@ -528,7 +457,7 @@ export default {
         }
       ],
       tbg: tabImgs.tbg,
-      result: tabImgs.result,
+      result: tabImgs.result, // 赢输和图
       coins: [
         {
           value: tabImgs.coins[0],
@@ -599,9 +528,8 @@ export default {
         img: tabImgs.lowzMax[3].img,
         value: tabImgs.lowzMax[3].value
       }],
-      showCoins: false,
-      isFirst: true,
-      gameMsg: {},
+      isFirst: true, // 是否是第一局游戏，房主显示开始游戏和准备区别
+      gameMsg: {}, // 房间相关信息
       cmScore: 0, // 出门下注分数
       tmScore: 0, // 天门下注分数
       kmScore: 0, // 坎门下注分数
@@ -614,86 +542,35 @@ export default {
       isMaster: false, // 是否是房主
       isShowXz: true, // 庄家没有投注
       isFriends: false, // 是否邀请好友，游戏中至少2个人
-      isStartReady: false, // 房主是否点击开始，
-      // isReady: false // 用户是否已经准备就绪,
+      isStartReady: false, // 玩家是否准备，
       isGameStart: false, // 是否游戏已经开始,
       disbandType: 0, // 游戏中解散房间类型，解散请求和响应
-      disbandAgree: true, // 游戏中解散是否同意
+      disbandAgree: false, // 游戏中解散是否同意
       showExitModal: false,
       exitText: '', // 用户退出提示文字
       showReleaseWaitModal: false,
       releaseWaitText: '', // 房主提示文字
       showReleaseReadyModal: false,
       releaseReadyText: '', // 游戏中解散房间提示文字
-      isCurUserReady: false,
+      isCurUserReady: false, // 当前玩家是否准备，不可抢庄
       curCardBg: tabImgs.cards[3],
       cards: tabImgs.djCards, // 所有的牌组合方式
-      cardList: [
-        // {
-        //   bImg: tabImgs.cards[3],
-        //   fImg: tabImgs.cards[3]
-        // },
-        // {
-        //   bImg: tabImgs.cards[3],
-        //   fImg: tabImgs.cards[3]
-        // },
-        // {
-        //   bImg: tabImgs.cards[3],
-        //   fImg: tabImgs.cards[3]
-        // },
-        // {
-        //   bImg: tabImgs.cards[3],
-        //   fImg: tabImgs.cards[3]
-        // },
-        // {
-        //   bImg: tabImgs.cards[3],
-        //   fImg: tabImgs.cards[3]
-        // },
-        // {
-        //   bImg: tabImgs.cards[3],
-        //   fImg: tabImgs.cards[3]
-        // },
-        // {
-        //   bImg: tabImgs.cards[3],
-        //   fImg: tabImgs.cards[3]
-        // },
-        // {
-        //   bImg: tabImgs.cards[3],
-        //   fImg: tabImgs.cards[3]
-        // }
-      ],
-      showCards: false,
-      checkResult1: false, // 查看结果，翻牌
-      checkResult2: false, // 查看结果，翻牌
-      isDown: false, // 是否已经下注过
+      cardList: [], // 最终展示牌
+      showCards: false, // 是否显示发牌
+      checkResult1: false, // 查看牌1结果，翻牌
+      checkResult2: false, // 查看牌2结果，翻牌
+      isDown: false, // 是否已经下注过，不可重复下注
       isDownSu: false, // 最后一个人下注完成
-      chuType: false, // 投注类型：出门
-      tianType: false, // 投注类型：天门
-      kanType: false, // 投注类型：坎门
-      menType: false,
-      coinList: [], // 投注列表
-      gameEnd: false, // 显示游戏结束结果字样
-      scores: [
-        // {
-        //   winScore: +100
-        // },
-        // {
-        //   winScore: 0
-        // },
-        // {
-        //   winScore: +300
-        // },
-        // {
-        //   winScore: -400
-        // },
-        // {
-        //   winScore: +500
-        // }
-      ], // 最终结果
+      // chuType: false, // 投注类型：出门
+      // tianType: false, // 投注类型：天门
+      // kanType: false, // 投注类型：坎门
+      menType: false, // 显示投注动画
+    //  coinList: [], // 投注列表
+      scores: [], // 最终结果分数
       showScore: false,
-      collCoins: [true, true, true, true, true],
+      // collCoins: [true, true, true, true, true],
       showShareModal: false,
-      allScores: []
+      allScores: [] // 单局结束统计
     }
   },
   props: {
@@ -734,26 +611,6 @@ export default {
     dj (val) {
       this.showDj = val
     },
-    // ds: {
-    //   handler (val) {
-    //     console.log(val)
-    //     this.users = []
-    //     val.forEach((item) => {
-    //       if (item instanceof Object) {
-    //         item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
-    //         this.users.push(item)
-    //       }
-    //     })
-    //   },
-    //   deep: true
-    // },
-    // curUser (val) {
-    //   console.log('sssssssssssssssss')
-    //   for (let key in val) {
-    //     console.log(key + ':' + val(key))
-    //   }
-    //   this.userId = val.id
-    // },
     uid (val) {
       this.userId = val
     },
@@ -761,45 +618,8 @@ export default {
       this.roomId = val
     },
     ds (val) {
-      console.log('获取陈宫进入房间信息')
-      for (let key in val) {
-        console.log(key + ':' + val[key])
-      }
       this.gameMsg = val
     },
-    // ds (val) {
-    //   this.users = []
-    //   let arr = []
-    //   val.forEach((item) => {
-    //     if (item instanceof Object) {
-    //       item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
-    //       let obj = {}
-    //       for (let key in item) {
-    //         obj[key] = item[key]
-    //       }
-    //       obj.nickname = 'Tom'
-    //       obj.userId = '99000'
-    //       arr.push(obj)
-    //       arr.push(obj)
-    //       arr.push(item)
-    //       arr.push(obj)
-    //       arr.push(obj)
-    //     }
-    //   })
-    //   arr.forEach((item) => {
-    //     if (item.userId === this.userId) {
-    //       this.users.unshift(item)
-    //     } else {
-    //       this.users.push(item)
-    //     }
-    //   })
-    //   // 获取当前设置对应信息
-    //   // roomId、userId
-    //   // 判断游戏中用户人数是否至少为2人
-    //   if (this.users >= MIN_USER) {
-    //     this.isFriends = true
-    //   }
-    // }
     isOwner (val) {
       // this.roomId = val.roomId
       // this.roomNum = val.numId
@@ -817,8 +637,6 @@ export default {
     this.users = this.ds
     this.gameMsg = this.ds
     this.curCardBg = this.cardBg
-    console.log('hahahahahahahah我是北极光图')
-    console.log(this.curCardBg)
     // 注册交互事件
     this.registerFn()
     // 获取当前时间
@@ -845,103 +663,61 @@ export default {
       let vm = this
       // 系统更新加入游戏的用户列表
       this.$JsBridge.registerHandler('updateUsers', function (data, responseCallback) {
-        console.log('游戏中用户列表更新了')
-        console.log(data)
         // 将原生带来的参数，显示在show标签位置
         vm.users = []
         let arr = []
         let arrs = []
-        // let val = []
-        // arr = vm.$hds.handler(data)
         arrs = window.JSON.parse(data)
         arrs.forEach((item) => {
           if (item != null) {
             arr.push(item)
           }
         })
-        // val.forEach((item) => {
-        //   if (item instanceof Object) {
-        //     item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
-        //     item.ready = 'false'
-        //     let obj = {}
-        //     let objs = {}
-        //     for (let key in item) {
-        //       obj[key] = item[key]
-        //     }
-        //     for (let key in item) {
-        //       objs[key] = item[key]
-        //     }
-        //     obj.nickname = 'Tom'
-        //     obj.userId = '99000'
-        //     obj.roomOwner = 'false'
-        //     obj.takeBanker = 'false'
-        //     obj.ready = 'true'
-        //     objs.nickname = 'Tom'
-        //     objs.userId = '99000'
-        //     objs.roomOwner = 'false'
-        //     objs.takeBanker = 'false'
-        //     objs.ready = 'true'
-        //     arr.push(obj)
-        //     arr.push(obj)
-        //     arr.push(item)
-        //     arr.push(objs)
-        //     arr.push(obj)
-        //   }
-        // })
         // 游戏开始，禁止用户加入
         // if (vm.isGameStart) {
         //   return
         // }
         // 如果人数最少2人，即可开始游戏
         if (arr.length < MIN_USER) {
-          console.log('aaaaaaaaaaaaaaaaaaaa')
           arr.forEach((item) => {
             if (Number(item.userId) === Number(vm.userId)) {
-              console.log('我是1个人' + item.userId)
-              console.log('我是当前用户')
               item.curUser = true
+              // 匹配最大下注值
               vm.getRoomMsg()
               // 房间创建者可以邀请好友
               if (item.roomOwner) {
-                console.log('我是房主')
                 vm.isMaster = true
               } else {
                 vm.isMaster = false
               }
-               // 当前玩家若是庄家，不显示下注
-              if (item.banker === true) {
-                vm.isShowXz = false
-              } else {
-                vm.isShowXz = true
-              }
+              //  // 当前玩家若是庄家，不显示下注
+              // if (item.banker === true) {
+              //   vm.isShowXz = false
+              // } else {
+              //   vm.isShowXz = true
+              // }
               // 当前玩家准备后不可以抢庄
               if (item.ready === true) {
                 vm.isCurUserReady = true
               } else {
                 vm.isCurUserReady = false
               }
-              console.log('我在测试1')
               item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
               vm.users.unshift(item)
-              console.log('我在测试2')
             } else {
               item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
-              console.log('我在测试3')
               vm.users.push(item)
-              console.log('我在测试4')
             }
           })
         } else {
           arr.forEach((item) => {
             if (Number(item.userId) === Number(vm.userId)) {
-              console.log('我是多个人' + item.userId)
-              console.log('我是当前用户')
               item.curUser = true
               item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
+              // 匹配最大下注值
               vm.getRoomMsg()
               // 房间创建者可以邀请好友
               if (item.roomOwner) {
-                console.log('我是房主')
                 vm.isMaster = true
               } else {
                 vm.isMaster = false
@@ -954,45 +730,28 @@ export default {
               }
               // 当前玩家准备后不可以抢庄
               if (item.ready === true) {
-                console.log('1111')
                 vm.isCurUserReady = true
               } else {
                 vm.isCurUserReady = false
               }
-              console.log('2222')
               vm.users.unshift(item)
-              console.log('333')
             } else {
-              console.log('44')
               item.curUser = false
-              console.log('555')
               item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
               vm.users.push(item)
-              console.log('666')
             }
           })
-       //   console.log(window.JSON.stringify(vm.users))
-          console.log('bbbbbbbbbbbbbbbbbbbbb')
-        //  vm.playCards()
           // 显示准备按钮
           if (!vm.isStartReady) {
-            console.log('cccccccccccccccc')
             vm.isStartReady = true
           } else {
-            // 房主点击开始游戏
-            console.log(vm.isOtherReady(vm.users))
+            // 其他玩家点击准备按钮,房主显示开始游戏按钮
             if (vm.isOtherReady(vm.users)) {
-              console.log('eeeeee')
               vm.isFriends = true
-              console.log(vm.isFriends)
-           //   vm.playCards()
             }
-            // 其他玩家点击准备按钮,判断是否都已经准备就绪
-            console.log('ddddddddddddddddddddddd')
+            // 判断是否都已经准备就绪
             if (vm.isAllUserReady(vm.users)) {
-              console.log('kkkk')
               vm.isStartReady = false
-              vm.isMaster = false
               vm.isFriends = false
               // 禁止抢庄
               vm.isGameStart = true
@@ -1007,8 +766,6 @@ export default {
       // 系统发牌
       this.$JsBridge.registerHandler('updateCards', function (data, responseCallback) {
         // 将原生带来的参数，显示在show标签位置
-        console.log('获取到系统发牌')
-        console.log(window.JSON.parse(data))
         vm.cardList = []
         let res = []
         let obj = {}
@@ -1022,7 +779,6 @@ export default {
         })
         res.push(obj)
         res.forEach((item, index) => {
-          console.log(window.JSON.stringify(item))
           // 大九
           if (item.pokerList.length === 1) {
             let arr1 = []
@@ -1040,9 +796,6 @@ export default {
               }
                // 匹配对应的牌
               if (vm.regCard(arr1, arr2)) {
-                console.log(arr1.join('-'))
-                console.log(arr2.join('-'))
-                console.log(vm.curCardBg)
                 vm.cardList.push({
                   bImg: vm.curCardBg,
                   fImg: vm.cards[i].img
@@ -1052,9 +805,9 @@ export default {
           }
         })
         vm.showCards = true
-        setTimeout(() => {
+        vm.timer1 = setTimeout(() => {
           vm.checkResult1 = true
-          setTimeout(() => {
+          vm.timer2 = setTimeout(() => {
             vm.users.forEach((item) => {
               if (Number(item.userId) === Number(vm.userId)) {
                 item.xz = 0
@@ -1067,9 +820,6 @@ export default {
             }
           }, 500)
         }, 3000)
-        console.log(window.JSON.stringify(vm.cardList))
-        // vm.showDj = false
-        // vm.$emit('on-close', vm.showDj)
         // 调用responseCallback方法可以带传参数到原生
         responseCallback('')
       })
@@ -1086,9 +836,8 @@ export default {
       // })
       // 投注后更新结果
       this.$JsBridge.registerHandler('updateResult', function (data, responseCallback) {
-        console.log('投注结果收到了')
         // 将原生带来的参数，显示在show标签位置
-        vm.coinList = []
+     //   vm.coinList = []
         let res = window.JSON.parse(data)
         let result = res.userGameVOList // 结果
         let list = res.doorVOList // 第二张牌
@@ -1096,15 +845,11 @@ export default {
         let status = []
         let coins = []
         let obj = {}
-        console.log('aaaa')
         result.forEach((item) => {
           if ((item.banker === false) && (item.betting === true)) {
             status.push(item.betting)
           }
         })
-        console.log('bbb')
-        console.log(status.length)
-        console.log(result.length)
         list.forEach((item, index) => {
           if (Number(item.doorNum) === 0) {
             obj = item
@@ -1113,8 +858,8 @@ export default {
           }
         })
         scds.push(obj)
+        // 除庄家外，最后一个人投注完成,更新结果
         if (status.length === result.length - 1) {
-          console.log('最后一个人瓦策不过投注')
           // 最后一个人完成投注
           scds.forEach((item) => {
             let arr1 = []
@@ -1131,13 +876,7 @@ export default {
                 }
               }
                // 匹配对应的牌
-              console.log(arr1.join('-'))
-              console.log(arr2.join('-'))
               if (vm.regCard(arr1, arr2)) {
-                console.log('更新第二张牌')
-                console.log(arr1.join('-'))
-                console.log(arr2.join('-'))
-                console.log(vm.curCardBg)
                 vm.cardList.push({
                   bImg: vm.curCardBg,
                   fImg: vm.cards[i].img
@@ -1147,15 +886,13 @@ export default {
           })
           vm.isDownSu = true
           vm.menType = true
-          setTimeout(() => {
+          vm.timer3 = setTimeout(() => {
             vm.checkResult2 = true
             vm.scores = []
-            console.log(vm.scores.length + '床都')
             vm.showScore = true
             vm.users.forEach((item) => {
               for (let i = 0; i < result.length; i++) {
                 if (Number(item.userId) === Number(result[i].userId)) {
-                  console.log('cidhdshdsdsds')
                   vm.scores.push(result[i])
                 }
               }
@@ -1181,11 +918,9 @@ export default {
               }
             })
             // 庄家赢了
-            setTimeout(() => {
+            vm.timer4 = setTimeout(() => {
               if (winer) {
                 console.log('庄家赢了')
-                console.log(bankerId)
-                console.log(curIndex)
                 if (Number(bankerId) === Number(vm.userId)) {
                   console.log('是当前玩家')
                   for (let i = 0; i < 10; i++) {
@@ -1208,8 +943,6 @@ export default {
               } else {
                 // 闲家赢了
                 console.log('闲家赢了')
-                console.log(bankerId)
-                console.log(curIndex)
                 for (let i = 0; i < 10; i++) {
                   if ((i === (curIndex * 2)) || (i === (curIndex * 2 + 1)) || i >= (result.length * 2)) {
                     coins[i] = 'hide'
@@ -1218,28 +951,13 @@ export default {
                   }
                 }
               }
-              console.log(coins.join('-'))
               vm.coins.forEach((item, index) => {
                 item.show = coins[index]
               })
             }, 6000)
-            setTimeout(() => {
+            vm.timer5 = setTimeout(() => {
               vm.gameOver()
             }, 8000)
-          //  setTimeout(() => {
-              // vm.showScore = true
-              // vm.users.forEach((item) => {
-              //   for (let i = 0; i < result.length; i++) {
-              //     if (Number(item.userId) === Number(result[i].userId)) {
-              //       console.log('cidhdshdsdsds')
-              //       vm.scores.push(result[i])
-              //     }
-              //   }
-              // })
-              // setTimeout(() => {
-              //   vm.gameOver()
-              // }, 500)
-           // }, 500)
           }, 3500)
         }
         // 调用responseCallback方法可以带传参数到原生
@@ -1252,6 +970,9 @@ export default {
         vm.users = window.JSON.parse(data)
         let msg = '房主解散了房间'
         vm.closeTime()
+        vm.resetParams()
+        vm.showReleaseWaitModal = false
+        vm.isFirst = true
         vm.$emit('on-close', msg)
         // 调用responseCallback方法可以带传参数到原生
         responseCallback('')
@@ -1286,7 +1007,6 @@ export default {
       if (this.lowz.length >= 4) {
         return
       }
-      console.log(this.lowz)
       if (Number(this.gameMsg.baseScore) === 20) {
         this.lowz.push(this.lowzMax[0])
       } else if (this.gameMsg.baseScore === 50) {
@@ -1323,36 +1043,6 @@ export default {
     },
     // 抢庄
     isQz () {
-      // this.showShareModal = true
-      // this.scores = [
-      //   {
-      //     winScore: +100
-      //   },
-      //   {
-      //     winScore: 0
-      //   },
-      //   {
-      //     winScore: +300
-      //   },
-      //   {
-      //     winScore: -400
-      //   },
-      //   {
-      //     winScore: +500
-      //   }
-      // ]
-      // this.showScore = true
-      // this.isGameStart = true
-      // this.menType = true
-      // this.isShowXz = true
-      // this.coins.forEach((item, index) => {
-      //   item.show = 'move'
-      //   // if (index === 2 || index === 3) {
-      //   //   item.show = 'hide'
-      //   // } else {
-      //   //   item.show = 'move'
-      //   // }
-      // })
       this.$audio.play(this.$audio.ui)
       // 若是都准备就绪，禁止抢庄
       if (this.isCurUserReady) {
@@ -1371,7 +1061,6 @@ export default {
           }
         }
       })
-      console.log('强庄了')
       // let vm = this
       this.$JsBridge.callHandler(
         'qianZuan' // 原生的方法名
@@ -1490,6 +1179,7 @@ export default {
     // 游戏进行中解散房间
     releaseReadyOk () {
       this.$audio.play(this.$audio.btn)
+      this.disbandAgree = true
       let params = window.JSON.stringify({
         host: this.$url,
         path: this.$interface['/app'],
@@ -1518,10 +1208,6 @@ export default {
         }
       )
     },
-    // 关闭设置弹窗
-    closeSetModal () {
-      this.showSetModal = false
-    },
     // 出门投注分数
     selectCmScore (val) {
       this.$audio.play(this.$audio.ui)
@@ -1530,7 +1216,6 @@ export default {
       if (this.cmScore >= 50) {
         this.cmScore = 50
       }
-      console.log(this.cmScore)
     },
     // 删除出门投注分数
     deleteCmScore () {
@@ -1546,7 +1231,6 @@ export default {
       if (this.tmScore >= 50) {
         this.tmScore = 50
       }
-      console.log(this.tmScore)
     },
     // 删除天门投注分数
     deleteTmScore () {
@@ -1562,7 +1246,6 @@ export default {
       if (this.kmScore >= 50) {
         this.kmScore = 50
       }
-      console.log(this.kmScore)
     },
     // 删除坎门投注分数
     deleteKmScore () {
@@ -1613,7 +1296,6 @@ export default {
         , {'param': params} // 带个原生方法的参数
         , function (responseData) { // 响应原生回调方法
           vm.showXzModal = false
-          vm.showCoins = true
           vm.isDown = true
           // if (Number(window.JSON.parse(responseData)) === 200) {
           //   vm.$router.push({path: router, params: {}})
@@ -1733,7 +1415,6 @@ export default {
         path: this.$interface['/gameover/statistics'],
         params: this.$sign(params)
       })
-      console.log(ajaxParams)
       // 调用android原生内部方法
       this.$JsBridge.callHandler(
         'gameOver' // 原生的方法名
@@ -1751,6 +1432,50 @@ export default {
     // 单局结束分享
     share () {
       //
+    },
+    // 单局游戏结束参数重置
+    resetParams () {
+      this.cmScore = 0
+      this.tmScore = 0
+      this.kmScore = 0
+      this.cmType = 0
+      this.tmType = 0
+      this.kmType = 0
+      this.disbandType = 0
+      this.disbandAgree = false
+      // this.isMaster = false
+      // this.isFriends = false
+      this.isFirst = false
+      this.isCurUserReady = false
+      this.isGameStart = false
+      this.isShowXz = true
+      this.showCards = false
+      this.checkResult1 = false
+      this.checkResult2 = false
+      this.isDown = false
+      this.isDownSu = false
+      this.menType = false
+      this.showScore = false
+      this.cardList = []
+      this.scores = []
+      this.allScores = []
+      this.coins.forEach((item) => {
+        item.show = ''
+      })
+      this.timer = null
+      this.timer1 = null
+      this.timer2 = null
+      this.timer3 = null
+      this.timer4 = null
+      this.timer5 = null
+      clearTimeout(this.timer1)
+      clearTimeout(this.timer2)
+      clearTimeout(this.timer3)
+      clearTimeout(this.timer4)
+      clearTimeout(this.timer5)
+      this.users.forEach((item) => {
+        item.ready = false
+      })
     }
   }
 }
@@ -1877,7 +1602,7 @@ export default {
         }
         .score{
           position: absolute;
-          z-index: 1001;
+          z-index: 9999;
         }
         .score .sign, .score .num{
           font-size: 48px;
@@ -1979,7 +1704,7 @@ export default {
       }
       .score{
         top: -40px;
-        right: 0px; // -50
+        right: -250px; // -50
         opacity: 0;
       }
       .score.showRes{
@@ -1987,7 +1712,7 @@ export default {
       }
       .avater .result{
         top: -60px;
-        right: -240px;
+        right: -100px;
       }
     }
     .site1{
@@ -3183,18 +2908,18 @@ export default {
 /**分数动画**/
 @keyframes scores0 {
   0% {
-    right: -50px;
-    opacity: 0;
+    right: -250px;
+    opacity: 1;
   }
   100%{
-    right: -50px;
+    right: -300px;
     opacity: 1;
   }
 }
 @keyframes scores1 {
   0% {
     left: -300px;
-    opacity: 0;
+    opacity: 1;
   }
   100%{
     left: -250px;
@@ -3204,7 +2929,7 @@ export default {
 @keyframes scores2 {
   0% {
     right: -150px;
-    opacity: 0;
+    opacity: 1;
   }
   100%{
     right: -200px;
@@ -3214,7 +2939,7 @@ export default {
 @keyframes scores3 {
   0% {
     left: -300px;
-    opacity: 0;
+    opacity: 1;
   }
   100%{
     left: -250px;
@@ -3224,7 +2949,7 @@ export default {
 @keyframes scores4 {
   0% {
     right: -150px;
-    opacity: 0;
+    opacity: 1;
   }
   100%{
     right: -200px;
