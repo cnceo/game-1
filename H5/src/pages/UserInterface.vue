@@ -366,7 +366,8 @@ export default {
       isFirstDj: true,
       gameType: 1,
       cardBg: tabImgs.cards[3],
-      loadRoom: false
+      loadRoom: false,
+      selectData: {}
     }
   },
   created () {
@@ -381,7 +382,8 @@ export default {
     let ajaxParams1 = window.JSON.stringify({
       host: this.$url,
       path: this.$interface['/user/login'],
-      params: this.$sign(params)
+      params: this.$sign(params),
+      nickname: this.userMsg.nickname
     })
     this.$JsBridge.callHandler(
       'getUserMsg' // 原生的方法名
@@ -431,7 +433,8 @@ export default {
       let ajaxParams = window.JSON.stringify({
         host: this.$url,
         path: this.$interface['/user/login'],
-        params: this.$sign(params)
+        params: this.$sign(params),
+        nickname: val.nickname
       })
       setTimeout(() => {
         this.$JsBridge.callHandler(
@@ -713,27 +716,51 @@ export default {
     createGameRoom (e) {
       this.loadRoom = true
       this.$audio.play(this.$audio.btn)
-      let selectData = {}
+      if (this.selectTypes === 0) {
+        this.createRoomData1.substitute = false
+      } else if (this.selectTypes === 1) {
+        this.createRoomData2.substitute = false
+      } else {
+        this.createRoomData3.substitute = false
+      }
+      this.selectData = {}
+      this.create()
+    },
+    // 是否代开房间
+    invoiceGameRoom (e) {
+      this.loadRoom = true
+      this.$audio.play(this.$audio.btn)
+      if (this.selectTypes === 0) {
+        this.createRoomData1.substitute = true
+      } else if (this.selectTypes === 1) {
+        this.createRoomData2.substitute = true
+      } else {
+        this.createRoomData3.substitute = true
+      }
+      this.selectData = {}
+      this.create()
+    },
+    create () {
       let type = null
       // 获取选择的游戏类型
       if (this.selectTypes === 0) {
-        selectData = this.createRoomData1
+        this.selectData = this.createRoomData1
         type = 1
        // this.router = '/qt'
       } else if (this.selectTypes === 1) {
-        selectData = this.createRoomData2
+        this.selectData = this.createRoomData2
         type = 2
        // this.router = '/ht'
       } else {
-        selectData = this.createRoomData3
+        this.selectData = this.createRoomData3
         type = 3
       //  this.router = '/dj'
       }
       let params = {
         userId: this.userInfo.id,
-        baseScore: selectData.score,
-        baseRound: selectData.round,
-        substitute: selectData.substitute,
+        baseScore: this.selectData.score,
+        baseRound: this.selectData.round,
+        substitute: this.selectData.substitute,
         gameType: type
       }
       console.log(params)
@@ -766,13 +793,8 @@ export default {
               baseScore: data.model.baseScore,
               baseRound: data.model.baseRound
             })
-              // 是否是代开房间
-            if (!selectData.substitute) {
-              // 进入房间
-              vm.startEnterRoom(vm.numId)
-            } else {
-              vm.showDkModal = true
-            }
+            // 进入房间
+            vm.startEnterRoom(vm.numId)
             // } else {
             //   // 提示房卡不足
             //   vm.showTip = true
@@ -800,17 +822,6 @@ export default {
           }
         }
       )
-    },
-    // 是否代开房间
-    invoiceGameRoom (e) {
-      this.$audio.play(this.$audio.btn)
-      if (this.selectTypes === 0) {
-        this.createRoomData1.substitute = true
-      } else if (this.selectTypes === 1) {
-        this.createRoomData2.substitute = true
-      } else {
-        this.createRoomData3.substitute = true
-      }
     },
     // 关闭创建房间弹窗
     closeCreateRoom () {
@@ -871,7 +882,18 @@ export default {
             vm.roomId = data.model.id
             vm.gameType = data.model.gameType
             console.log(vm.roomId)
-            vm.enterRoom()
+            // 是否是代开房间
+            if (!vm.selectData.substitute) {
+              vm.enterRoom()
+            } else {
+              vm.showCreateRoom = false
+              vm.loadRoom = false
+              vm.roomNums.forEach((item, index) => {
+                vm.$set(vm.roomNums, index, '')
+              })
+              vm.numIndex = 0
+              vm.showDkModal = true
+            }
           } else {
             vm.loadRoom = false
             vm.showTip = true

@@ -75,3 +75,11 @@
 #app .modal-bg {
   height: 100%;
 }
+#app .share-modal .modal-content {
+  width: 90%;
+  height: 90%;
+}
+#app .share-modal .modal-content .share-title {
+  width: 50%;
+  margin: 0 auto;
+}

@@ -57,10 +57,10 @@
             </span>
          </div>
         <div class="xz-tip">
-          <span v-show="item.xz === 0 && item.banker == false && isDownSu == false">
+          <span v-show="item.xz == 0 && item.banker == false && isDownSu == true">
             <img src="../assets/imgs/img_Bet_qingxiazhu.png" alt="" width="100%" height="100%">
           </span>
-          <span v-show="item.xz === 1 && item.banker == false && isDownSu == false">
+          <span v-show="item.xz == 1 && item.banker == false && isDownSu == true">
             <img src="../assets/imgs/img_Bet_zhengzaixiazhu.png" alt="" width="100%" height="100%">
           </span>
         </div>
@@ -199,7 +199,7 @@
       :class="{'chu': index === 0, 'tian': index === 1, 'kan': index === 2}">
         <img :src="item" alt="" height="100%">
         <div class="coin-box" v-show="index === 0">
-          <div class="coins chu-coins" v-show="menType && isShowXz">
+          <div class="coins chu-coins" v-show="menType">
             <span v-for="(item, index) in coins" :key="index" :class="{'coin0': index === 0,
             'coin1': index === 1, 'coin2': index === 2, 'coin3': index === 3, 'coin4': index === 4,
             'coin5': index === 5, 'coin6': index === 6, 'coin7': index === 7, 'coin8': index === 8, 'coin9': index === 9, 'active': menType,
@@ -210,7 +210,7 @@
           </div>
         </div>
         <div class="coin-box" v-show="index === 1">
-          <div class="coins tian-coins" v-show="menType && isShowXz">
+          <div class="coins tian-coins" v-show="menType">
             <span v-for="(item, index) in coins" :key="index" :class="{'coin0': index === 0,
             'coin1': index === 1, 'coin2': index === 2, 'coin3': index === 3, 'coin4': index === 4,
             'coin5': index === 5, 'coin6': index === 6, 'coin7': index === 7, 'coin8': index === 8, 'coin9': index === 9, 'active': menType,
@@ -221,7 +221,7 @@
           </div>
         </div>
         <div class="coin-box" v-show="index === 2">
-          <div class="coins kan-coins" v-show="menType && isShowXz">
+          <div class="coins kan-coins" v-show="menType">
               <span v-for="(item, index) in coins" :key="index" :class="{'coin0': index === 0,
               'coin1': index === 1, 'coin2': index === 2, 'coin3': index === 3, 'coin4': index === 4,
               'coin5': index === 5, 'coin6': index === 6, 'coin7': index === 7, 'coin8': index === 8, 'coin9': index === 9, 'active': menType,
@@ -388,30 +388,65 @@
     <Modal :showModal="showShareModal"
     class="share-modal">
     <div slot="modal-bg" class="modal-bg">
-      <img src="../assets/imgs/img-Stoppingdoor-background.png" alt=""  width="100%" height="100%">
+      <img src="../assets/imgs/img-End-background.png" alt=""  width="100%" height="100%">
     </div>
-      <!-- <div slot="title" class="xz-title title-active">
-         <img src="../assets/imgs/img_Bet_title.png" alt=""  width="100%">
-      </div> -->
+      <div slot="title" class="share-title title-active">
+         <img src="../assets/imgs/img-End-title.png" alt=""  width="100%">
+      </div>
       <div slot="body" class="share-body">
          <ul>
-           <li v-for="(item, index) in allScores" :key="index">
-             <p>
-               <img :src="item.headimgurl" width="60px" height="60px"/>
-             </p>
-             <p>昵称：{{item.nickname}}</p>
-             <p>ID{{item.userId}}</p>
-             <p>赢的次数：{{item.winNum}}</p>
-             <p>输的次数：{{item.loseNum}}</p>
-             <p>和的次数：{{item.heNum}}</p>
-             <p>坐庄次数：{{item.bankerNum}}</p>
-             <p>总得分：{{item.userWincore}}</p>
+           <li v-for="(item, index) in allScores" :key="index" :class="{'winBg': item.userWincore >= 0,
+             'loseBg': item.userWincore < 0}">
+             <div class="user-tit">
+               <!-- <img :src="item.headimgurl" width="60px" height="60px"/> -->
+               <div class="user-avatar">
+                  <img src="../assets/imgs/Avatarframe.png" width="100%"  height="100%"/>
+                  <div class="user-img">
+                    <img :src="item.headimgurl" width="100px"/>
+                  </div>
+                </div>
+                <div class="user-id-card">
+                  <div class="user-name f-relative">
+                    <img src="../assets/imgs/img-End-netname.png"/>
+                    <span>{{item.nickname}}</span>
+                    </div>
+                  <div class="user-id f-relative">
+                     <img src="../assets/imgs/img-End-id.png"/>
+                     <span>{{item.userId}}</span>
+                    </div>
+                </div>
+              </div>
+              <div class="item">
+               <img src="../assets/imgs/img-End-yingcishu.png" width="160px"/>
+               <span class="num">{{item.winNum}}</span>
+               <span class="line"></span>
+              </div>
+              <div class="item">
+               <img src="../assets/imgs/img-End-shucishu.png" width="160px"/>
+               <span class="num">{{item.loseNum}}</span>
+               <span class="line"></span>
+              </div>
+              <div class="item">
+                <img src="../assets/imgs/img-End-hecishu.png" width="160px"/>
+                <span class="num">{{item.heNum}}</span>
+                <span class="line"></span>
+              </div>
+              <div class="item">
+               <img src="../assets/imgs/img-End-zhuangcishu.png" width="160px"/>
+               <span class="num">{{item.bankerNum}}</span>
+               <span class="line"></span>
+              </div>
+              <div class="item">
+                <img src="../assets/imgs/img-End-totalscore.png" width="100px"/>
+                <span class="num">{{item.userWincore}}</span>
+                <!-- <span class="line"></span> -->
+              </div>
            </li>
-         </ul>                                                                 
+         </ul>
       </div>
       <div slot="foot" class="share-foot">
         <div class="ok share-btn" @touchstart="share">
-           <img src="../assets/imgs/img-Stoppingdoor-confirm.png" alt=""  width="100%">
+           <img src="../assets/imgs/img-End-share.png" alt=""  width="100%">
         </div>
       </div>
     </Modal>
@@ -751,12 +786,19 @@ export default {
             }
             // 判断是否都已经准备就绪
             if (vm.isAllUserReady(vm.users)) {
+              console.log('所有人准备就绪')
               vm.isStartReady = false
               vm.isFriends = false
+              vm.isMaster = false
               // 禁止抢庄
               vm.isGameStart = true
               // 开始发牌
-              vm.playCards()
+              vm.users.forEach((its) => {
+                if (Number(its.userId) === Number(vm.userId) && (its.banker === true)) {
+                  console.log('发牌了')
+                  vm.playCards()
+                }
+              })
             }
           }
         }
@@ -805,6 +847,7 @@ export default {
           }
         })
         vm.showCards = true
+        vm.isDownSu = true
         vm.timer1 = setTimeout(() => {
           vm.checkResult1 = true
           vm.timer2 = setTimeout(() => {
@@ -884,7 +927,7 @@ export default {
               }
             }
           })
-          vm.isDownSu = true
+          vm.isDownSu = false
           vm.menType = true
           vm.timer3 = setTimeout(() => {
             vm.checkResult2 = true
@@ -956,9 +999,13 @@ export default {
               })
             }, 6000)
             vm.timer5 = setTimeout(() => {
-              vm.gameOver()
+              if (res.gameover === true) {
+                vm.gameOver()
+              } else {
+                vm.resetParams()
+              }
             }, 8000)
-          }, 3500)
+          }, 3000)
         }
         // 调用responseCallback方法可以带传参数到原生
         responseCallback('')
@@ -967,12 +1014,13 @@ export default {
       this.$JsBridge.registerHandler('releaseWait', function (data, responseCallback) {
         console.log('游戏未开始解散房间')
         // 将原生带来的参数，显示在show标签位置
-        vm.users = window.JSON.parse(data)
+       // vm.users = window.JSON.parse(data)
         let msg = '房主解散了房间'
         vm.closeTime()
         vm.resetParams()
         vm.showReleaseWaitModal = false
         vm.isFirst = true
+        vm.users = []
         vm.$emit('on-close', msg)
         // 调用responseCallback方法可以带传参数到原生
         responseCallback('')
@@ -981,11 +1029,31 @@ export default {
       this.$JsBridge.registerHandler('releaseReady', function (data, responseCallback) {
         // 将原生带来的参数，显示在show标签位置
         console.log('游戏中解散房间')
+        let flag = false
         let user = window.JSON.parse(data)
-        if (Number(user.disbandType) === 1) {
-          vm.disbandType = 2
-          vm.releaseReadyText = user.userId + '用户在解散房间，您是否同意？'
-          vm.showReleaseReadyModal = true
+        if (user.disband === true) {
+          let msg = '房间已经解散'
+          vm.closeTime()
+          vm.resetParams()
+          vm.showReleaseReadyModal = false
+          vm.isFirst = true
+          vm.users = []
+          vm.$emit('on-close', msg)
+        } else {
+          if (Number(user.opeUserId) !== Number(vm.userId) && Number(user.disbandType) === 1) {
+            user.dissolveUserList.forEach((its) => {
+              if (Number(its.userId) === Number(vm.userId)) {
+                flag = true
+              }
+            })
+            if (!flag) {
+              vm.disbandType = 2
+              vm.releaseReadyText = user.opeUserId + '在解散房间，您是否同意？'
+              vm.showReleaseReadyModal = true
+            }
+          } else {
+            vm.showReleaseReadyModal = false
+          }
         }
         // 调用responseCallback方法可以带传参数到原生
         responseCallback('')
@@ -1113,8 +1181,11 @@ export default {
           // }
           //
           vm.showExitModal = false
-          vm.showDj = false
-          vm.$emit('on-close', vm.showDj)
+          vm.isFirst = true
+          let msg = '您已经退出了房间'
+          vm.closeTime()
+          vm.resetParams()
+          vm.$emit('on-close', msg)
         }
       )
     },
@@ -1152,7 +1223,7 @@ export default {
           }
         }
       })
-      let vm = this
+      // let vm = this
       this.$JsBridge.callHandler(
         'releaseWait' // 原生的方法名
         , {'param': params} // 带个原生方法的参数
@@ -1161,9 +1232,9 @@ export default {
           //   vm.$router.push({path: router, params: {}})
           // }
           //
-          vm.showReleaseWaitModal = true
-          vm.showDj = false
-          vm.$emit('on-close', vm.showDj)
+          // vm.showReleaseWaitModal = true
+          // vm.showDj = false
+          // vm.$emit('on-close', vm.showDj)
         }
       )
     },
@@ -1174,12 +1245,18 @@ export default {
     },
     releaseReadyCancel () {
       this.$audio.play(this.$audio.btn)
-      this.showReleaseReadyModal = false
+      this.disbandAgree = false
+      this.askOtherAgree()
+    //  this.showReleaseReadyModal = false
     },
     // 游戏进行中解散房间
     releaseReadyOk () {
       this.$audio.play(this.$audio.btn)
       this.disbandAgree = true
+      this.askOtherAgree()
+    //  this.showReleaseReadyModal = false
+    },
+    askOtherAgree () {
       let params = window.JSON.stringify({
         host: this.$url,
         path: this.$interface['/app'],
@@ -1193,7 +1270,7 @@ export default {
           }
         }
       })
-      let vm = this
+      // let vm = this
       this.$JsBridge.callHandler(
         'releaseReady' // 原生的方法名
         , {'param': params} // 带个原生方法的参数
@@ -1202,9 +1279,9 @@ export default {
           //   vm.$router.push({path: router, params: {}})
           // }
           //
-          vm.showReleaseReadyModal = true
-          vm.showDj = false
-          vm.$emit('on-close', vm.showDj)
+          // vm.showReleaseReadyModal = true
+          // vm.showDj = false
+          // vm.$emit('on-close', vm.showDj)
         }
       )
     },
@@ -1421,10 +1498,16 @@ export default {
         , {'param': ajaxParams} // 带个原生方法的参数
         , function (responseData) { // 响应原生回调方法
           let data = window.JSON.parse(responseData)
+          let arrs = []
           data.model.forEach((item) => {
             item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
+            if (Number(item.userId) === Number(vm.userId)) {
+              arrs.unshift(item)
+            } else {
+              arrs.push(item)
+            }
           })
-          vm.allScores = data.model
+          vm.allScores = arrs
           vm.showShareModal = true
         }
       )
@@ -1432,6 +1515,8 @@ export default {
     // 单局结束分享
     share () {
       //
+      this.showShareModal = false
+      this.resetParams()
     },
     // 单局游戏结束参数重置
     resetParams () {
@@ -1445,6 +1530,7 @@ export default {
       this.disbandAgree = false
       // this.isMaster = false
       // this.isFriends = false
+      this.showXzModal = false
       this.isFirst = false
       this.isCurUserReady = false
       this.isGameStart = false
@@ -1575,34 +1661,38 @@ export default {
           display: block;
           width: 100%;
           opacity: 0;
-          animation: lost 0.3s linear 5s forwards;
+          animation: small 0.3s linear 5s forwards;
         }
         .result .lost{
+          display: block;
+          width: 100%;
           opacity: 0;
-          animation: lost 0.3s linear 5s forwards;
+          animation: small 0.3s linear 5s forwards;
         }
         .result .tie{
+          display: block;
+          width: 100%;
           opacity: 0;
-          animation: lost 0.3s linear 5s forwards;
+          animation: small 0.3s linear 5s forwards;
         }
         .result.cur-user .win{
           opacity: 0;
         //  left: 200px;
-          animation: win 0.3s linear 5s forwards;
+          animation: big 0.3s linear 5s forwards;
         }
         .result.cur-user .lost{
           opacity: 0;
         //  left: 200px;
-           animation: win 0.3s linear 5s forwards;
+           animation: big 0.3s linear 5s forwards;
         }
         .result.cur-user .tie{
           opacity: 0;
         //  left: 200px;
-          animation: win 0.3s linear 5s forwards;
+          animation: big 0.3s linear 5s forwards;
         }
         .score{
           position: absolute;
-          z-index: 9999;
+          z-index: 99999;
         }
         .score .sign, .score .num{
           font-size: 48px;
@@ -1679,6 +1769,7 @@ export default {
       .xz-tip{
         position: absolute;
         width: 180px;
+        z-index: 99999;
         img{
           width: 100%;
           height: 40px;
@@ -1704,7 +1795,7 @@ export default {
       }
       .score{
         top: -40px;
-        right: -250px; // -50
+        right: -200px; // -50
         opacity: 0;
       }
       .score.showRes{
@@ -2375,9 +2466,116 @@ export default {
 }
 .share-modal{
   .share-body{
-    padding: 86px 0;
+    padding: 86px 0 10px 0;
     color: #fff;
     font-size: 48px;
+    ul{
+      display: flex;
+    }
+    li{ 
+      flex: 1;
+      margin: 0 10px;
+      .user-tit{
+        display: flex;
+        padding: 15px 20px;
+        .user-avatar{
+          position: relative;
+          flex: 0 0 100px;
+          width: 100px;
+          height: 100px;
+          line-height: 100px;
+          border-radius: 16px;
+          overflow: hidden;
+          background-image: url('../assets/imgs/Avatarframe.png');
+          background-size: 100% 100%;
+          .user-img{
+            position: absolute;
+            top: -5px;
+            left: -4px;
+            width: 78px;
+            height: 78px;
+            padding: 15px;
+            border-radius: 20px;
+            overflow: hidden;
+            img{
+              width: 78px;
+              height: 78px;
+              border-radius: 16px;
+              border: 1px solid #000;
+              box-shadow: 0px 0px 10px #000;
+            }
+          }
+        }
+        .user-id-card{
+          display: inline-block;
+          flex: 1;
+        //  width: calc(~"100% - 200px");
+          padding-left: 15px;
+          margin-right: 30px;
+          font-size: 32px;
+          text-align: left;
+          .user-name{
+            padding: 0 15px 0 0;
+            margin: 5px 0;
+            border-radius: 12px;
+          //  background: rgba(0, 0, 0, .5) url('../assets/imgs/img-End-netname.png') 0 0 no-repeat;
+          //  background-size: contain;
+            img{
+              height: 42px;
+              vertical-align: middle;
+            }
+            span{
+              display: inline-block;
+              vertical-align: middle;
+            }
+          }
+          .user-id{
+            padding: 0 15px 0 0;
+            margin: 5px 0;
+            border-radius: 12px;
+          //  background: rgba(0, 0, 0, .5) url('../assets/imgs/img-End-id.png') 0 0 no-repeat;
+           // background-size: contain;
+            img{
+              height: 42px;
+              vertical-align: middle;
+            }
+            span{
+              display: inline-block;
+              vertical-align: middle;
+            }
+          }
+        }
+      }
+      .item{
+        position: relative;
+        text-align: left;
+        margin: 0 20px;
+        .num{
+          font-size: 32px;
+          position: absolute;
+          top: 2px;
+          right: 20px;
+        }
+        .line{
+          position: absolute;
+          bottom: 9px;
+          left: 0;
+          width: 100%;
+          height: 2px;
+          background: #efefef;
+        }
+      }
+    }
+    li.winBg{
+      border-radius: 24px;
+      background-image: url('../assets/imgs/img-End-smallbackground1.png');
+      background-size: 100% 130%;
+    }
+    li.loseBg{
+      border-radius: 24px;
+      background-image: url('../assets/imgs/img-End-smallbackground2.png');
+      background-size: 100% 130%;
+    }
   }
   .share-foot{
      display: flex;
@@ -2386,7 +2584,7 @@ export default {
      justify-content: space-between;
      text-align: center;
     .share-btn{
-      flex: 0 0 32%;
+      flex: 0 0 24%;
       margin: 0 auto;
     }
   }
@@ -2908,11 +3106,11 @@ export default {
 /**分数动画**/
 @keyframes scores0 {
   0% {
-    right: -250px;
+    right: -200px;
     opacity: 1;
   }
   100%{
-    right: -300px;
+    right: -250px;
     opacity: 1;
   }
 }
@@ -2957,7 +3155,7 @@ export default {
   }
 }
 /**输赢动画**/
-@keyframes win {
+@keyframes big {
   0% {
     opacity: 0;
   }
@@ -2970,7 +3168,7 @@ export default {
     transform: scale(1.5)
   }
 }
-@keyframes lost {
+@keyframes small {
   0% {
     opacity: 0;
   }
