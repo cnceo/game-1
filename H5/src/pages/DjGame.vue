@@ -1020,6 +1020,7 @@ export default {
         vm.resetParams()
         vm.showReleaseWaitModal = false
         vm.isFirst = true
+        vm.isGameStart = false
         vm.users = []
         vm.$emit('on-close', msg)
         // 调用responseCallback方法可以带传参数到原生
@@ -1037,6 +1038,7 @@ export default {
           vm.resetParams()
           vm.showReleaseReadyModal = false
           vm.isFirst = true
+          vm.isGameStart = false
           vm.users = []
           vm.$emit('on-close', msg)
         } else {
@@ -1182,6 +1184,7 @@ export default {
           //
           vm.showExitModal = false
           vm.isFirst = true
+          vm.isGameStart = false
           let msg = '您已经退出了房间'
           vm.closeTime()
           vm.resetParams()
@@ -1533,7 +1536,7 @@ export default {
       this.showXzModal = false
       this.isFirst = false
       this.isCurUserReady = false
-      this.isGameStart = false
+      // this.isGameStart = false
       this.isShowXz = true
       this.showCards = false
       this.checkResult1 = false

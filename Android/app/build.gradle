@@ -9,20 +9,57 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+    }
+    signingConfigs {
+        release {
+            storeFile file("D:/keys/online.jks")
+            storePassword "xsd140767"
+            keyAlias "online"
+            keyPassword "xsd140767"
+        }
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            signingConfig signingConfigs.release
         }
     }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
+    compile 'com.github.lzyzsd:jsbridge:1.0.4'
+    implementation files('libs/volley_library-1.0.19.jar')
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.8'
+  //  compile 'com.github.nkzawa:socket.io-client:0.3.0'
+    compile ('io.socket:socket.io-client:0.7.0') {
+        // excluding org.json which is provided by Android
+        exclude group: 'org.json', module: 'json'
+    }
+    compile 'com.orhanobut:logger:1.15'
+    //compile 'io.netty:netty-all:5.0.0.Alpha2'
+    testCompile 'junit:junit:4.12'
+    compile files('libs/netty-all-4.1.6.Final.jar')
+    compile files('libs/gson-2.6.1.jar')
+    compile files('libs/json-lib-2.4-jdk15.jar')
+    compile 'org.slf4j:slf4j-api:1.7.21'
+    compile 'com.github.tony19:logback-android-core:1.1.1-5'
+ //   compile 'com.github.tony19:logback-android-classic:1.1.1-5'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.4.+'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.4.+'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.4.+'
+//    compile 'net.sf.json-lib:json-lib:2.4'
+   // compile 'commons-beanutils-1.7.jar'
+    compile 'com.alibaba:fastjson:1.1.37'
+   // compile 'org.apache.struts2.json.JSONUtil'
 }
