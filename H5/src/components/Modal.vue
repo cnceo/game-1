@@ -16,7 +16,9 @@
       <div class="game-foot">
         <slot name="foot"></slot>
       </div>
-      <span class="close" @touchstart="closeModal" v-show="showX">X</span>
+      <span class="close" @touchstart="closeModal" v-show="showX">
+        <img src="../assets/imgs/img_Daikai_cuohao.png" alt="" width="100%">
+      </span>
     </div>
     <div class="modal-mask"></div>
   </div>
@@ -93,8 +95,9 @@ export default {
     }
     .close{
       position: absolute;
-      top: 0;
-      right: 0;
+      top: -20px;
+      right: -20px;
+      width: 80px;
       color: #fff;
     }
     .game-body{

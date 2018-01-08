@@ -1,25 +1,42 @@
 <template>
   <div class="game-face dk-room" v-show="showDk">
-    <!-- <img src="../assets/game.png" width="100%"/> -->
-    <div class="z-bg" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1">
-      <img src="../assets/imgs/img_Room_announcement-background.png" alt=""  width="100%">
-    </div>
-    <!-- 游戏信息 -->
-    <div class="game-info">
-      <div class="room-num">房间号： {{gameMsg.numId}}</div>
-      <div class="geme-type">
-        <span v-show="gameMsg.gameType == '1'">清推</span>
-        <span v-show="gameMsg.gameType == '2'">混推</span>
-        <span v-show="gameMsg.gameType == '3'">大九</span>
-        <span>{{gameMsg.baseRound}}局</span>
-        <span>{{gameMsg.baseScore}}分封顶</span>
+    <div class="dk-content">
+      <div class="dk-bg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1">
+        <img src="../assets/imgs/img-Stoppingdoor-background.png" alt=""  width="100%" height="100%">
       </div>
+      
+      <div class="dk-title">
+        <img src="../assets/imgs/img_Daikai_beijing.png" alt=""  width="100%">
+      </div>  
+      <div class="dk-body">
+        <ul>
+          <li class="num">
+            <div class="img">
+              <img src="../assets/imgs/img_Daikai_fangjianhao.png" alt="" height="100%">
+            </div>
+            <span>{{gameMsg.numId}}</span>
+          </li>
+          <li class="rule">
+            <div class="img">
+              <img src="../assets/imgs/img_Daikai_guize.png" alt="" height="100%">
+            </div>
+            <span></span>
+          </li>
+        </ul>
+      </div>
+      <div class="dk-foot">
+        <div class="ok dk-btn" @touchstart="copyNum">
+           <img src="../assets/imgs/img_Daikai_fuzhi.png" alt=""  width="100%">
+        </div>
+        <div class="cancel dk-btn" @touchstart="invateFriend">
+           <img src="../assets/imgs/img_Daikai_yaoqing.png" alt=""  width="100%">
+        </div>
+      </div>
+      <span class="close" @touchstart="closeModal">
+        <img src="../assets/imgs/img_Daikai_cuohao.png" alt="" width="100%">
+      </span>
     </div>
-    <!-- 邀请好友 -->
-    <div class="yq-friend g-flex-row" @touchstart="invateFriend">
-      <img src="../assets/imgs/img_Room_lnvitefriends.png" alt="" width= "100%">
-    </div>
-    
+    <div class="dk-mask"></div>
   </div>
 </template>
 
@@ -29,6 +46,7 @@ export default {
   data () {
     return {
       showDk: false,
+      roomNum: '',
       gameMsg: {}
     }
   },
@@ -57,6 +75,13 @@ export default {
     this.gameMsg = this.ds
   },
   methods: {
+    closeModal () {
+      this.showDk = false
+      this.$emit('on-close', false)
+    },
+    copyNum () {
+      this.roomNum = this.gameMsg.numId
+    },
     // 邀请好友
     invateFriend () {
       // roomMsg(房间信息)
@@ -83,56 +108,82 @@ export default {
 </script>
 
 <style scoped lang="less">
-
-.g-flex-column{
-  display: flex;
-  flex-direction: column;
-}
-.g-flex-row{
-  display: flex;
-  flex-direction: row;
-}
-.g-flex{
-  flex: 1;
-}
-
-.game-face{
-  position: fixed;
-  top: 0;
-  left: 0;
-  background: url('../assets/imgs/img_Room_announcement-background.png') 0 0 no-repeat;
-  background-size: 100% 100%;
-  z-index: 100;
-  width: 100%;
-  height: 100%;
-  .game-info{
-    position: absolute;
-    top: 90px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: #fff;
-    font-family: 'microsoft yahei';
-    font-size: 24px;
-    .geme-type{
-      margin-top: 12px;
-      span{
-        display: inline-block;
-        margin: 0 30px;
+.dk-room{
+  .dk-content{
+    position: fixed;
+    top: 50%;
+    right: 50%;
+    width: 60%;
+    height: 60%;
+    transform: translate(50%, -50%);
+   // background: rgba(0, 0, 0, .8);
+    z-index: 1000;
+    .dk-title{
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      width: 60%;
+      transform: translateX(-50%);
+    }
+    .close{
+      position: absolute;
+      top: -20px;
+      right: -20px;
+      width: 80px;
+      color: #fff;
+      z-index: 1001;
+    }
+    .dk-body{
+      padding: 130px 50px 40px;
+      color: #fff;
+      font-size: 48px;
+      ul{
+        li.num{
+          display: flex;
+          height: 72px;
+          .img{
+            flex: 0 0 80px;
+            height: 40px;
+            text-align: right;
+            padding-left: 64px;
+          }
+          span{
+            flex: 1;
+          }
+        }
+        li.rule{
+          display: flex;
+          height: 72px;
+          .img{
+            flex: 0 0 80px;
+            height: 40px;
+            text-align: right;
+          }
+          span{
+            flex: 1;
+          }
+        }
+      }
+    }
+    .dk-foot{
+      display: flex;
+      flex-direction: row;
+      padding: 0 10%;
+      justify-content: space-between;
+      .dk-btn{
+        flex: 0 0 38%;
       }
     }
   }
-  .yq-friend{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 22%;
-    height: 12vh;
+  .dk-mask{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #D9D9D9;
     z-index: 100;
-    // background: url('../assets/imgs/img_Room_lnvitefriends.png') 0 0 no-repeat;
-    // background-size: 100% 100%;
   }
- 
 }
 
 </style>
