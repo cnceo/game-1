@@ -4,10 +4,10 @@
       <div class="dk-bg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1">
         <img src="../assets/imgs/img-Stoppingdoor-background.png" alt=""  width="100%" height="100%">
       </div>
-      
+
       <div class="dk-title">
         <img src="../assets/imgs/img_Daikai_beijing.png" alt=""  width="100%">
-      </div>  
+      </div>
       <div class="dk-body">
         <ul>
           <li class="num">
@@ -80,7 +80,19 @@ export default {
       this.$emit('on-close', false)
     },
     copyNum () {
+      let vm = this
       this.roomNum = this.gameMsg.numId
+      this.$JsBridge.callHandler(
+        'copyRoom' // 原生的方法名
+        , {'param': vm.roomNum} // 带个原生方法的参数
+        , function (responseData) { // 响应原生回调方法
+          // if (Number(window.JSON.parse(responseData)) === 200) {
+          //   vm.$router.push({path: router, params: {}})
+          // }
+          //
+          console.log('复制成功')
+        }
+      )
     },
     // 邀请好友
     invateFriend () {
