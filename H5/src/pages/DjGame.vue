@@ -323,8 +323,8 @@
     </Modal>
     <!-- 退出房间弹窗 -->
     <Modal :showModal="showExitModal"
-    class="exit-modal"
-    :site="site">
+    :showClose="showClose"
+    class="exit-modal">
     <div slot="modal-bg" class="modal-bg">
       <img src="../assets/imgs/img-Stoppingdoor-background.png" alt=""  width="100%" height="100%">
     </div>
@@ -345,8 +345,8 @@
     </Modal>
     <!-- 游戏未开始房主解散房间弹窗 -->
     <Modal :showModal="showReleaseWaitModal"
-    class="exit-modal"
-    :site="site">
+    :showClose="showClose"
+    class="exit-modal">
     <div slot="modal-bg" class="modal-bg">
       <img src="../assets/imgs/img-Stoppingdoor-background.png" alt=""  width="100%" height="100%">
     </div>
@@ -367,8 +367,8 @@
     </Modal>
     <!-- 游戏中解散房间弹窗 -->
     <Modal :showModal="showReleaseReadyModal"
-    class="exit-modal"
-    :site="site">
+    :showClose="showClose"
+    class="exit-modal">
     <div slot="modal-bg" class="modal-bg">
       <img src="../assets/imgs/img-Stoppingdoor-background.png" alt=""  width="100%" height="100%">
     </div>
@@ -389,8 +389,8 @@
     </Modal>
     <!-- 单局结束分享页 -->
     <Modal :showModal="showShareModal"
-    class="share-modal"
-    :site="site">
+    :showClose="showClose"
+    class="share-modal">
     <div slot="modal-bg" class="modal-bg">
       <img src="../assets/imgs/img-End-background.png" alt=""  width="100%" height="100%">
     </div>

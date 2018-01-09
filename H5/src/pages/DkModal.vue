@@ -193,7 +193,7 @@ export default {
     left: 0;
     width: 100%;
     height: 100%;
-    background: #D9D9D9;
+    background: rgb(105, 105, 105, .6);
     z-index: 100;
   }
 }
