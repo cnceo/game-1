@@ -1298,8 +1298,8 @@ export default {
       this.$audio.play(this.$audio.ui)
       this.cmType = 1
       this.cmScore += val
-      if (this.cmScore >= this.lowz[0].value) {
-        this.cmScore = this.lowz[0].value
+      if (this.cmScore >= this.gameMsg.baseScore) {
+        this.cmScore = this.gameMsg.baseScore
       }
     },
     // 删除出门投注分数
@@ -1313,8 +1313,8 @@ export default {
       this.$audio.play(this.$audio.ui)
       this.tmType = 2
       this.tmScore += val
-      if (this.tmScore >= this.lowz[0].value) {
-        this.tmScore = this.lowz[0].value
+      if (this.tmScore >= this.gameMsg.baseScore) {
+        this.tmScore = this.gameMsg.baseScore
       }
     },
     // 删除天门投注分数
@@ -1328,8 +1328,8 @@ export default {
       this.$audio.play(this.$audio.ui)
       this.kmType = 3
       this.kmScore += val
-      if (this.kmScore >= this.lowz[0].value) {
-        this.kmScore = this.lowz[0].value
+      if (this.kmScore >= this.gameMsg.baseScore) {
+        this.kmScore = this.gameMsg.baseScore
       }
     },
     // 删除坎门投注分数
