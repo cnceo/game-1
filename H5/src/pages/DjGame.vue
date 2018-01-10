@@ -1046,7 +1046,7 @@ export default {
           vm.users = []
           vm.$emit('on-close', msg)
         } else {
-          if (Number(user.opeUserId) !== Number(vm.userId) && Number(user.disbandType) === 1) {
+          if (Number(user.opeUserId) !== Number(vm.userId)) {
             user.dissolveUserList.forEach((its) => {
               if (Number(its.userId) === Number(vm.userId)) {
                 flag = true
@@ -1057,6 +1057,8 @@ export default {
               vm.disbandType = 2
               vm.releaseReadyText = user.opeUserId + '在解散房间，您是否同意？'
               vm.showReleaseReadyModal = true
+            } else {
+              vm.showReleaseReadyModal = false
             }
           } else {
             vm.showReleaseReadyModal = false
