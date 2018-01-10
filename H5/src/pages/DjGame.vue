@@ -1008,8 +1008,8 @@ export default {
               } else {
                 vm.resetParams()
               }
-            }, 8000)
-          }, 3000)
+            }, 10000)
+          }, 4500)
         }
         // 调用responseCallback方法可以带传参数到原生
         responseCallback('')
@@ -1297,8 +1297,8 @@ export default {
       this.$audio.play(this.$audio.ui)
       this.cmType = 1
       this.cmScore += val
-      if (this.cmScore >= 50) {
-        this.cmScore = 50
+      if (this.cmScore >= this.lowz[0].value) {
+        this.cmScore = this.lowz[0].value
       }
     },
     // 删除出门投注分数
@@ -1312,8 +1312,8 @@ export default {
       this.$audio.play(this.$audio.ui)
       this.tmType = 2
       this.tmScore += val
-      if (this.tmScore >= 50) {
-        this.tmScore = 50
+      if (this.tmScore >= this.lowz[0].value) {
+        this.tmScore = this.lowz[0].value
       }
     },
     // 删除天门投注分数
@@ -1327,8 +1327,8 @@ export default {
       this.$audio.play(this.$audio.ui)
       this.kmType = 3
       this.kmScore += val
-      if (this.kmScore >= 50) {
-        this.kmScore = 50
+      if (this.kmScore >= this.lowz[0].value) {
+        this.kmScore = this.lowz[0].value
       }
     },
     // 删除坎门投注分数
@@ -1549,6 +1549,7 @@ export default {
       this.isDownSu = false
       this.menType = false
       this.showScore = false
+      this.qz = false
       this.cardList = []
       this.scores = []
       this.allScores = []
