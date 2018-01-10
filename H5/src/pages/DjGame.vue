@@ -1049,6 +1049,7 @@ export default {
               }
             })
             if (!flag) {
+              console.log('aaaa')
               vm.disbandType = 2
               vm.releaseReadyText = user.opeUserId + '在解散房间，您是否同意？'
               vm.showReleaseReadyModal = true
