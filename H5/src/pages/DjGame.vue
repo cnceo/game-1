@@ -121,7 +121,7 @@
         </li>
         <li v-for="(item, index) in cardList" :key="index"
         v-if="index === 4 || index === 5 || index === 6 || index === 7"
-        :class="{'card4': index === 4, 'card5': index === 5, 
+        :class="{'card4': index === 4, 'card5': index === 5,
         'card6': index === 6, 'card7': index === 7, 'reverse': checkResult2}"
         >
           <img :src="item.bImg" alt="" class="front">
@@ -167,9 +167,9 @@
           <img src="../assets/imgs/img_Room_setup.png" alt="" width= "100%">
         </div>
         <div class="js-room">
-          <img src="../assets/imgs/img_Room_dissolvetheroom.png" alt="" width= "100%" 
+          <img src="../assets/imgs/img_Room_dissolvetheroom.png" alt="" width= "100%"
           v-if="isMaster || isGameStart" @touchstart="releaseRoom">
-          <img src="../assets/imgs/img_Room_exitroom.jpg" alt="" width= "100%" 
+          <img src="../assets/imgs/img_Room_exitroom.jpg" alt="" width= "100%"
           v-else @touchstart="exitRoom">
         </div>
       </div>
@@ -203,7 +203,7 @@
             <span v-for="(item, index) in coins" :key="index" :class="{'coin0': index === 0,
             'coin1': index === 1, 'coin2': index === 2, 'coin3': index === 3, 'coin4': index === 4,
             'coin5': index === 5, 'coin6': index === 6, 'coin7': index === 7, 'coin8': index === 8, 'coin9': index === 9, 'active': menType,
-            'move': item.show == 'move', 'hide': item.show == 'hide'}" 
+            'move': item.show == 'move', 'hide': item.show == 'hide'}"
             >
             <img :src="item.value" alt="" width="100%">
             </span>
@@ -214,7 +214,7 @@
             <span v-for="(item, index) in coins" :key="index" :class="{'coin0': index === 0,
             'coin1': index === 1, 'coin2': index === 2, 'coin3': index === 3, 'coin4': index === 4,
             'coin5': index === 5, 'coin6': index === 6, 'coin7': index === 7, 'coin8': index === 8, 'coin9': index === 9, 'active': menType,
-            'move': item.show == 'move', 'hide': item.show == 'hide'}" 
+            'move': item.show == 'move', 'hide': item.show == 'hide'}"
             >
             <img :src="item.value" alt="" width="100%">
             </span>
@@ -225,7 +225,7 @@
               <span v-for="(item, index) in coins" :key="index" :class="{'coin0': index === 0,
               'coin1': index === 1, 'coin2': index === 2, 'coin3': index === 3, 'coin4': index === 4,
               'coin5': index === 5, 'coin6': index === 6, 'coin7': index === 7, 'coin8': index === 8, 'coin9': index === 9, 'active': menType,
-               'move': item.show == 'move', 'hide': item.show == 'hide'}" 
+               'move': item.show == 'move', 'hide': item.show == 'hide'}"
               >
               <img :src="item.value" alt="" width="100%">
               </span>
@@ -323,6 +323,7 @@
     </Modal>
     <!-- 退出房间弹窗 -->
     <Modal :showModal="showExitModal"
+    :showClose="showClose"
     class="exit-modal">
     <div slot="modal-bg" class="modal-bg">
       <img src="../assets/imgs/img-Stoppingdoor-background.png" alt=""  width="100%" height="100%">
@@ -344,6 +345,7 @@
     </Modal>
     <!-- 游戏未开始房主解散房间弹窗 -->
     <Modal :showModal="showReleaseWaitModal"
+    :showClose="showClose"
     class="exit-modal">
     <div slot="modal-bg" class="modal-bg">
       <img src="../assets/imgs/img-Stoppingdoor-background.png" alt=""  width="100%" height="100%">
@@ -365,6 +367,7 @@
     </Modal>
     <!-- 游戏中解散房间弹窗 -->
     <Modal :showModal="showReleaseReadyModal"
+    :showClose="showClose"
     class="exit-modal">
     <div slot="modal-bg" class="modal-bg">
       <img src="../assets/imgs/img-Stoppingdoor-background.png" alt=""  width="100%" height="100%">
@@ -386,6 +389,7 @@
     </Modal>
     <!-- 单局结束分享页 -->
     <Modal :showModal="showShareModal"
+    :showClose="showClose"
     class="share-modal">
     <div slot="modal-bg" class="modal-bg">
       <img src="../assets/imgs/img-End-background.png" alt=""  width="100%" height="100%">
@@ -1004,8 +1008,8 @@ export default {
               } else {
                 vm.resetParams()
               }
-            }, 8000)
-          }, 3000)
+            }, 10000)
+          }, 4500)
         }
         // 调用responseCallback方法可以带传参数到原生
         responseCallback('')
@@ -1294,8 +1298,8 @@ export default {
       this.$audio.play(this.$audio.ui)
       this.cmType = 1
       this.cmScore += val
-      if (this.cmScore >= 50) {
-        this.cmScore = 50
+      if (this.cmScore >= this.lowz[0].value) {
+        this.cmScore = this.lowz[0].value
       }
     },
     // 删除出门投注分数
@@ -1309,8 +1313,8 @@ export default {
       this.$audio.play(this.$audio.ui)
       this.tmType = 2
       this.tmScore += val
-      if (this.tmScore >= 50) {
-        this.tmScore = 50
+      if (this.tmScore >= this.lowz[0].value) {
+        this.tmScore = this.lowz[0].value
       }
     },
     // 删除天门投注分数
@@ -1324,8 +1328,8 @@ export default {
       this.$audio.play(this.$audio.ui)
       this.kmType = 3
       this.kmScore += val
-      if (this.kmScore >= 50) {
-        this.kmScore = 50
+      if (this.kmScore >= this.lowz[0].value) {
+        this.kmScore = this.lowz[0].value
       }
     },
     // 删除坎门投注分数
@@ -1546,6 +1550,7 @@ export default {
       this.isDownSu = false
       this.menType = false
       this.showScore = false
+      this.qz = false
       this.cardList = []
       this.scores = []
       this.allScores = []
@@ -1632,10 +1637,10 @@ export default {
           z-index: -1;
         }
         .zuja.l-site{
-          left: -110px; 
+          left: -110px;
         }
         .zuja.r-site{
-          right: -90px; 
+          right: -90px;
         }
         .master{
           position: absolute;
@@ -1647,10 +1652,10 @@ export default {
           z-index: -1;
         }
         .master.l-site{
-          left: -110px; 
+          left: -110px;
         }
         .master.r-site{
-          right: -90px; 
+          right: -90px;
         }
         .result{
           position: absolute;
@@ -1660,7 +1665,7 @@ export default {
           height: 100%;
           z-index: 99;
         }
-        
+
         .result .win{
           display: block;
           width: 100%;
@@ -1733,7 +1738,7 @@ export default {
           left: 36%;
         }
       }
-      .g-inline{ 
+      .g-inline{
         left: -50px;
         bottom: 20px;
         margin-top: 20px;
@@ -1762,13 +1767,13 @@ export default {
         width: 180px;
       }
       .status.l-site{
-          left: -280px; 
+          left: -280px;
         }
       .status.r-site{
-          right: -220px; 
+          right: -220px;
       }
       .status.c-site{
-          right: 20px; 
+          right: 20px;
       }
       .xz-tip{
         position: absolute;
@@ -1779,7 +1784,7 @@ export default {
           height: 40px;
         }
       }
-      
+
     }
     .site0{
       left: 40%;
@@ -1820,7 +1825,7 @@ export default {
       }
       .score{
         top: -60px;
-        left: -300px; // -200 
+        left: -300px; // -200
         opacity: 0;
       }
       .score.showRes{
@@ -2062,11 +2067,11 @@ export default {
        left: 70px;
         box-shadow: 5px 5px 15px 2px #333;
       }
-      
+
       .coin2.active{
         animation: coinMove2 0.2s linear forwards;
       }
-      
+
       .coin2.hide{
         display: none;
         opacity: 0;
@@ -2078,7 +2083,7 @@ export default {
       .coin3.active{
        animation: coinMove3 0.2s linear forwards;
       }
-      
+
       .coin3.hide{
         display: none;
         opacity: 0;
@@ -2090,7 +2095,7 @@ export default {
       .coin4.active{
         animation: coinMove4 0.2s linear forwards;
       }
-      
+
       .coin4.hide{
         display: none;
         opacity: 0;
@@ -2102,7 +2107,7 @@ export default {
       .coin5.active{
         animation: coinMove5 0.2s linear forwards;
       }
-      
+
       .coin5.hide{
         display: none;
         opacity: 0;
@@ -2114,7 +2119,7 @@ export default {
       .coin6.active{
        animation: coinMove6 0.2s linear forwards;
       }
-      
+
       .coin6.hide{
         display: none;
         opacity: 0;
@@ -2126,7 +2131,7 @@ export default {
       .coin7.active{
        animation: coinMove7 0.2s linear forwards;
       }
-      
+
       .coin7.hide{
         display: none;
         opacity: 0;
@@ -2138,7 +2143,7 @@ export default {
       .coin8.active{
        animation: coinMove8 0.2s linear forwards;
       }
-      
+
       .coin8.hide{
         display: none;
         opacity: 0;
@@ -2150,7 +2155,7 @@ export default {
       .coin9.active{
        animation: coinMove9 0.2s linear forwards;
       }
-      
+
       .coin9.hide{
         display: none;
         opacity: 0;
@@ -2160,7 +2165,7 @@ export default {
        .coin0.move{
         animation: Move0_0 0.3s linear forwards;
       }
-      
+
       .coin1.move{
         animation: Move0_1 0.3s linear forwards;
       }
@@ -2193,7 +2198,7 @@ export default {
        .coin0.move{
         animation: Move1_0 0.3s linear forwards;
       }
-      
+
       .coin1.move{
         animation: Move1_1 0.3s linear forwards;
       }
@@ -2226,7 +2231,7 @@ export default {
        .coin0.move{
         animation: Move2_0 0.3s linear forwards;
       }
-      
+
       .coin1.move{
         animation: Move2_1 0.3s linear forwards;
       }
@@ -2377,7 +2382,7 @@ export default {
           width: 150px;
           display: flex;
           align-items: center;
-          img{          
+          img{
             width: 100%;
             vertical-align: middle;
           }
@@ -2476,7 +2481,7 @@ export default {
     ul{
       display: flex;
     }
-    li{ 
+    li{
       flex: 1;
       margin: 0 10px;
       .user-tit{
