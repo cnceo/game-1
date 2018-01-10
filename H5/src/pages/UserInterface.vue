@@ -1,6 +1,6 @@
 <template>
   <div class="user-face g-flex-column">
-    <div class="face-bar"> 
+    <div class="face-bar">
       <div class="box g-flex-row">
         <!--用户信息-->
         <div class="user-info g-flex-row">
@@ -46,14 +46,14 @@
     </div>
     <div class="face-body g-flex-row">
       <div class="bg-girl">
-        <img src="../assets/imgs/beautyGirl.png"  width="100%"/> 
+        <img src="../assets/imgs/beautyGirl.png"  width="100%"/>
       </div>
       <div class="all-room">
         <div class="room-item create-room" @touchstart="createRoom($event)">
-          <img src="../assets/imgs/createroom.png"  width="100%"/> 
+          <img src="../assets/imgs/createroom.png"  width="100%"/>
         </div>
         <div class="room-item join-room" @touchstart="joinRoom($event)">
-          <img src="../assets/imgs/joinroom.png"  width="100%"/> 
+          <img src="../assets/imgs/joinroom.png"  width="100%"/>
         </div>
       </div>
     </div>
@@ -83,17 +83,17 @@
         <div class="game-box">
           <div v-show="selectGame === 0" class="item">
             <div v-html="qtRules"></div>
-            <img src="../assets/imgs/loading.gif" alt=""  width="100%" class="loading1" 
+            <img src="../assets/imgs/loading.gif" alt=""  width="100%" class="loading1"
         v-show="loadQt">
           </div>
           <div v-show="selectGame === 1" class="item">
             <div v-html="htRules"></div>
-            <img src="../assets/imgs/loading.gif" alt=""  width="100%" class="loading1" 
+            <img src="../assets/imgs/loading.gif" alt=""  width="100%" class="loading1"
         v-show="loadHt">
           </div>
           <div v-show="selectGame === 2" class="item">
             <div v-html="djRules"></div>
-            <img src="../assets/imgs/loading.gif" alt=""  width="100%" class="loading1" 
+            <img src="../assets/imgs/loading.gif" alt=""  width="100%" class="loading1"
         v-show="loadDj">
           </div>
         </div>
@@ -109,7 +109,7 @@
       </div>
       <div slot="body" class="msg-body">
         {{publics}}
-        <img src="../assets/imgs/loading.gif" alt=""  width="100%" class="loading2" 
+        <img src="../assets/imgs/loading.gif" alt=""  width="100%" class="loading2"
         v-show="loadMsg">
         </div>
     </Modal>
@@ -187,8 +187,8 @@
           <div class="toggle">
             <span class="box" @touchstart="invoiceGameRoom($event)">
               <img src="../assets/imgs/img_Create_Topoenaroom.png" alt="" width="100%">
-            </span>  
-          </div>    
+            </span>
+          </div>
         </div>
       </div>
     </Modal>
@@ -226,7 +226,7 @@
       {{tipMsg}}
     </div>
     <!-- 大九 -->
-    <dj-game :dj="showDj" :uid="userId" :rid="roomId" 
+    <dj-game :dj="showDj" :uid="userId" :rid="roomId"
     :isOwner="isMaster" :ds="gameDatas" :cardBg="cardBg"
     @on-close="closeDj"></dj-game>
     <!-- 清推 -->
@@ -235,7 +235,7 @@
     <ht-game :ht="showHt" @on-close="closeHt"></ht-game>
     <!-- 代开 -->
     <dk-modal :dk="showDkModal" :ds="gameDatas" @on-close="closeDk"></dk-modal>
-    
+
   </div>
 </template>
 
@@ -371,33 +371,35 @@ export default {
     }
   },
   created () {
-    let vm = this
-    let params = {
-      openid: this.userMsg.openid,
-      nickname: this.userMsg.nickname,
-      sex: this.userMsg.sex,
-      headimgurl: this.userMsg.headimgurl
-    }
+    // let vm = this
+    // let params = {
+    //   openid: this.userMsg.openid,
+    //   nickname: this.userMsg.nickname,
+    //   sex: this.userMsg.sex,
+    //   headimgurl: this.userMsg.headimgurl
+    // }
    // let ajaxParams1 = window.JSON.stringify(this.$url + this.$interface['/user/login'] + this.$sign(params))
-    let ajaxParams1 = window.JSON.stringify({
-      host: this.$url,
-      path: this.$interface['/user/login'],
-      params: this.$sign(params),
-      nickname: this.userMsg.nickname
-    })
-    this.$JsBridge.callHandler(
-      'getUserMsg' // 原生的方法名
-      , {'param': ajaxParams1} // 带个原生方法的参数
-      , function (responseData) { // 响应原生回调方法
-        let data = window.JSON.parse(responseData)
-        data.model.headimgurl = data.model.headimgurl + HEAD_IMG_SIZE
-        Object.keys(vm.userInfo).forEach((key) => {
-          vm.userInfo[key] = data.model[key]
-        })
-        vm.$store.dispatch('userInfo', vm.userInfo)
-        vm.userId = vm.userInfo.id
-      }
-    )
+    // let ajaxParams1 = window.JSON.stringify({
+    //   host: this.$url,
+    //   path: this.$interface['/user/login'],
+    //   params: this.$sign(params),
+    //   nickname: this.userMsg.nickname
+    // })
+    // this.$JsBridge.callHandler(
+    //   'getUserMsg' // 原生的方法名
+    //   , {'param': ajaxParams1} // 带个原生方法的参数
+    //   , function (responseData) { // 响应原生回调方法
+    //     console.log(responseData)
+    //     let data = window.JSON.parse(responseData)
+    //     console.log(data.nickname)
+    //     data.model.headimgurl = data.model.headimgurl + HEAD_IMG_SIZE
+    //     Object.keys(vm.userInfo).forEach((key) => {
+    //       vm.userInfo[key] = data.model[key]
+    //     })
+    //     vm.$store.dispatch('userInfo', vm.userInfo)
+    //     vm.userId = vm.userInfo.id
+    //   }
+    // )
     // 初始化数据
     this.handleArray([this.gameTabs, this.createRoomTabs], this.tabs)
     this.handleArray([this.ds1_1, this.ds2_1, this.ds3_1], this.ds1)
@@ -441,7 +443,9 @@ export default {
         'getUserMsg' // 原生的方法名
           , {'param': ajaxParams} // 带个原生方法的参数
           , function (responseData) { // 响应原生回调方法
+            console.log(responseData)
             let data = window.JSON.parse(responseData)
+            console.log(data.nickname)
             data.model.headimgurl = data.model.headimgurl + HEAD_IMG_SIZE
             Object.keys(vm.userInfo).forEach((key) => {
               vm.userInfo[key] = data.model[key]
@@ -1059,7 +1063,7 @@ export default {
       flex: 1;
       margin: 30px 0;
       font-size: 32px;
-      color: #fff; 
+      color: #fff;
       .f-relative{
         position: relative;
         width: 180px;
@@ -1202,7 +1206,7 @@ export default {
       }
     }
   }
-  
+
 }
 .rule-body{
   .game-box{
@@ -1278,7 +1282,7 @@ export default {
         .num-row{
           display: flex;
           flex-direction: row;
-          flex: 1;  
+          flex: 1;
           .num-cell{
             flex: 1;
             width: 24%;
@@ -1306,7 +1310,7 @@ export default {
     width: 100px;
     vertical-align: top;
   }
-  
+
   .bar{
     //flex: 1;
      display: inline-block;
@@ -1364,19 +1368,19 @@ export default {
   height: 160px;
   transform: translate(-50%, -50%);
 }
-#horse {  
-    position: relative;  
-    width:100%;  
+#horse {
+    position: relative;
+    width:100%;
     white-space:nowrap;
-    animation:horse 10s linear infinite;  
-} 
+    animation:horse 10s linear infinite;
+}
 #horse .box{
   display: inline-block;
-} 
-@keyframes horse  
-{  
-    0%   {left:0px;} 
-    50% {left:-75%;}  
-    100% {left:-150%;}  
+}
+@keyframes horse
+{
+    0%   {left:0px;}
+    50% {left:-75%;}
+    100% {left:-150%;}
 }
 </style>
