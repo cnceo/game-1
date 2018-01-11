@@ -438,6 +438,11 @@ export default {
         params: this.$sign(params),
         nickname: val.nickname
       })
+      let ajaxParams2 = window.JSON.stringify({
+        host: this.$url,
+        path: this.$interface['/get/notice'],
+        params: this.$sign({})
+      })
       setTimeout(() => {
         this.$JsBridge.callHandler(
         'getUserMsg' // 原生的方法名
@@ -452,27 +457,24 @@ export default {
             })
             vm.$store.dispatch('userInfo', vm.userInfo)
             vm.userId = vm.userInfo.id
-          }
-        )
-      }, 800)
-      let ajaxParams2 = window.JSON.stringify({
-        host: this.$url,
-        path: this.$interface['/get/notice'],
-        params: this.$sign({})
-      })
-      // 调用android原生内部方法
-      setTimeout(() => {
-        this.$JsBridge.callHandler(
-          'getPublic' // 原生的方法名
-          , {'param': ajaxParams2} // 带个原生方法的参数
-          , function (responseData) { // 响应原生回调方法
-            let data = window.JSON.parse(responseData)
-            vm.dtMsg = data.model
-            document.getElementById('horse').style.width = vm.dtMsg.toString().length * 50 + 'px'
-            vm.$store.dispatch('publicAjax', data)
+            vm.$JsBridge.callHandler(
+              'getPublic' // 原生的方法名
+              , {'param': ajaxParams2} // 带个原生方法的参数
+              , function (responseData) { // 响应原生回调方法
+                let data = window.JSON.parse(responseData)
+                vm.dtMsg = data.model
+                document.getElementById('horse').style.width = vm.dtMsg.toString().length * 50 + 'px'
+                vm.$store.dispatch('publicAjax', data)
+              }
+            )
           }
         )
       }, 1200)
+
+      // 调用android原生内部方法
+      // setTimeout(() => {
+
+      // }, 1300)
     },
     // curUser (val) {
     //   console.log('更新嘻嘻嘻嘻嘻嘻嘻嘻嘻嘻嘻嘻嘻嘻嘻嘻嘻')
