@@ -203,7 +203,8 @@
             <span v-for="(item, index) in coins" :key="index" :class="{'coin0': index === 0,
             'coin1': index === 1, 'coin2': index === 2, 'coin3': index === 3, 'coin4': index === 4,
             'coin5': index === 5, 'coin6': index === 6, 'coin7': index === 7, 'coin8': index === 8, 'coin9': index === 9, 'active': menType,
-            'move': item.show == 'move', 'hide': item.show == 'hide'}"
+            'move': item.show == 'move', 'hide': item.show == 'hide',
+            'isDown': item.down == 'isDown', 'noDown': item.down == 'noDown'}"
             >
             <img :src="item.value" alt="" width="100%">
             </span>
@@ -214,7 +215,8 @@
             <span v-for="(item, index) in coins" :key="index" :class="{'coin0': index === 0,
             'coin1': index === 1, 'coin2': index === 2, 'coin3': index === 3, 'coin4': index === 4,
             'coin5': index === 5, 'coin6': index === 6, 'coin7': index === 7, 'coin8': index === 8, 'coin9': index === 9, 'active': menType,
-            'move': item.show == 'move', 'hide': item.show == 'hide'}"
+            'move': item.show == 'move', 'hide': item.show == 'hide',
+            'isDown': item.down == 'isDown', 'noDown': item.down == 'noDown'}"
             >
             <img :src="item.value" alt="" width="100%">
             </span>
@@ -225,7 +227,8 @@
               <span v-for="(item, index) in coins" :key="index" :class="{'coin0': index === 0,
               'coin1': index === 1, 'coin2': index === 2, 'coin3': index === 3, 'coin4': index === 4,
               'coin5': index === 5, 'coin6': index === 6, 'coin7': index === 7, 'coin8': index === 8, 'coin9': index === 9, 'active': menType,
-               'move': item.show == 'move', 'hide': item.show == 'hide'}"
+               'move': item.show == 'move', 'hide': item.show == 'hide',
+               'isDown': item.down == 'isDown', 'noDown': item.down == 'noDown'}"
               >
               <img :src="item.value" alt="" width="100%">
               </span>
@@ -500,43 +503,53 @@ export default {
       coins: [
         {
           value: tabImgs.coins[0],
-          show: ''
+          show: '',
+          down: ''
         },
         {
           value: tabImgs.coins[1],
-          show: ''
+          show: '',
+          down: ''
         },
         {
           value: tabImgs.coins[2],
-          show: ''
+          show: '',
+          down: ''
         },
         {
           value: tabImgs.coins[3],
-          show: ''
+          show: '',
+          down: ''
         },
         {
           value: tabImgs.coins[4],
-          show: ''
+          show: '',
+          down: ''
         },
         {
           value: tabImgs.coins[5],
-          show: ''
+          show: '',
+          down: ''
         },
         {
           value: tabImgs.coins[6],
-          show: ''
+          show: '',
+          down: ''
         },
         {
           value: tabImgs.coins[7],
-          show: ''
+          show: '',
+          down: ''
         },
         {
           value: tabImgs.coins[8],
-          show: ''
+          show: '',
+          down: ''
         },
         {
           value: tabImgs.coins[9],
-          show: ''
+          show: '',
+          down: ''
         }
       ],
       lowz: [{
@@ -2056,7 +2069,7 @@ export default {
       .coin0.active{
         animation: coinMove0 0.2s linear forwards;
       }
-      .coin0.hide{
+      .coin0.hide, .coin0.noDown{
         display: none;
         opacity: 0;
       }
@@ -2067,7 +2080,7 @@ export default {
       .coin1.active{
         animation: coinMove1 0.2s linear forwards;
       }
-      .coin1.hide{
+      .coin1.hide, .coin1.noDown{
         display: none;
         opacity: 0;
       }
@@ -2080,7 +2093,7 @@ export default {
         animation: coinMove2 0.2s linear forwards;
       }
 
-      .coin2.hide{
+      .coin2.hide, .coin2.noDown{
         display: none;
         opacity: 0;
       }
@@ -2092,7 +2105,7 @@ export default {
        animation: coinMove3 0.2s linear forwards;
       }
 
-      .coin3.hide{
+      .coin3.hide, .coin3.noDown{
         display: none;
         opacity: 0;
       }
@@ -2104,7 +2117,7 @@ export default {
         animation: coinMove4 0.2s linear forwards;
       }
 
-      .coin4.hide{
+      .coin4.hide, .coin4.noDown{
         display: none;
         opacity: 0;
       }
@@ -2116,7 +2129,7 @@ export default {
         animation: coinMove5 0.2s linear forwards;
       }
 
-      .coin5.hide{
+      .coin5.hide, .coin5.noDown{
         display: none;
         opacity: 0;
       }
@@ -2128,7 +2141,7 @@ export default {
        animation: coinMove6 0.2s linear forwards;
       }
 
-      .coin6.hide{
+      .coin6.hide, .coin6.noDown{
         display: none;
         opacity: 0;
       }
@@ -2140,7 +2153,7 @@ export default {
        animation: coinMove7 0.2s linear forwards;
       }
 
-      .coin7.hide{
+      .coin7.hide, .coin7.noDown{
         display: none;
         opacity: 0;
       }
@@ -2152,7 +2165,7 @@ export default {
        animation: coinMove8 0.2s linear forwards;
       }
 
-      .coin8.hide{
+      .coin8.hide, .coin8.noDown{
         display: none;
         opacity: 0;
       }
@@ -2164,7 +2177,7 @@ export default {
        animation: coinMove9 0.2s linear forwards;
       }
 
-      .coin9.hide{
+      .coin9.hide, .coin9.noDown{
         display: none;
         opacity: 0;
       }
@@ -2174,12 +2187,18 @@ export default {
         top: 400px;
         left: 20px;
       }
-       .coin0.move{
+      .coin0.isDown{
+        animation: Down0_0 0.3s linear forwards;
+      }
+      .coin0.move{
         animation: Move0_0 0.3s linear forwards;
       }
       .coin1{
         top: 360px;
         left: 20px;
+      }
+      .coin1.isDown{
+        animation: Down0_1 0.3s linear forwards;
       }
       .coin1.move{
         animation: Move0_1 0.3s linear forwards;
@@ -2188,12 +2207,18 @@ export default {
         top: 200px;
         left: 900px;
       }
+      .coin2.isDown{
+        animation: Down0_2 0.3s linear forwards;
+      }
       .coin2.move{
         animation: Move0_2 0.3s linear forwards;
       }
       .coin3{
         top: 230px;
         left: 900px;
+      }
+      .coin3.isDown{
+        animation: Down0_3 0.3s linear forwards;
       }
       .coin3.move{
         animation: Move0_3 0.3s linear forwards;
@@ -2202,12 +2227,18 @@ export default {
         top: 200px;
         left: -200px;
       }
+      .coin4.isDown{
+        animation: Down0_4 0.3s linear forwards;
+      }
       .coin4.move{
         animation: Move0_4 0.3s linear forwards;
       }
       .coin5{
         top: 240px;
         left: -160px;
+      }
+      .coin5.isDown{
+        animation: Down0_5 0.3s linear forwards;
       }
       .coin5.move{
         animation: Move0_5 0.3s linear forwards;
@@ -2216,12 +2247,18 @@ export default {
         top: -50px;
         left: 900px;
       }
+      .coin6.isDown{
+        animation: Down0_6 0.3s linear forwards;
+      }
       .coin6.move{
         animation: Move0_6 0.3s linear forwards;
       }
       .coin7{
         top: -90px;
         left: 900px;
+      }
+      .coin7.isDown{
+        animation: Down0_7 0.3s linear forwards;
       }
       .coin7.move{
         animation: Move0_7 0.3s linear forwards;
@@ -2230,12 +2267,18 @@ export default {
         top: -50px;
         left: -200px;
       }
+      .coin8.isDown{
+        animation: Down0_8 0.3s linear forwards;
+      }
       .coin8.move{
         animation: Move0_8 0.3s linear forwards;
       }
       .coin9{
         top: -90px;
         left: -180px;
+      }
+      .coin9.isDown{
+        animation: Down0_9 0.3s linear forwards;
       }
       .coin9.move{
         animation: Move0_9 0.3s linear forwards;
@@ -2246,12 +2289,18 @@ export default {
         top: 380px;
         left: -160px;
       }
+      .coin0.isDown{
+        animation: Down1_0 0.3s linear forwards;
+      }
        .coin0.move{
         animation: Move1_0 0.3s linear forwards;
       }
       .coin1{
         top: 360px;
         left: -120px;
+      }
+      .coin1.isDown{
+        animation: Down1_1 0.3s linear forwards;
       }
       .coin1.move{
         animation: Move1_1 0.3s linear forwards;
@@ -2260,12 +2309,18 @@ export default {
        top: 160px;
        left: 600px;
       }
+      .coin2.isDown{
+        animation: Down1_2 0.3s linear forwards;
+      }
       .coin2.move{
         animation: Move1_2 0.3s linear forwards;
       }
       .coin3{
         top: 230px;
         left: 600px;
+      }
+       .coin3.isDown{
+        animation: Down1_3 0.3s linear forwards;
       }
       .coin3.move{
         animation: Move1_3 0.3s linear forwards;
@@ -2274,12 +2329,18 @@ export default {
         top: 160px;
         left: -480px;
       }
+       .coin4.isDown{
+        animation: Down1_4 0.3s linear forwards;
+      }
       .coin4.move{
         animation: Move1_4 0.3s linear forwards;
       }
       .coin5{
         top: 250px;
         left: -480px;
+      }
+       .coin5.isDown{
+        animation: Down1_5 0.3s linear forwards;
       }
       .coin5.move{
         animation: Move1_5 0.3s linear forwards;
@@ -2288,12 +2349,18 @@ export default {
         top: -80px;
         left: 600px;
       }
+       .coin6.isDown{
+        animation: Down1_6 0.3s linear forwards;
+      }
       .coin6.move{
         animation: Move1_6 0.3s linear forwards;
       }
       .coin7{
         top: -30px;
         left: 600px;
+      }
+       .coin7.isDown{
+        animation: Down1_7 0.3s linear forwards;
       }
       .coin7.move{
         animation: Move1_7 0.3s linear forwards;
@@ -2302,12 +2369,18 @@ export default {
        top: -100px;
        left: -520px;
       }
+       .coin8.isDown{
+        animation: Down1_8 0.3s linear forwards;
+      }
       .coin8.move{
         animation: Move1_8 0.3s linear forwards;
       }
       .coin9{
         top: -30px;
         left: -480px;
+      }
+       .coin9.isDown{
+        animation: Down1_9 0.3s linear forwards;
       }
        .coin9.move{
         animation: Move1_9 0.3s linear forwards;
@@ -2318,12 +2391,18 @@ export default {
         top: 400px;
         left: -360px;
       }
+       .coin0.isDown{
+        animation: Down2_0 0.3s linear forwards;
+      }
        .coin0.move{
         animation: Move2_0 0.3s linear forwards;
       }
       .coin1{
         top: 420px;
         left: -420px;
+      }
+       .coin1.isDown{
+        animation: Down2_1 0.3s linear forwards;
       }
       .coin1.move{
         animation: Move2_1 0.3s linear forwards;
@@ -2332,12 +2411,18 @@ export default {
        top: 210px;
        left: 300px;;
       }
+       .coin2.isDown{
+        animation: Down2_2 0.3s linear forwards;
+      }
       .coin2.move{
         animation: Move2_2 0.3s linear forwards;
       }
       .coin3{
         top: 180px;
         left: 300px;
+      }
+       .coin3.isDown{
+        animation: Down2_3 0.3s linear forwards;
       }
       .coin3.move{
         animation: Move2_3 0.3s linear forwards;
@@ -2346,12 +2431,18 @@ export default {
         top: 210px;
         left: -640px;
       }
+       .coin4.isDown{
+        animation: Down2_4 0.3s linear forwards;
+      }
       .coin4.move{
         animation: Move2_4 0.3s linear forwards;
       }
       .coin5{
         top: 160px;
         left: -640px;
+      }
+       .coin5.isDown{
+        animation: Down2_5 0.3s linear forwards;
       }
       .coin5.move{
         animation: Move2_5 0.3s linear forwards;
@@ -2360,12 +2451,18 @@ export default {
        top: -50px;
        left: 300px;
       }
+       .coin6.isDown{
+        animation: Down2_6 0.3s linear forwards;
+      }
       .coin6.move{
         animation: Move2_6 0.3s linear forwards;
       }
       .coin7{
         top: -110px;
         left: 320px;
+      }
+       .coin7.isDown{
+        animation: Down2_7 0.3s linear forwards;
       }
       .coin7.move{
         animation: Move2_7 0.3s linear forwards;
@@ -2374,12 +2471,18 @@ export default {
        top: -50px;
        left: -640px;
       }
+       .coin8.isDown{
+        animation: Down2_8 0.3s linear forwards;
+      }
       .coin8.move{
         animation: Move2_8 0.3s linear forwards;
       }
       .coin9{
         top: -110px;
         left: -640px;
+      }
+       .coin9.isDown{
+        animation: Down2_9 0.3s linear forwards;
       }
        .coin9.move{
         animation: Move2_9 0.3s linear forwards;
