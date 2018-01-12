@@ -2050,7 +2050,7 @@ export default {
         z-index: 9999;
       }
       .coin0{
-        left: 60px;
+      //  left: 60px;
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin0.active{
@@ -2061,7 +2061,7 @@ export default {
         opacity: 0;
       }
       .coin1{
-       left: 150px;
+      // left: 150px;
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin1.active{
@@ -2072,7 +2072,7 @@ export default {
         opacity: 0;
       }
       .coin2{
-       left: 70px;
+      // left: 70px;
         box-shadow: 5px 5px 15px 2px #333;
       }
 
@@ -2085,7 +2085,7 @@ export default {
         opacity: 0;
       }
       .coin3{
-       left: 120px;
+      // left: 120px;
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin3.active{
@@ -2097,7 +2097,7 @@ export default {
         opacity: 0;
       }
       .coin4{
-        left: 140px;
+      //  left: 140px;
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin4.active{
@@ -2109,7 +2109,7 @@ export default {
         opacity: 0;
       }
       .coin5{
-       left: 50px;
+     //  left: 50px;
        box-shadow: 5px 5px 15px 2px #333;
       }
       .coin5.active{
@@ -2121,7 +2121,7 @@ export default {
         opacity: 0;
       }
       .coin6{
-        left: 20px;
+      //  left: 20px;
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin6.active{
@@ -2133,7 +2133,7 @@ export default {
         opacity: 0;
       }
       .coin7{
-        left: 180px;
+     //   left: 180px;
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin7.active{
@@ -2145,7 +2145,7 @@ export default {
         opacity: 0;
       }
       .coin8{
-        left: 150px;
+     //   left: 150px;
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin8.active{
@@ -2157,7 +2157,7 @@ export default {
         opacity: 0;
       }
       .coin9{
-        left: 160px;
+     //   left: 160px;
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin9.active{
@@ -2170,103 +2170,221 @@ export default {
       }
     }
     .chu-coins{
+      .coin0{
+        top: 400px;
+        left: 20px;
+      }
        .coin0.move{
         animation: Move0_0 0.3s linear forwards;
       }
-
+      .coin1{
+        top: 360px;
+        left: 20px;
+      }
       .coin1.move{
         animation: Move0_1 0.3s linear forwards;
+      }
+      .coin2{
+        top: 200px;
+        left: 900px;
       }
       .coin2.move{
         animation: Move0_2 0.3s linear forwards;
       }
+      .coin3{
+        top: 230px;
+        left: 900px;
+      }
       .coin3.move{
         animation: Move0_3 0.3s linear forwards;
+      }
+      .coin4{
+        top: 200px;
+        left: -200px;
       }
       .coin4.move{
         animation: Move0_4 0.3s linear forwards;
       }
+      .coin5{
+        top: 240px;
+        left: -160px;
+      }
       .coin5.move{
         animation: Move0_5 0.3s linear forwards;
+      }
+      .coin6{
+        top: -50px;
+        left: 900px;
       }
       .coin6.move{
         animation: Move0_6 0.3s linear forwards;
       }
+      .coin7{
+        top: -90px;
+        left: 900px;
+      }
       .coin7.move{
         animation: Move0_7 0.3s linear forwards;
       }
+      .coin8{
+        top: -50px;
+        left: -200px;
+      }
       .coin8.move{
         animation: Move0_8 0.3s linear forwards;
+      }
+      .coin9{
+        top: -90px;
+        left: -180px;
       }
       .coin9.move{
         animation: Move0_9 0.3s linear forwards;
       }
     }
     .tian-coins{
+      .coin0{
+        top: 380px;
+        left: -160px;
+      }
        .coin0.move{
         animation: Move1_0 0.3s linear forwards;
       }
-
+      .coin1{
+        top: 360px;
+        left: -120px;
+      }
       .coin1.move{
         animation: Move1_1 0.3s linear forwards;
+      }
+      .coin2{
+       top: 160px;
+       left: 600px;
       }
       .coin2.move{
         animation: Move1_2 0.3s linear forwards;
       }
+      .coin3{
+        top: 230px;
+        left: 600px;
+      }
       .coin3.move{
         animation: Move1_3 0.3s linear forwards;
+      }
+      .coin4{
+        top: 160px;
+        left: -480px;
       }
       .coin4.move{
         animation: Move1_4 0.3s linear forwards;
       }
+      .coin5{
+        top: 250px;
+        left: -480px;
+      }
       .coin5.move{
         animation: Move1_5 0.3s linear forwards;
+      }
+      .coin6{
+        top: -80px;
+        left: 600px;
       }
       .coin6.move{
         animation: Move1_6 0.3s linear forwards;
       }
+      .coin7{
+        top: -30px;
+        left: 600px;
+      }
       .coin7.move{
         animation: Move1_7 0.3s linear forwards;
       }
+      .coin8{
+       top: -100px;
+       left: -520px;
+      }
       .coin8.move{
         animation: Move1_8 0.3s linear forwards;
+      }
+      .coin9{
+        top: -30px;
+        left: -480px;
       }
        .coin9.move{
         animation: Move1_9 0.3s linear forwards;
       }
     }
     .kan-coins{
+      .coin0{
+        top: 400px;
+        left: -360px;
+      }
        .coin0.move{
         animation: Move2_0 0.3s linear forwards;
       }
-
+      .coin1{
+        top: 420px;
+        left: -420px;
+      }
       .coin1.move{
         animation: Move2_1 0.3s linear forwards;
+      }
+      .coin2{
+       top: 210px;
+       left: 300px;;
       }
       .coin2.move{
         animation: Move2_2 0.3s linear forwards;
       }
+      .coin3{
+        top: 180px;
+        left: 300px;
+      }
       .coin3.move{
         animation: Move2_3 0.3s linear forwards;
+      }
+      .coin4{
+        top: 210px;
+        left: -640px;
       }
       .coin4.move{
         animation: Move2_4 0.3s linear forwards;
       }
+      .coin5{
+        top: 160px;
+        left: -640px;
+      }
       .coin5.move{
         animation: Move2_5 0.3s linear forwards;
+      }
+      .coin6{
+       top: -50px;
+       left: 300px;
       }
       .coin6.move{
         animation: Move2_6 0.3s linear forwards;
       }
+      .coin7{
+        top: -110px;
+        left: 320px;
+      }
       .coin7.move{
         animation: Move2_7 0.3s linear forwards;
+      }
+      .coin8{
+       top: -50px;
+       left: -640px;
       }
       .coin8.move{
         animation: Move2_8 0.3s linear forwards;
       }
+      .coin9{
+        top: -110px;
+        left: -640px;
+      }
        .coin9.move{
         animation: Move2_9 0.3s linear forwards;
       }
+
     }
     // .chu-coins{
     //   .coin0 {
