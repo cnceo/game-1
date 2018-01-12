@@ -189,7 +189,7 @@
         <span v-show="gameMsg.gameType == '1'">清推</span>
         <span v-show="gameMsg.gameType == '2'">混推</span>
         <span v-show="gameMsg.gameType == '3'">大九</span>
-        <span>{{gameMsg.baseRound}}局</span>
+        <span>{{gameMsg.baseRound + curRound}}局</span>
         <span>{{gameMsg.baseScore}}分封顶</span>
       </div>
     </div>
@@ -609,7 +609,8 @@ export default {
       showScore: false,
       // collCoins: [true, true, true, true, true],
       showShareModal: false,
-      allScores: [] // 单局结束统计
+      allScores: [], // 单局结束统计
+      curRound: 0 // 当前局数
     }
   },
   props: {
@@ -673,7 +674,7 @@ export default {
   },
   created () {
     this.showDj = this.dj
-    this.users = this.ds
+   // this.users = this.ds
     this.gameMsg = this.ds
     this.curCardBg = this.cardBg
     // 注册交互事件
@@ -851,17 +852,17 @@ export default {
           }
         })
         vm.showCards = true
-        vm.isDownSu = true
         vm.timer1 = setTimeout(() => {
           vm.checkResult1 = true
+          vm.isDownSu = true
+          vm.users.forEach((item) => {
+            if (Number(item.userId) === Number(vm.userId)) {
+              item.xz = 0
+            } else {
+              item.xz = 1
+            }
+          })
           vm.timer2 = setTimeout(() => {
-            vm.users.forEach((item) => {
-              if (Number(item.userId) === Number(vm.userId)) {
-                item.xz = 0
-              } else {
-                item.xz = 1
-              }
-            })
             if (vm.isShowXz) {
               vm.showXzModal = true
             }
@@ -1025,6 +1026,7 @@ export default {
         vm.showReleaseWaitModal = false
         vm.isFirst = true
         vm.isGameStart = false
+        vm.curRound = 0
         vm.users = []
         vm.$emit('on-close', msg)
         // 调用responseCallback方法可以带传参数到原生
@@ -1043,6 +1045,7 @@ export default {
           vm.showReleaseReadyModal = false
           vm.isFirst = true
           vm.isGameStart = false
+          vm.curRound = 0
           vm.users = []
           vm.$emit('on-close', msg)
         } else {
@@ -1192,6 +1195,7 @@ export default {
           vm.showExitModal = false
           vm.isFirst = true
           vm.isGameStart = false
+          vm.curRound = 0
           let msg = '您已经退出了房间'
           vm.closeTime()
           vm.resetParams()
@@ -1572,7 +1576,9 @@ export default {
       clearTimeout(this.timer5)
       this.users.forEach((item) => {
         item.ready = false
+        item.banker = false
       })
+      this.curRound += 1
     }
   }
 }

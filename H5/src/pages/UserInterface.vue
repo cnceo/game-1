@@ -263,7 +263,7 @@ export default {
       showQt: false,
       showHt: false,
       showTip: false,
-      tipMsg: '房卡不存在',
+      tipMsg: '',
       showDkModal: false,
       tabs: [
         {
@@ -752,10 +752,22 @@ export default {
       if (this.selectTypes === 0) {
         this.selectData = this.createRoomData1
         type = 1
+        this.showTip = true
+        this.tipMsg = '建设中...'
+        setTimeout(() => {
+          this.showTip = false
+        }, 1000)
+        return
        // this.router = '/qt'
       } else if (this.selectTypes === 1) {
         this.selectData = this.createRoomData2
         type = 2
+        this.showTip = true
+        this.tipMsg = '建设中...'
+        setTimeout(() => {
+          this.showTip = false
+        }, 1000)
+        return
        // this.router = '/ht'
       } else {
         this.selectData = this.createRoomData3
@@ -1012,13 +1024,13 @@ export default {
   left: 50%;
   padding: 5px 20px;
   color: #fff;
-  background: red;
-  border-radius: 10px;
+  background: #BA55D3;
+  border-radius: 5px;
   transform: translateX(-50%);
+  transition: top 0.3s linear;
 }
 .tip-modal.active{
   top: 10px;
-  transition: top 5s linear;
 }
 .g-flex-column{
   display: flex;

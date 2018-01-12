@@ -5,7 +5,7 @@
     class="set-modal">
       <div slot="title" class="set-title">
         <div class="set-tabs">
-          <span v-for="(item, index) in setTabs" @touchstart="changeSet(index)" :key="index" 
+          <span v-for="(item, index) in setTabs" @touchstart="changeSet(index)" :key="index"
           class="title-active">
              <img :src="item.img" alt="" width="100%">
           </span>
@@ -43,8 +43,8 @@
               </li>
             </ul>
             <span class="toggle" @click="changeAccount" v-show="account">
-              <img src="../assets/imgs/img_Setup_Exchangeaccount.png" alt="" width="100%">  
-            </span> 
+              <img src="../assets/imgs/img_Setup_Exchangeaccount.png" alt="" width="100%">
+            </span>
           </div>
         </div>
       </div>
@@ -68,8 +68,11 @@ export default {
     sounds: {
       handler: function (val) {
         // console.log(val)
-        this.music = val.music
-        this.sound = val.sound
+        let local = window.localStorage
+        let soundSize = local.getItem('soundSize')
+        let musicSize = local.getItem('musicdSize')
+        this.music = musicSize == null ? this.sounds.music : musicSize
+        this.sound = soundSize == null ? this.sounds.sound : soundSize
       },
       deep: true
     }
@@ -146,8 +149,11 @@ export default {
   created () {
     // 初始化数据
    // this.handleArray([this.ds0_1, this.ds0_2], this.ds0)
-    this.music = this.sounds.music
-    this.sound = this.sounds.sound
+    let local = window.localStorage
+    let soundSize = local.getItem('soundSize')
+    let musicSize = local.getItem('musicdSize')
+    this.music = musicSize == null ? this.sounds.music : musicSize
+    this.sound = soundSize == null ? this.sounds.sound : soundSize
   },
   methods: {
     handleArray (arr, data) {
@@ -210,15 +216,18 @@ export default {
           cur: val
         }
       })
+      let local = window.localStorage
+      local.setItem('soundSize', val)
     },
     // 音乐设置
     changeMusic (val) {
+      let local = window.localStorage
        // 调用android原生内部方法
       this.$JsBridge.callHandler(
         'setSound' // 原生的方法名
         , {'param': val.toString()} // 带个原生方法的参数
         , function (responseData) { // 响应原生回调方法
-
+          local.setItem('musicSize', val)
         }
       )
        // 保存设置的音效
@@ -302,7 +311,7 @@ export default {
     .toggle{
       margin-top: 50px;
     }
-  }  
-  
+  }
+
 }
 </style>
