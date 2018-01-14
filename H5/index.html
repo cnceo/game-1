@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0"/>
     <title>game</title>
     <style>
       @media screen and (orientation: portrait) {  
@@ -43,6 +44,8 @@
 		      }  
 		} 
     </style>
+    <link rel="stylesheet" type="text/css" href="http://unpkg.com/iview/dist/styles/iview.css">
+    <!-- <script type="text/javascript" src="http://unpkg.com/iview/dist/iview.min.js"></script> -->
     <!-- <script type="text/javascript" src="static/js/flex.js"></script> -->
     <!-- <script src="/socket.io/socket.io.js"></script> -->
   </head>
@@ -97,7 +100,7 @@
                 var clientWidth = docEl.clientWidth;
                 
                 if (!clientWidth) return;
-                docEl.style.fontSize = 20 * (clientWidth / 750) + 'px';
+                docEl.style.fontSize = 18 * (clientWidth / 750) + 'px';
             };
 
         if (!doc.addEventListener) return;

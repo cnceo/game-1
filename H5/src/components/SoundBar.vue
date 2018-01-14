@@ -91,7 +91,7 @@ export default {
       }
       setTimeout(() => {
         this.calcVolume(site)
-      }, 5)
+      }, 2)
     },
     calcVolume (site) {
       let [dotElem, barWidth, dotWidth] = this.initSound()
@@ -103,7 +103,7 @@ export default {
         this.$refs.cur.style.width = '0px'
       } else if (site >= (barWidth - (dotWidth) - 30)) {
        // return
-        dotElem.style.left = (barWidth - dotWidth) - 30 + 'px'
+        dotElem.style.left = (barWidth - dotWidth) - 60 + 'px'
         this.$refs.cur.style.width = (barWidth - dotWidth) - 20 + 'px'
       } else {
         dotElem.style.left = site - (dotWidth / 2) + 'px'

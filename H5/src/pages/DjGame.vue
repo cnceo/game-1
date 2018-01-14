@@ -20,7 +20,7 @@
            </div>
            <div class="zuja" :class="{'l-site': (index === 0) || (index % 2 !== 0),
            'r-site': (index !== 0) && (index % 2 === 0)}" v-show="item.banker == true">
-            <img src="../assets/imgs/img_Setuphualun.png" alt="" width="100%" height="100%">
+            <img src="../assets/imgs/img_Buchong_zhuang.png" alt="" width="100%" height="100%">
            </div>
         </div>
         <div class="msg" :class="{'g-inline': index === 0,'l-msg': (index !== 0) && (index % 2 !== 0),
@@ -47,7 +47,7 @@
               <img src="../assets/imgs/img_Room_readying.png" alt="" width="100%" height="100%">
             </span>
             <span v-show="item.ready == false && item.roomOwner == true && isFriends == true && isFirst == true" @click="startGame">
-              <img src="../assets/imgs/img_Setup_Exchangeaccount.png" alt="" width="100%" height="100%">
+              <img src="../assets/imgs/img_Buchong_kaishi.png" alt="" width="100%" height="100%">
             </span>
             <span v-show="item.ready == false && item.roomOwner == true && isFirst == false && item.curUser == true" @click="startReady">
               <img src="../assets/imgs/img_Room_ready.png" alt="" width="100%" height="100%">
@@ -150,7 +150,7 @@
           <p class="tip"></p>
         </div>
         <div class="message">
-          <span class="rate">{{gameMsg.currentRound}}/{{gameMsg.baseRound}}</span>
+          <span class="rate">{{Number(gameMsg.currentRound) + curRound}}/{{gameMsg.baseRound}}</span>
           <span class="time">{{date}}</span>
           <span class="power"></span>
         </div>
@@ -160,7 +160,7 @@
           <img src="../assets/imgs/img_Room_roomnumber.png" alt="" width= "100%">
           <div class="box">
             <div class="rate">{{gameMsg.numId}}</div>
-            <div class="room-num">{{gameMsg.currentRound}}/{{gameMsg.baseRound}}</div>
+            <div class="room-num">{{Number(gameMsg.currentRound) + curRound}}/{{gameMsg.baseRound}}</div>
           </div>
         </div>
         <div class="setting" @touchstart="setting">
@@ -189,7 +189,7 @@
         <span v-show="gameMsg.gameType == '1'">清推</span>
         <span v-show="gameMsg.gameType == '2'">混推</span>
         <span v-show="gameMsg.gameType == '3'">大九</span>
-        <span>{{gameMsg.baseRound + curRound}}局</span>
+        <span>{{gameMsg.baseRound}}局</span>
         <span>{{gameMsg.baseScore}}分封顶</span>
       </div>
     </div>
@@ -339,10 +339,10 @@
       </div>
       <div slot="foot" class="exit-foot">
         <div class="ok exit-btn" @touchstart="exitRoomOk">
-           <img src="../assets/imgs/img-Stoppingdoor-confirm.png" alt=""  width="100%">
+           <img src="../assets/imgs/img_Buchong_yes.png" alt=""  width="100%">
         </div>
         <div class="cancel exit-btn" @touchstart="exitRoomCancel">
-           <img src="../assets/imgs/img-Stoppingdoor-nostoppingdoor.png" alt=""  width="100%">
+           <img src="../assets/imgs/img_Buchong_no.png" alt=""  width="100%">
         </div>
       </div>
     </Modal>
@@ -361,10 +361,10 @@
       </div>
       <div slot="foot" class="exit-foot">
         <div class="ok exit-btn" @touchstart="releaseWaitOk">
-           <img src="../assets/imgs/img-Stoppingdoor-confirm.png" alt=""  width="100%">
+           <img src="../assets/imgs/img_Buchong_yes.png" alt=""  width="100%">
         </div>
         <div class="cancel exit-btn" @touchstart="releaseWaitCancel">
-           <img src="../assets/imgs/img-Stoppingdoor-nostoppingdoor.png" alt=""  width="100%">
+           <img src="../assets/imgs/img_Buchong_no.png" alt=""  width="100%">
         </div>
       </div>
     </Modal>
@@ -383,10 +383,10 @@
       </div>
       <div slot="foot" class="exit-foot">
         <div class="ok exit-btn" @touchstart="releaseReadyOk">
-           <img src="../assets/imgs/img-Stoppingdoor-confirm.png" alt=""  width="100%">
+           <img src="../assets/imgs/img_Buchong_yes.png" alt=""  width="100%">
         </div>
         <div class="cancel exit-btn" @touchstart="releaseReadyCancel">
-           <img src="../assets/imgs/img-Stoppingdoor-nostoppingdoor.png" alt=""  width="100%">
+           <img src="../assets/imgs/img_Buchong_no.png" alt=""  width="100%">
         </div>
       </div>
     </Modal>
@@ -623,7 +623,9 @@ export default {
       // collCoins: [true, true, true, true, true],
       showShareModal: false,
       allScores: [], // 单局结束统计
-      curRound: 0 // 当前局数
+      curRound: 0, // 当前局数,
+      coinUser: [],
+      bks: ['', '', '', '', '', '', '', '', '', '']
     }
   },
   props: {
@@ -885,16 +887,68 @@ export default {
         responseCallback('')
       })
       // // 系统更新投注结果
-      // this.$JsBridge.registerHandler('updateCoins', function (data, responseCallback) {
-      //   // 将原生带来的参数，显示在show标签位置
-      //   vm.cards = window.JSON.parse(data)
-      //   console.log('投注结果收到了')
-      //   console.log(window.JSON.stringify(vm.cards))
-      //   // vm.showDj = false
-      //   // vm.$emit('on-close', vm.showDj)
-      //   // 调用responseCallback方法可以带传参数到原生
-      //   responseCallback('')
-      // })
+      this.$JsBridge.registerHandler('updateCoins', function (data, responseCallback) {
+        vm.menType = true
+        // 将原生带来的参数，显示在show标签位置
+        let coins = window.JSON.parse(data)
+        console.log('投注结果收到了')
+        console.log(coins)
+        coins.forEach((item) => {
+          let flag = false
+          let index = 0
+          if (item.betting === true) {
+            console.log('aaa')
+            vm.coinUser.forEach((its) => {
+              if (Number(its) === Number(item.userId)) {
+                console.log(its)
+                console.log(item.userId)
+                flag = true
+              }
+            })
+            console.log(flag)
+            if (!flag) {
+              console.log('bbb')
+              vm.coinUser.push(item.userId)
+              vm.users.forEach((it, i) => {
+                if (Number(it.userId) === Number(item.userId)) {
+                  index = i
+                }
+              })
+              if (vm.users.length === 2) {
+                vm.bks[index * 2] = 'isDown'
+                vm.bks[index * 2 + 1] = 'isDown'
+                vm.bks[6] = 'noDown'
+                vm.bks[7] = 'noDown'
+                vm.bks[8] = 'noDown'
+                vm.bks[9] = 'noDown'
+              } else if (vm.users.length === 3) {
+                vm.bks[index * 2] = 'isDown'
+                vm.bks[index * 2 + 1] = 'isDown'
+                vm.bks[7] = 'noDown'
+                vm.bks[8] = 'noDown'
+                vm.bks[9] = 'noDown'
+              } else if (vm.users.length === 4) {
+                vm.bks[index * 2] = 'isDown'
+                vm.bks[index * 2 + 1] = 'isDown'
+                vm.bks[8] = 'noDown'
+                vm.bks[9] = 'noDown'
+              } else if (vm.users.length === 5) {
+                vm.bks[index * 2] = 'isDown'
+                vm.bks[index * 2 + 1] = 'isDown'
+              }
+              console.log(vm.bks)
+              console.log(vm.bks.join('---'))
+              vm.coins.forEach((item, index) => {
+                item.down = vm.bks[index]
+              })
+            }
+          }
+        })
+        // vm.showDj = false
+        // vm.$emit('on-close', vm.showDj)
+        // 调用responseCallback方法可以带传参数到原生
+        responseCallback('')
+      })
       // 投注后更新结果
       this.$JsBridge.registerHandler('updateResult', function (data, responseCallback) {
         // 将原生带来的参数，显示在show标签位置
@@ -906,6 +960,64 @@ export default {
         let status = []
         let coins = []
         let obj = {}
+        result.forEach((item) => {
+          let flag = false
+          let index = 0
+          if (item.betting === true) {
+            console.log('aaa')
+            vm.coinUser.forEach((its) => {
+              if (Number(its) === Number(item.userId)) {
+                console.log(its)
+                console.log(item.userId)
+                flag = true
+              }
+            })
+            console.log(flag)
+            if (!flag) {
+              console.log('bbb')
+              vm.coinUser.push(item.userId)
+              vm.users.forEach((it, i) => {
+                if (Number(it.userId) === Number(item.userId)) {
+                  index = i
+                }
+              })
+              if (vm.users.length === 2) {
+                vm.bks[index * 2] = 'isDown'
+                vm.bks[index * 2 + 1] = 'isDown'
+                vm.bks[6] = 'noDown'
+                vm.bks[7] = 'noDown'
+                vm.bks[8] = 'noDown'
+                vm.bks[9] = 'noDown'
+              } else if (vm.users.length === 3) {
+                vm.bks[index * 2] = 'isDown'
+                vm.bks[index * 2 + 1] = 'isDown'
+                vm.bks[7] = 'noDown'
+                vm.bks[8] = 'noDown'
+                vm.bks[9] = 'noDown'
+              } else if (vm.users.length === 4) {
+                vm.bks[index * 2] = 'isDown'
+                vm.bks[index * 2 + 1] = 'isDown'
+                vm.bks[8] = 'noDown'
+                vm.bks[9] = 'noDown'
+              } else if (vm.users.length === 5) {
+                vm.bks[index * 2] = 'isDown'
+                vm.bks[index * 2 + 1] = 'isDown'
+              }
+              console.log(vm.bks)
+              console.log(vm.bks.join('---'))
+              vm.bks.forEach((it, i) => {
+                if (!it) {
+                  vm.bks[i] = 'noDown'
+                }
+              })
+              console.log(vm.bks)
+              console.log(vm.bks.join('---'))
+              vm.coins.forEach((item, index) => {
+                item.down = vm.bks[index]
+              })
+            }
+          }
+        })
         result.forEach((item) => {
           if ((item.banker === false) && (item.betting === true)) {
             status.push(item.betting)
@@ -1575,6 +1687,7 @@ export default {
       this.allScores = []
       this.coins.forEach((item) => {
         item.show = ''
+        item.down = ''
       })
       this.timer = null
       this.timer1 = null
@@ -1591,6 +1704,8 @@ export default {
         item.ready = false
         item.banker = false
       })
+      this.coinUser = []
+      this.bks = ['', '', '', '', '', '', '', '', '', '']
       this.curRound += 1
     }
   }
@@ -1641,8 +1756,10 @@ export default {
           position: absolute;
           top: 0;
           left: 0;
-          width: 100px;
-          height: 70px;
+          // width: 100px;
+          // height: 70px;
+           width: 124px;
+          height: 95px;
           padding: 11px 16px 15px 14px;
           overflow: hidden;
           img{
@@ -1652,16 +1769,16 @@ export default {
         }
         .zuja{
           position: absolute;
-          top: 32px;
-          width: 116px;
-          height: 32px;
+          top: 42px;
+          width: 42px;
+          height: 42px;
           z-index: -1;
         }
         .zuja.l-site{
-          left: -110px;
+          left: -80px;
         }
         .zuja.r-site{
-          right: -90px;
+          right: -80px;
         }
         .master{
           position: absolute;
@@ -1940,7 +2057,7 @@ export default {
             top: 0;
             left: 0;
             width: 50%;
-            height: 100%;
+            height: 98%;
             transition: left 0.1s linear;
           }
           .cur.active{
@@ -2064,120 +2181,140 @@ export default {
       }
       .coin0{
       //  left: 60px;
+      //  display: none;
+        opacity: 0;
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin0.active{
-        animation: coinMove0 0.2s linear forwards;
+       // animation: coinMove0 0.2s linear forwards;
       }
-      .coin0.hide, .coin0.noDown{
+      .coin0.hide{
         display: none;
         opacity: 0;
       }
       .coin1{
+       //  display: none;
+        opacity: 0;
       // left: 150px;
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin1.active{
-        animation: coinMove1 0.2s linear forwards;
+      //  animation: coinMove1 0.2s linear forwards;
       }
-      .coin1.hide, .coin1.noDown{
+      .coin1.hide{
         display: none;
         opacity: 0;
       }
       .coin2{
+      //   display: none;
+        opacity: 0;
       // left: 70px;
         box-shadow: 5px 5px 15px 2px #333;
       }
 
       .coin2.active{
-        animation: coinMove2 0.2s linear forwards;
+      //  animation: coinMove2 0.2s linear forwards;
       }
 
-      .coin2.hide, .coin2.noDown{
+      .coin2.hide{
         display: none;
         opacity: 0;
       }
       .coin3{
+      //   display: none;
+        opacity: 0;
       // left: 120px;
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin3.active{
-       animation: coinMove3 0.2s linear forwards;
+      // animation: coinMove3 0.2s linear forwards;
       }
 
-      .coin3.hide, .coin3.noDown{
+      .coin3.hide{
         display: none;
         opacity: 0;
       }
       .coin4{
+      //   display: none;
+        opacity: 0;
       //  left: 140px;
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin4.active{
-        animation: coinMove4 0.2s linear forwards;
+       // animation: coinMove4 0.2s linear forwards;
       }
 
-      .coin4.hide, .coin4.noDown{
+      .coin4.hide{
         display: none;
         opacity: 0;
       }
       .coin5{
+      //   display: none;
+        opacity: 0;
      //  left: 50px;
        box-shadow: 5px 5px 15px 2px #333;
       }
       .coin5.active{
-        animation: coinMove5 0.2s linear forwards;
+      //  animation: coinMove5 0.2s linear forwards;
       }
 
-      .coin5.hide, .coin5.noDown{
+      .coin5.hide{
         display: none;
         opacity: 0;
       }
       .coin6{
+      //   display: none;
+        opacity: 0;
       //  left: 20px;
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin6.active{
-       animation: coinMove6 0.2s linear forwards;
+      // animation: coinMove6 0.2s linear forwards;
       }
 
-      .coin6.hide, .coin6.noDown{
+      .coin6.hide{
         display: none;
         opacity: 0;
       }
       .coin7{
+      //   display: none;
+        opacity: 0;
      //   left: 180px;
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin7.active{
-       animation: coinMove7 0.2s linear forwards;
+      // animation: coinMove7 0.2s linear forwards;
       }
 
-      .coin7.hide, .coin7.noDown{
+      .coin7.hide{
         display: none;
         opacity: 0;
       }
       .coin8{
+      //   display: none;
+        opacity: 0;
      //   left: 150px;
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin8.active{
-       animation: coinMove8 0.2s linear forwards;
+      // animation: coinMove8 0.2s linear forwards;
       }
 
-      .coin8.hide, .coin8.noDown{
+      .coin8.hide{
         display: none;
         opacity: 0;
       }
       .coin9{
+      //   display: none;
+        opacity: 0;
      //   left: 160px;
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin9.active{
-       animation: coinMove9 0.2s linear forwards;
+      // animation: coinMove9 0.2s linear forwards;
       }
 
-      .coin9.hide, .coin9.noDown{
+      .coin9.hide{
         display: none;
         opacity: 0;
       }
@@ -2188,7 +2325,14 @@ export default {
         left: 20px;
       }
       .coin0.isDown{
-        animation: Down0_0 0.3s linear forwards;
+         display: inline-block;
+        opacity: 1;
+        animation: isDown0_0 0.3s linear forwards;
+      }
+      .coin0.noDown{
+      //  display: none;
+        opacity: 0;
+        animation: noDown0_0 0.3s linear forwards;
       }
       .coin0.move{
         animation: Move0_0 0.3s linear forwards;
@@ -2198,7 +2342,14 @@ export default {
         left: 20px;
       }
       .coin1.isDown{
-        animation: Down0_1 0.3s linear forwards;
+        display: inline-block;
+        opacity: 1;
+        animation: isDown0_1 0.3s linear forwards;
+      }
+      .coin1.noDown{
+       // display: none;
+        opacity: 0;
+        animation: noDown0_1 0.3s linear forwards;
       }
       .coin1.move{
         animation: Move0_1 0.3s linear forwards;
@@ -2208,7 +2359,14 @@ export default {
         left: 900px;
       }
       .coin2.isDown{
-        animation: Down0_2 0.3s linear forwards;
+        display: inline-block;
+        opacity: 1;
+        animation: isDown0_2 0.3s linear forwards;
+      }
+      .coin2.noDown{
+      //  display: none;
+        opacity: 0;
+        animation: noDown0_2 0.3s linear forwards;
       }
       .coin2.move{
         animation: Move0_2 0.3s linear forwards;
@@ -2218,7 +2376,14 @@ export default {
         left: 900px;
       }
       .coin3.isDown{
-        animation: Down0_3 0.3s linear forwards;
+        display: inline-block;
+        opacity: 1;
+        animation: isDown0_3 0.3s linear forwards;
+      }
+      .coin3.noDown{
+      //  display: none;
+        opacity: 0;
+        animation: noDown0_3 0.3s linear forwards;
       }
       .coin3.move{
         animation: Move0_3 0.3s linear forwards;
@@ -2228,7 +2393,14 @@ export default {
         left: -200px;
       }
       .coin4.isDown{
-        animation: Down0_4 0.3s linear forwards;
+        display: inline-block;
+        opacity: 1;
+        animation: isDown0_4 0.3s linear forwards;
+      }
+      .coin4.noDown{
+      //  display: none;
+        opacity: 0;
+        animation: noDown0_4 0.3s linear forwards;
       }
       .coin4.move{
         animation: Move0_4 0.3s linear forwards;
@@ -2238,7 +2410,14 @@ export default {
         left: -160px;
       }
       .coin5.isDown{
-        animation: Down0_5 0.3s linear forwards;
+        display: inline-block;
+        opacity: 1;
+        animation: isDown0_5 0.3s linear forwards;
+      }
+      .coin5.noDown{
+      //  display: none;
+        opacity: 0;
+        animation: noDown0_5 0.3s linear forwards;
       }
       .coin5.move{
         animation: Move0_5 0.3s linear forwards;
@@ -2248,7 +2427,14 @@ export default {
         left: 900px;
       }
       .coin6.isDown{
-        animation: Down0_6 0.3s linear forwards;
+        display: inline-block;
+        opacity: 1;
+        animation: isDown0_6 0.3s linear forwards;
+      }
+      .coin6.noDown{
+      //  display: none;
+        opacity: 0;
+        animation: noDown0_6 0.3s linear forwards;
       }
       .coin6.move{
         animation: Move0_6 0.3s linear forwards;
@@ -2258,7 +2444,14 @@ export default {
         left: 900px;
       }
       .coin7.isDown{
-        animation: Down0_7 0.3s linear forwards;
+        display: inline-block;
+        opacity: 1;
+        animation: isDown0_7 0.3s linear forwards;
+      }
+      .coin7.noDown{
+      //  display: none;
+        opacity: 0;
+        animation: noDown0_7 0.3s linear forwards;
       }
       .coin7.move{
         animation: Move0_7 0.3s linear forwards;
@@ -2268,7 +2461,14 @@ export default {
         left: -200px;
       }
       .coin8.isDown{
-        animation: Down0_8 0.3s linear forwards;
+        display: inline-block;
+        opacity: 1;
+        animation: isDown0_8 0.3s linear forwards;
+      }
+      .coin8.noDown{
+      //  display: none;
+        opacity: 0;
+        animation: noDown0_8 0.3s linear forwards;
       }
       .coin8.move{
         animation: Move0_8 0.3s linear forwards;
@@ -2278,7 +2478,14 @@ export default {
         left: -180px;
       }
       .coin9.isDown{
-        animation: Down0_9 0.3s linear forwards;
+        display: inline-block;
+        opacity: 1;
+        animation: isDown0_9 0.3s linear forwards;
+      }
+      .coin9.noDown{
+      //  display: none;
+        opacity: 0;
+        animation: noDown0_9 0.3s linear forwards;
       }
       .coin9.move{
         animation: Move0_9 0.3s linear forwards;
@@ -2290,7 +2497,14 @@ export default {
         left: -160px;
       }
       .coin0.isDown{
-        animation: Down1_0 0.3s linear forwards;
+        display: inline-block;
+        opacity: 1;
+        animation: isDown1_0 0.3s linear forwards;
+      }
+      .coin0.noDown{
+      //  display: none;
+        opacity: 0;
+        animation: noDown1_0 0.3s linear forwards;
       }
        .coin0.move{
         animation: Move1_0 0.3s linear forwards;
@@ -2300,7 +2514,14 @@ export default {
         left: -120px;
       }
       .coin1.isDown{
-        animation: Down1_1 0.3s linear forwards;
+        display: inline-block;
+        opacity: 1;
+        animation: isDown1_1 0.3s linear forwards;
+      }
+      .coin1.noDown{
+      //  display: none;
+        opacity: 0;
+        animation: noDown1_1 0.3s linear forwards;
       }
       .coin1.move{
         animation: Move1_1 0.3s linear forwards;
@@ -2310,7 +2531,14 @@ export default {
        left: 600px;
       }
       .coin2.isDown{
-        animation: Down1_2 0.3s linear forwards;
+        display: inline-block;
+        opacity: 1;
+        animation: isDown1_2 0.3s linear forwards;
+      }
+      .coin2.noDown{
+      //  display: none;
+        opacity: 0;
+        animation: noDown1_2 0.3s linear forwards;
       }
       .coin2.move{
         animation: Move1_2 0.3s linear forwards;
@@ -2320,7 +2548,14 @@ export default {
         left: 600px;
       }
        .coin3.isDown{
-        animation: Down1_3 0.3s linear forwards;
+         display: inline-block;
+        opacity: 1;
+        animation: isDown1_3 0.3s linear forwards;
+      }
+      .coin3.noDown{
+       // display: none;
+        opacity: 0;
+        animation: noDown1_3 0.3s linear forwards;
       }
       .coin3.move{
         animation: Move1_3 0.3s linear forwards;
@@ -2330,7 +2565,14 @@ export default {
         left: -480px;
       }
        .coin4.isDown{
-        animation: Down1_4 0.3s linear forwards;
+         display: inline-block;
+        opacity: 1;
+        animation: isDown1_4 0.3s linear forwards;
+      }
+      .coin4.noDown{
+      //  display: none;
+        opacity: 0;
+        animation: noDown1_4 0.3s linear forwards;
       }
       .coin4.move{
         animation: Move1_4 0.3s linear forwards;
@@ -2340,7 +2582,14 @@ export default {
         left: -480px;
       }
        .coin5.isDown{
-        animation: Down1_5 0.3s linear forwards;
+         display: inline-block;
+        opacity: 1;
+        animation: isDown1_5 0.3s linear forwards;
+      }
+      .coin5.noDown{
+      //  display: none;
+        opacity: 0;
+        animation: noDown1_5 0.3s linear forwards;
       }
       .coin5.move{
         animation: Move1_5 0.3s linear forwards;
@@ -2350,7 +2599,14 @@ export default {
         left: 600px;
       }
        .coin6.isDown{
-        animation: Down1_6 0.3s linear forwards;
+         display: inline-block;
+        opacity: 1;
+        animation: isDown1_6 0.3s linear forwards;
+      }
+      .coin6.noDown{
+      //  display: none;
+        opacity: 0;
+        animation: noDown1_6 0.3s linear forwards;
       }
       .coin6.move{
         animation: Move1_6 0.3s linear forwards;
@@ -2360,7 +2616,14 @@ export default {
         left: 600px;
       }
        .coin7.isDown{
-        animation: Down1_7 0.3s linear forwards;
+         display: inline-block;
+        opacity: 1;
+        animation: isDown1_7 0.3s linear forwards;
+      }
+      .coin7.noDown{
+      //  display: none;
+        opacity: 0;
+        animation: noDown1_7 0.3s linear forwards;
       }
       .coin7.move{
         animation: Move1_7 0.3s linear forwards;
@@ -2370,7 +2633,14 @@ export default {
        left: -520px;
       }
        .coin8.isDown{
-        animation: Down1_8 0.3s linear forwards;
+         display: inline-block;
+        opacity: 1;
+        animation: isDown1_8 0.3s linear forwards;
+      }
+      .coin8.noDown{
+     //   display: none;
+        opacity: 0;
+        animation: noDown1_8 0.3s linear forwards;
       }
       .coin8.move{
         animation: Move1_8 0.3s linear forwards;
@@ -2380,7 +2650,14 @@ export default {
         left: -480px;
       }
        .coin9.isDown{
-        animation: Down1_9 0.3s linear forwards;
+         display: inline-block;
+        opacity: 1;
+        animation: isDown1_9 0.3s linear forwards;
+      }
+      .coin9.noDown{
+      //  display: none;
+        opacity: 0;
+        animation: noDown1_9 0.3s linear forwards;
       }
        .coin9.move{
         animation: Move1_9 0.3s linear forwards;
@@ -2392,7 +2669,14 @@ export default {
         left: -360px;
       }
        .coin0.isDown{
-        animation: Down2_0 0.3s linear forwards;
+         display: inline-block;
+        opacity: 1;
+        animation: isDown2_0 0.3s linear forwards;
+      }
+      .coin0.noDown{
+      //  display: none;
+        opacity: 0;
+        animation: noDown2_0 0.3s linear forwards;
       }
        .coin0.move{
         animation: Move2_0 0.3s linear forwards;
@@ -2402,7 +2686,14 @@ export default {
         left: -420px;
       }
        .coin1.isDown{
-        animation: Down2_1 0.3s linear forwards;
+         display: inline-block;
+        opacity: 1;
+        animation: isDown2_1 0.3s linear forwards;
+      }
+      .coin1.noDown{
+       // display: none;
+        opacity: 0;
+        animation: noDown2_1 0.3s linear forwards;
       }
       .coin1.move{
         animation: Move2_1 0.3s linear forwards;
@@ -2412,7 +2703,14 @@ export default {
        left: 300px;;
       }
        .coin2.isDown{
-        animation: Down2_2 0.3s linear forwards;
+         display: inline-block;
+        opacity: 1;
+        animation: isDown2_2 0.3s linear forwards;
+      }
+      .coin2.noDown{
+      //  display: none;
+        opacity: 0;
+        animation: noDown2_2 0.3s linear forwards;
       }
       .coin2.move{
         animation: Move2_2 0.3s linear forwards;
@@ -2422,7 +2720,14 @@ export default {
         left: 300px;
       }
        .coin3.isDown{
-        animation: Down2_3 0.3s linear forwards;
+         display: inline-block;
+        opacity: 1;
+        animation: isDown2_3 0.3s linear forwards;
+      }
+      .coin3.noDown{
+      //  display: none;
+        opacity: 0;
+        animation: noDown2_3 0.3s linear forwards;
       }
       .coin3.move{
         animation: Move2_3 0.3s linear forwards;
@@ -2432,7 +2737,14 @@ export default {
         left: -640px;
       }
        .coin4.isDown{
-        animation: Down2_4 0.3s linear forwards;
+         display: inline-block;
+        opacity: 1;
+        animation: isDown2_4 0.3s linear forwards;
+      }
+      .coin4.noDown{
+      //  display: none;
+        opacity: 0;
+        animation: noDown2_4 0.3s linear forwards;
       }
       .coin4.move{
         animation: Move2_4 0.3s linear forwards;
@@ -2442,7 +2754,14 @@ export default {
         left: -640px;
       }
        .coin5.isDown{
-        animation: Down2_5 0.3s linear forwards;
+         display: inline-block;
+        opacity: 1;
+        animation: isDown2_5 0.3s linear forwards;
+      }
+      .coin5.noDown{
+     //   display: none;
+        opacity: 0;
+        animation: noDown2_5 0.3s linear forwards;
       }
       .coin5.move{
         animation: Move2_5 0.3s linear forwards;
@@ -2452,7 +2771,14 @@ export default {
        left: 300px;
       }
        .coin6.isDown{
-        animation: Down2_6 0.3s linear forwards;
+         display: inline-block;
+        opacity: 1;
+        animation: isDown2_6 0.3s linear forwards;
+      }
+      .coin6.noDown{
+      //  display: none;
+        opacity: 0;
+        animation: noDown2_6 0.3s linear forwards;
       }
       .coin6.move{
         animation: Move2_6 0.3s linear forwards;
@@ -2462,7 +2788,14 @@ export default {
         left: 320px;
       }
        .coin7.isDown{
-        animation: Down2_7 0.3s linear forwards;
+         display: inline-block;
+        opacity: 1;
+        animation: isDown2_7 0.3s linear forwards;
+      }
+      .coin7.noDown{
+       // display: none;
+        opacity: 0;
+        animation: noDown2_7 0.3s linear forwards;
       }
       .coin7.move{
         animation: Move2_7 0.3s linear forwards;
@@ -2472,7 +2805,14 @@ export default {
        left: -640px;
       }
        .coin8.isDown{
-        animation: Down2_8 0.3s linear forwards;
+         display: inline-block;
+        opacity: 1;
+        animation: isDown2_8 0.3s linear forwards;
+      }
+      .coin8.noDown{
+    //  display: none;
+        opacity: 0;
+        animation: noDown2_8 0.3s linear forwards;
       }
       .coin8.move{
         animation: Move2_8 0.3s linear forwards;
@@ -2482,7 +2822,14 @@ export default {
         left: -640px;
       }
        .coin9.isDown{
-        animation: Down2_9 0.3s linear forwards;
+        display: inline-block;
+        opacity: 1;
+        animation: isDown2_9 0.3s linear forwards;
+      }
+      .coin9.noDown{
+      //  display: none;
+        opacity: 0;
+        animation: noDown2_9 0.3s linear forwards;
       }
        .coin9.move{
         animation: Move2_9 0.3s linear forwards;
@@ -2688,9 +3035,9 @@ export default {
 }
 .exit-modal{
   .exit-body{
-    padding: 86px 0;
+    padding: 60px 0;
     color: #fff;
-    font-size: 48px;
+    font-size: 42px;
   }
   .exit-foot{
      display: flex;
@@ -2698,7 +3045,7 @@ export default {
      padding: 0 10%;
      justify-content: space-between;
     .exit-btn{
-      flex: 0 0 32%;
+      flex: 0 0 30%;
     }
   }
 }
@@ -3008,6 +3355,938 @@ export default {
   100% {
     top: 120px;
     opacity: 1;
+  }
+}
+/*下注动画*/
+@keyframes noDown0_0 {
+  
+  0% {
+    top: 400px;
+    left: 20px;
+  //  opacity: 0;
+  }
+   95% {
+    opacity: 0;
+  }
+  100% {
+    top: 0px;
+    left: 60px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes noDown1_0 {
+  
+  0% {
+    top: 380px;
+    left: -160px;
+  //  opacity: 0;
+  }
+   95% {
+    opacity: 0;
+  }
+  100% {
+    top: 0px;
+    left: 60px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes noDown2_0 {
+  
+  0% {
+    top: 400px;
+    left: -360px;
+  //  opacity: 0;
+  }
+   95% {
+    opacity: 0;
+  }
+  100% {
+    top: 0px;
+    left: 60px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes noDown0_1 {
+  
+  0% {
+    top: 360px;
+    left: 20px;
+  //  opacity: 0;
+  }
+   95% {
+    opacity: 0;
+  }
+  100% {
+    top: 150px;
+    left: 100px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes noDown1_1 {
+ 
+  0% {
+    top: 360px;
+    left: -120px;
+  //  opacity: 0;
+  }
+   95% {
+    opacity: 0;
+  }
+   100% {
+   top: 150px;
+    left: 100px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes noDown2_1 {
+  
+  0% {
+    top: 420px;
+    left: -420px;
+  //  opacity: 0;
+  }
+   95% {
+    opacity: 0;
+  }
+  100% {
+    top: 150px;
+    left: 100px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes noDown0_2 {
+  
+  0% {
+    top: 200px;
+    left: 900px;
+   // opacity: 0;
+  }
+   95% {
+    opacity: 0;
+  }
+  100% {
+    top: -20px;
+    left: 150px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes noDown1_2 {
+ 
+  0% {
+    top: 160px;
+    left: 600px;
+   // opacity: 0;
+  }
+   95% {
+    opacity: 0;
+  }
+   100% {
+    top: -20px;
+    left: 150px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes noDown2_2 {
+ 
+  0% {
+    top: 210px;
+    left: 300px;
+   // opacity: 0;
+  }
+   95% {
+    opacity: 0;
+  }
+   100% {
+    top: -20px;
+    left: 150px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes noDown0_3 {
+  
+  0% {
+    top: 230px;
+    left: 900px;
+   // opacity: 0;
+  }
+   95% {
+    opacity: 0;
+  }
+  100% {
+    top: 60px;
+    left: 70px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes noDown1_3 {
+  
+  0% {
+    top: 230px;
+    left: 600px;
+   // opacity: 0;
+  }
+   95% {
+    opacity: 0;
+  }
+  100% {
+    top: 60px;
+    left: 70px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes noDown2_3 {
+ 
+  0% {
+    top: 180px;
+    left: 300px;
+   // opacity: 0;
+  }
+   95% {
+    opacity: 0;
+  }
+   100% {
+    top: 60px;
+    left: 70px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes noDown0_4 {
+  
+  0% {
+    top: 200px;
+    left: -200px;
+   // opacity: 0;
+  }
+   95% {
+    opacity: 0;
+  }
+  100% {
+    top: 100px;
+    left: 120px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes noDown1_4 {
+  
+  0% {
+    top: 160px;
+    left: -480px;
+   // opacity: 0;
+  }
+   95% {
+    opacity: 0;
+  }
+  100% {
+     top: 100px;
+    left: 120px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes noDown2_4 {
+  
+  0% {
+    top: 210px;
+    left: -640px;
+   // opacity: 0;
+  }
+   95% {
+    opacity: 0;
+  }
+  100% {
+    top: 100px;
+    left: 120px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes noDown0_5 {
+ 
+  0% {
+    top: 240px;
+    left: -160px;
+   // opacity: 0;
+  }
+   95% {
+    opacity: 0;
+  }
+   100% {
+    top: 40px;
+    left: 140px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes noDown1_5 {
+ 
+  0% {
+    top: 250px;
+    left: -480px;
+   // opacity: 0;
+  }
+   95% {
+    opacity: 0;
+  }
+   100% {
+    top: 40px;
+    left: 140px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes noDown2_5 {
+  
+  0% {
+    top: 160px;
+    left: -640px;
+   // opacity: 0;
+  }
+   95% {
+    opacity: 0;
+  }
+  100% {
+    top: 40px;
+    left: 140px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes noDown0_6 {
+  
+  0% {
+    top: -50px;
+    left: 900px;
+   // opacity: 0;
+  }
+   95% {
+    opacity: 0;
+  }
+  100% {
+    top: 110px;
+    left: 50px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes noDown1_6 {
+  
+  0% {
+    top: -80px;
+    left: 600px;
+   // opacity: 0;
+  }
+   95% {
+    opacity: 0;
+  }
+  100% {
+    top: 110px;
+    left: 50px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes noDown2_6 {
+ 
+  0% {
+    top: -50px;
+    left: 300px;
+   // opacity: 0;
+  }
+   95% {
+    opacity: 0;
+  }
+   100% {
+    top: 110px;
+    left: 50px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes noDown0_7 {
+  
+  0% {
+    top: -90px;
+    left: 900px;
+   // opacity: 0;
+  }
+   95% {
+    opacity: 0;
+  }
+  100% {
+    top: 50px;
+    left: 20px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes noDown1_7 {
+  
+  0% {
+    top: -30px;
+    left: 600px;
+   // opacity: 0;
+  }
+   95% {
+    opacity: 0;
+  }
+  100% {
+    top: 50px;
+    left: 20px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes noDown2_7 {
+  
+  0% {
+    top: -110px;
+    left: 320px;
+   // opacity: 0;
+  }
+   95% {
+    opacity: 0;
+  }
+  100% {
+     top: 50px;
+    left: 20px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes noDown0_8 {
+  
+  0% {
+    top: -50px;
+    left: -200px;
+   // opacity: 0;
+  }
+   95% {
+    opacity: 0;
+  }
+  100% {
+    top: 90px;
+    left: 180px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes noDown1_8 {
+  
+  0% {
+    top: -100px;
+    left: -520px;
+   // opacity: 0;
+  }
+   95% {
+    opacity: 0;
+  }
+  100% {
+     top: 90px;
+    left: 180px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes noDown2_8 {
+  
+  0% {
+    top: -50px;
+    left: -640px;
+   // opacity: 0;
+  }
+   95% {
+    opacity: 0;
+  }
+  100% {
+    top: 90px;
+    left: 180px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes noDown0_9 {
+ 
+  0% {
+    top: -90px;
+    left: -180px;
+   // opacity: 0;
+  }
+   95% {
+    opacity: 0;
+  }
+   100% {
+    top: 150px;
+    left: 150px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes noDown1_9 {
+  
+  0% {
+    top: -30px;
+    left: -480px;
+   // opacity: 0;
+  }
+   95% {
+    opacity: 0;
+  }
+  100% {
+     top: 150px;
+    left: 150px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes noDown2_9 {
+  
+  0% {
+    top: -110px;
+    left: -640px;
+   // opacity: 0;
+  }
+  95% {
+    opacity: 0;
+  }
+  100% {
+     top: 150px;
+    left: 150px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+/***/
+@keyframes isDown0_0 {
+  
+  0% {
+    top: 400px;
+    left: 20px;
+  //  opacity: 0;
+  }
+  100% {
+    top: 0px;
+    left: 60px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes isDown1_0 {
+  
+  0% {
+    top: 380px;
+    left: -160px;
+  //  opacity: 0;
+  }
+  100% {
+    top: 0px;
+    left: 60px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes isDown2_0 {
+  
+  0% {
+    top: 400px;
+    left: -360px;
+  //  opacity: 0;
+  }
+  100% {
+    top: 0px;
+    left: 60px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes isDown0_1 {
+  
+  0% {
+    top: 360px;
+    left: 20px;
+  //  opacity: 0;
+  }
+  100% {
+    top: 150px;
+    left: 100px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes isDown1_1 {
+ 
+  0% {
+    top: 360px;
+    left: -120px;
+  //  opacity: 0;
+  }
+   100% {
+   top: 150px;
+    left: 100px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes isDown2_1 {
+  
+  0% {
+    top: 420px;
+    left: -420px;
+  //  opacity: 0;
+  }
+  100% {
+    top: 150px;
+    left: 100px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes isDown0_2 {
+  
+  0% {
+    top: 200px;
+    left: 900px;
+   // opacity: 0;
+  }
+  100% {
+    top: -20px;
+    left: 150px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes isDown1_2 {
+ 
+  0% {
+    top: 160px;
+    left: 600px;
+   // opacity: 0;
+  }
+   100% {
+    top: -20px;
+    left: 150px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes isDown2_2 {
+ 
+  0% {
+    top: 210px;
+    left: 300px;
+   // opacity: 0;
+  }
+   100% {
+    top: -20px;
+    left: 150px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes isDown0_3 {
+  
+  0% {
+    top: 230px;
+    left: 900px;
+   // opacity: 0;
+  }
+  100% {
+    top: 60px;
+    left: 70px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes isDown1_3 {
+  
+  0% {
+    top: 230px;
+    left: 600px;
+   // opacity: 0;
+  }
+  100% {
+    top: 60px;
+    left: 70px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes isDown2_3 {
+ 
+  0% {
+    top: 180px;
+    left: 300px;
+   // opacity: 0;
+  }
+   100% {
+    top: 60px;
+    left: 70px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes isDown0_4 {
+  
+  0% {
+    top: 200px;
+    left: -200px;
+   // opacity: 0;
+  }
+  100% {
+    top: 100px;
+    left: 120px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes isDown1_4 {
+  
+  0% {
+    top: 160px;
+    left: -480px;
+   // opacity: 0;
+  }
+  100% {
+     top: 100px;
+    left: 120px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes isDown2_4 {
+  
+  0% {
+    top: 210px;
+    left: -640px;
+   // opacity: 0;
+  }
+  100% {
+    top: 100px;
+    left: 120px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes isDown0_5 {
+ 
+  0% {
+    top: 240px;
+    left: -160px;
+   // opacity: 0;
+  }
+   100% {
+    top: 40px;
+    left: 140px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes isDown1_5 {
+ 
+  0% {
+    top: 250px;
+    left: -480px;
+   // opacity: 0;
+  }
+   100% {
+    top: 40px;
+    left: 140px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes isDown2_5 {
+  
+  0% {
+    top: 160px;
+    left: -640px;
+   // opacity: 0;
+  }
+  100% {
+    top: 40px;
+    left: 140px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes isDown0_6 {
+  
+  0% {
+    top: -50px;
+    left: 900px;
+   // opacity: 0;
+  }
+  100% {
+    top: 110px;
+    left: 50px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes isDown1_6 {
+  
+  0% {
+    top: -80px;
+    left: 600px;
+   // opacity: 0;
+  }
+  100% {
+    top: 110px;
+    left: 50px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes isDown2_6 {
+ 
+  0% {
+    top: -50px;
+    left: 300px;
+   // opacity: 0;
+  }
+   100% {
+    top: 110px;
+    left: 50px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes isDown0_7 {
+  
+  0% {
+    top: -90px;
+    left: 900px;
+   // opacity: 0;
+  }
+  100% {
+    top: 50px;
+    left: 20px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes isDown1_7 {
+  
+  0% {
+    top: -30px;
+    left: 600px;
+   // opacity: 0;
+  }
+  100% {
+    top: 50px;
+    left: 20px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes isDown2_7 {
+  
+  0% {
+    top: -110px;
+    left: 320px;
+   // opacity: 0;
+  }
+  100% {
+     top: 50px;
+    left: 20px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes isDown0_8 {
+  
+  0% {
+    top: -50px;
+    left: -200px;
+   // opacity: 0;
+  }
+  100% {
+    top: 90px;
+    left: 180px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes isDown1_8 {
+  
+  0% {
+    top: -100px;
+    left: -520px;
+   // opacity: 0;
+  }
+  100% {
+     top: 90px;
+    left: 180px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes isDown2_8 {
+  
+  0% {
+    top: -50px;
+    left: -640px;
+   // opacity: 0;
+  }
+  100% {
+    top: 90px;
+    left: 180px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes isDown0_9 {
+ 
+  0% {
+    top: -90px;
+    left: -180px;
+   // opacity: 0;
+  }
+   100% {
+    top: 150px;
+    left: 150px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes isDown1_9 {
+  
+  0% {
+    top: -30px;
+    left: -480px;
+   // opacity: 0;
+  }
+  100% {
+     top: 150px;
+    left: 150px;
+    opacity: 1;
+    display: inline-block;
+  }
+}
+@keyframes isDown2_9 {
+  
+  0% {
+    top: -110px;
+    left: -640px;
+   // opacity: 0;
+  }
+  100% {
+     top: 150px;
+    left: 150px;
+    opacity: 1;
+    display: inline-block;
   }
 }
 /**分钱动画**/

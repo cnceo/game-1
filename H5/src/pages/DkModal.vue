@@ -56,7 +56,7 @@ export default {
       default: false
     },
     ds: {
-      type: String,
+      type: Object,
       default: function () {
         return {}
       }

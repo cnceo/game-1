@@ -14,10 +14,12 @@ import './assets/less/modal.less'
 import Interface from './libs/interface'
 import Fn from './libs/bytesLen'
 import Handler from './libs/handlerSocket'
+import { Slider } from 'iview'
 // import VueSocketio from 'vue-socket.io'
 // import socketio from 'socket.io-client'
 var JSBridge = require('./libs/JsBridge')
 
+Vue.component('Slider', Slider)
 Vue.use(Vuex)
 Vue.use(Install)
 Vue.use(Audio)

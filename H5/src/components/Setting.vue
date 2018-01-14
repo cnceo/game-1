@@ -34,6 +34,7 @@
                   <img src="../assets/imgs/img_Setup_Sound.png" alt="" width="100%">
                 </span>
                 <SoundBar :sound="sound" class="bar" @on-change="changeSound"></SoundBar>
+                <!-- <Slider v-model="cur" :max="max"></Slider> -->
               </li>
               <li class="row">
                 <span class="label" style="width: 100px">
@@ -68,11 +69,17 @@ export default {
     sounds: {
       handler: function (val) {
         // console.log(val)
-        let local = window.localStorage
-        let soundSize = local.getItem('soundSize')
-        let musicSize = local.getItem('musicdSize')
-        this.music = musicSize == null ? this.sounds.music : musicSize
-        this.sound = soundSize == null ? this.sounds.sound : soundSize
+        // let local = window.localStorage
+        // let soundSize = local.getItem('soundSize')
+        // let musicSize = local.getItem('musicdSize')
+        // if (soundSize) {
+        //   val.sound.cur = soundSize
+        // }
+        // if (musicSize) {
+        //   val.music.cur = musicSize
+        // }
+        this.music = val.music
+        this.sound = val.sound
       },
       deep: true
     }
@@ -82,6 +89,8 @@ export default {
   }),
   data () {
     return {
+      cur: 0.5,
+      max: 1,
       showSetModal: false,
       sound: {},
       music: {},
@@ -149,11 +158,11 @@ export default {
   created () {
     // 初始化数据
    // this.handleArray([this.ds0_1, this.ds0_2], this.ds0)
-    let local = window.localStorage
-    let soundSize = local.getItem('soundSize')
-    let musicSize = local.getItem('musicdSize')
-    this.music = musicSize == null ? this.sounds.music : musicSize
-    this.sound = soundSize == null ? this.sounds.sound : soundSize
+    // let local = window.localStorage
+    // let soundSize = local.getItem('soundSize')
+    // let musicSize = local.getItem('musicdSize')
+    // this.music = musicSize == null ? this.sounds.music : musicSize
+    // this.sound = soundSize == null ? this.sounds.sound : soundSize
   },
   methods: {
     handleArray (arr, data) {
@@ -276,7 +285,7 @@ export default {
           margin: 30px 0;
           .label{
           // flex: 0 0 180px;
-            width: 20%;
+            width: 25%;
             margin-top: 10px;
             vertical-align: middle;
           }
@@ -290,7 +299,7 @@ export default {
     }
     .toggle{
       display: inline-block;
-      width: 300px;
+      width: 250px;
     }
   }
 }
@@ -299,7 +308,7 @@ export default {
     .set-body{
       .sound-bar{
         .row{
-          margin: 90px auto 0;
+          margin: 62px auto 0;
           .label{
             flex: 0 0 16%;
             width: 16%;

@@ -82,7 +82,7 @@ export default {
     top: 50%;
     right: 50%;
     width: 60%;
-    height: 60%;
+    height: 68%;
     transform: translate(50%, -50%);
    // background: rgba(0, 0, 0, .8);
     z-index: 1000;

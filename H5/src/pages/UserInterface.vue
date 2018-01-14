@@ -20,7 +20,7 @@
           </div>
         </div>
         <!--基本设置-->
-        <ul class="base-settting g-flex-row">
+        <ul class="base-setting g-flex-row">
           <li @touchstart="help($event)">
             <img src="../assets/imgs/rules.png" width="100%"/>
           </li>
@@ -124,7 +124,9 @@
     <div slot="modal-bg" class="modal-bg">
       <img src="../assets/imgs/img_Message_messagebackground.png" alt=""  width="100%" height="100%">
     </div>
-      <div slot="title" class="create-title title-active" style="color: #fff;font-weight: bold">创建房间</div>
+      <div slot="title" class="create-title title-active" style="color: #fff;font-weight: bold">
+       <img src="../assets/imgs/img_Create_tirle.png" alt=""  width="100%">
+      </div>
       <div slot="body" class="create-body">
         <div class="create-content">
           <div class="game-tabs">
@@ -720,7 +722,6 @@ export default {
     },
     // 创建房间
     createGameRoom (e) {
-      this.loadRoom = true
       this.$audio.play(this.$audio.btn)
       if (this.selectTypes === 0) {
         this.createRoomData1.substitute = false
@@ -734,7 +735,6 @@ export default {
     },
     // 是否代开房间
     invoiceGameRoom (e) {
-      this.loadRoom = true
       this.$audio.play(this.$audio.btn)
       if (this.selectTypes === 0) {
         this.createRoomData1.substitute = true
@@ -774,6 +774,7 @@ export default {
         type = 3
       //  this.router = '/dj'
       }
+      this.loadRoom = true
       let params = {
         userId: this.userInfo.id,
         baseScore: this.selectData.score,
@@ -870,6 +871,7 @@ export default {
           str += item
         })
         this.loadRoom = true
+        this.selectData.substitute = false
         this.startEnterRoom(str)
       }
     },
@@ -1024,7 +1026,7 @@ export default {
   left: 50%;
   padding: 5px 20px;
   color: #fff;
-  background: #BA55D3;
+  background: #7B68EE;
   border-radius: 5px;
   transform: translateX(-50%);
   transition: top 0.3s linear;
@@ -1051,9 +1053,9 @@ export default {
     padding: 0 60px;
     background: url('../assets/imgs/bar.png') 0 0 no-repeat;
     background-size: 100% 100%;
-    .base-settting{
+    .base-setting{
       flex: 0 0 450px;
-      width: 450px;
+      min-width: 450px;
       margin: 40px 0;
       justify-content: flex-end;
       li{
@@ -1080,12 +1082,15 @@ export default {
       color: #fff;
       .f-relative{
         position: relative;
-        width: 180px;
+        width: 210px;
         height: 50px;
         line-height: 50px;
         padding-left: 80px;
         padding-top: 6px;
         text-align: left;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
         color: #fff;
       }
       .user-avatar{
@@ -1103,8 +1108,10 @@ export default {
           position: absolute;
           top: -2px;
           left: 0;
-          width: 118px;
-          height: 118px;
+          // width: 118px;
+          // height: 118px;
+           width: 140px;
+          height: 140px;
           padding: 15px;
           border-radius: 20px;
           overflow: hidden;
@@ -1208,13 +1215,13 @@ export default {
   .game-tabs{
     flex: 0 0 230px;
     width: 230px;
-    padding: 0 5px 0 25px;
+    padding: 0 5px 0 50px;
     span{
       display: block;
       width: 100%;
-      height: 72px;
-      line-height: 72px;
-      margin-top: 30px;
+      height: 70px;
+      line-height: 70px;
+      margin-top: 38px;
       img{
         width: 100%;
       }
@@ -1225,7 +1232,7 @@ export default {
 .rule-body{
   .game-box{
     flex: 0 0 58%;
-    padding: 0 3% 0 3%;
+    padding: 0 5% 0 5%;
     width: 82%;
     height: 42vh;
     margin: 3vh 0 5vh 3%;

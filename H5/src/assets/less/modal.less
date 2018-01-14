@@ -2,12 +2,12 @@
 #app{
   .rule-modal{
     .modal-content{
-      width: 62%;
+      width: 72%;
      // background: url('../imgs/img_Rules_Rulebackground.png') 0 0 no-repeat;
       background-size: 100% 100%;
       .rule-body{
         .game-tabs{
-          width: 25%;
+          width: 28%;
           flex: none;
         }
       }
@@ -21,6 +21,7 @@
   }
   .msg-modal{
     .modal-content{
+      height: 56%;
       background: url('../imgs/img_Message_messagebackground.png') 0 0 no-repeat;
       background-size: 100% 100%;
     }
@@ -33,6 +34,7 @@
   }
   .set-modal{
     .modal-content{
+      height: 62%;
       padding: 20px;
       background: url('../imgs/img_Setup_Settingbackground.png') 0 0 no-repeat;
       background-size: 100% 100%;
@@ -65,14 +67,19 @@
   }
   .create-modal{
     .modal-content{
-      width: 75%;
+      width: 74%;
       height: 70%;
      // background: url('../imgs/img_Message_messagebackground.png') 0 0 no-repeat;
       background-size: 100% 100%;
     }
+    .create-title{
+      width: 50%;
+    }
   }
   .join-modal{
     .modal-content{
+      width: 68%;
+      height: 75%;
       padding: 30px;
       // background: url('../imgs/img_Join_background.png') 0 0 no-repeat;
       // background-size: 100% 100%;
@@ -109,5 +116,33 @@
       }
     }
   }
+  .exit-modal .modal-content{
+    height: 45%;
+  }
 }
-
+.ivu-slider{
+  width: 90%;
+  .ivu-slider-wrap{
+    position: relative;
+    height: 12px;
+    border-radius: 6px;
+    background: #FFF;
+    cursor: pointer;
+  }
+  .ivu-slider-bar{
+    height: 12px;
+    border-radius: 6px;
+    background: #ace93c;
+    cursor: pointer;
+  }
+  .ivu-slider-button-wrap{
+    width: 40px;
+    height: 25px;
+    background: url('../imgs/img_Setuphualun.png');
+    background-size: 100% 100%;
+    cursor: pointer;
+  }
+  .ivu-slider-button{
+    opacity: 0;
+  }
+}
