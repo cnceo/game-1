@@ -36,7 +36,7 @@
                 <!-- <SoundBar :sound="sound" class="bar" @on-change="changeSound"></SoundBar> -->
                 <div class="bar-box">
                   <vue-slider v-model="soundValue" :width="barWidth" :height="12" :dotSize="20" tooltip="false"
-                :processStyle="processStyle" @callback="changeSound" ></vue-slider>
+                :processStyle="processStyle" @callback="changeSound" :speed="speed"></vue-slider>
                 </div>
               </li>
               <li class="row">
@@ -46,7 +46,7 @@
                 <!-- <SoundBar :sound="music" class="bar" @on-change="changeMusic"></SoundBar> -->
                 <div class="bar-box">
                   <vue-slider v-model="musicValue" :width="barWidth" :height="12" :dotSize="20" :tooltip="false"
-                :processStyle="processStyle" @callback="changeMusic" ></vue-slider>
+                :processStyle="processStyle" @callback="changeMusic" :speed="speed"></vue-slider>
                 </div>
               </li>
             </ul>
@@ -88,15 +88,18 @@ export default {
         if (soundSize) {
           val.sound.cur = soundSize
         }
-        local.setItem('soundSize', val.sound.cur)
+       // local.setItem('soundSize', val.sound.cur)
         // if (musicSize) {
         //   val.music.cur = musicSize
         // }
       //  local.setItem('musicSize', val.music.cur)
         this.music = val.music
         this.sound = val.sound
-        this.musicValue = (val.music.cur * 100) / (val.music.max)
-        this.soundValue = (val.sound.cur * 100) / (val.sound.max)
+        if (this.isFirst) {
+          this.isFirst = false
+          this.musicValue = (val.music.cur * 100) / (val.music.max)
+          this.soundValue = (val.sound.cur * 100) / (val.sound.max)
+        }
       },
       deep: true
     },
@@ -119,8 +122,10 @@ export default {
       max: 1,
       showSetModal: false,
       barWidth: 'auto',
+      speed: 0,
       soundValue: '',
       musicValue: '',
+      isFirst: true,
       processStyle: {'backgroundColor': '#ace93c'},
       sound: {},
       music: {},
@@ -256,10 +261,10 @@ export default {
     },
     // 音效设置
     changeSound (val) {
-      let value = (this.sound.max * val) / 100
+      let value = ((this.sound.max * val) / 100).toFixed(1)
       let local = window.localStorage
       local.setItem('soundSize', value)
-      this.$audio.setvol(val)
+      this.$audio.setvol(value)
       // 保存设置的音效
       this.$store.dispatch('getMusic', {
         music: this.music,
@@ -273,7 +278,7 @@ export default {
     },
     // 音乐设置
     changeMusic (val) {
-      let value = (this.music.max * val) / 100
+      let value = parseInt((this.music.max * val) / 100)
    //   let local = window.localStorage
     //  local.setItem('musicSize', value)
        // 调用android原生内部方法
