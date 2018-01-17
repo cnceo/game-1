@@ -1,7 +1,7 @@
 var Audio = {}
 Audio.install = function (Vue, options) {
   Vue.prototype.$audio = {
-    volume: 0.8,
+    volume: 0.5,
     max: 1
   }
   Vue.prototype.$audio.ui = 'static/audios/ui_click.mp3'

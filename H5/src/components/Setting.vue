@@ -1,5 +1,5 @@
 <template>
-  <div class="setting-sound">
+  <div class="setting-sound" ref="slider">
     <Modal :showModal="showSetModal"
     @on-close="closeSetModal"
     class="set-modal">
@@ -13,7 +13,7 @@
       </div>
       <div slot="body" class="set-body">
         <div class="set-box">
-          <div v-show="selectSet === 0">
+          <div v-if="selectSet === 0">
             <div class="row">
               <span class="label">
                 <img src="../assets/imgs/img_Setup_Desktop.png" alt="" width="100%">
@@ -27,20 +27,27 @@
               <selectType :types="ds0_2" class="bar" @on-select="selectCard"></selectType>
             </div>
           </div>
-          <div v-show="selectSet === 1">
+          <div v-if="selectSet === 1">
             <ul class="sound-bar">
               <li class="row">
                 <span class="label" style="width: 100px">
                   <img src="../assets/imgs/img_Setup_Sound.png" alt="" width="100%">
                 </span>
-                <SoundBar :sound="sound" class="bar" @on-change="changeSound"></SoundBar>
-                <!-- <Slider v-model="cur" :max="max"></Slider> -->
+                <!-- <SoundBar :sound="sound" class="bar" @on-change="changeSound"></SoundBar> -->
+                <div class="bar-box">
+                  <vue-slider v-model="soundValue" :width="barWidth" :height="12" :dotSize="20" tooltip="false"
+                :processStyle="processStyle" @callback="changeSound" ></vue-slider>
+                </div>
               </li>
               <li class="row">
                 <span class="label" style="width: 100px">
                   <img src="../assets/imgs/img_Setup_Music.png" alt="" width="100%">
                 </span>
-                <SoundBar :sound="music" class="bar" @on-change="changeMusic"></SoundBar>
+                <!-- <SoundBar :sound="music" class="bar" @on-change="changeMusic"></SoundBar> -->
+                <div class="bar-box">
+                  <vue-slider v-model="musicValue" :width="barWidth" :height="12" :dotSize="20" :tooltip="false"
+                :processStyle="processStyle" @callback="changeMusic" ></vue-slider>
+                </div>
               </li>
             </ul>
             <span class="toggle" @click="changeAccount" v-show="account">
@@ -54,11 +61,15 @@
 </template>
 
 <script>
+import vueSlider from 'vue-slider-component'
 import {mapGetters} from 'vuex'
 import tabImgs from '../pages/tabImgs'
 
 export default {
   name: 'app',
+  components: {
+    vueSlider
+  },
   props: {
     account: {
       type: Boolean,
@@ -68,20 +79,35 @@ export default {
   watch: {
     sounds: {
       handler: function (val) {
+        console.log('hhh')
+        console.log(val)
         // console.log(val)
-        // let local = window.localStorage
-        // let soundSize = local.getItem('soundSize')
-        // let musicSize = local.getItem('musicdSize')
-        // if (soundSize) {
-        //   val.sound.cur = soundSize
-        // }
+        let local = window.localStorage
+        let soundSize = local.getItem('soundSize')
+      //  let musicSize = local.getItem('musicSize')
+        if (soundSize) {
+          val.sound.cur = soundSize
+        }
+        local.setItem('soundSize', val.sound.cur)
         // if (musicSize) {
         //   val.music.cur = musicSize
         // }
+      //  local.setItem('musicSize', val.music.cur)
         this.music = val.music
         this.sound = val.sound
+        this.musicValue = (val.music.cur * 100) / (val.music.max)
+        this.soundValue = (val.sound.cur * 100) / (val.sound.max)
       },
       deep: true
+    },
+    musicValue (val) {
+      // this.$JsBridge.callHandler(
+      //   'setSound' // 原生的方法名
+      //   , {'param': val.toString()} // 带个原生方法的参数
+      //   , function (responseData) { // 响应原生回调方法
+
+      //   }
+      // )
     }
   },
   computed: mapGetters({
@@ -92,6 +118,10 @@ export default {
       cur: 0.5,
       max: 1,
       showSetModal: false,
+      barWidth: 'auto',
+      soundValue: '',
+      musicValue: '',
+      processStyle: {'backgroundColor': '#ace93c'},
       sound: {},
       music: {},
       setTabs: [
@@ -164,6 +194,8 @@ export default {
     // this.music = musicSize == null ? this.sounds.music : musicSize
     // this.sound = soundSize == null ? this.sounds.sound : soundSize
   },
+  mounted () {
+  },
   methods: {
     handleArray (arr, data) {
       arr.forEach((item, index) => {
@@ -202,6 +234,14 @@ export default {
         }
       })
       this.selectSet = index
+      this.$nextTick(() => {
+        let dots = this.$refs.slider.getElementsByClassName('vue-slider-dot')
+        for (let i = 0, len = dots.length; i < len; i++) {
+          dots[i].style.width = '30px'
+        }
+        let modal = this.$refs.slider.getElementsByClassName('set-modal')[0]
+        console.log(modal.style.width)
+      })
     },
     // 选择桌面
     selectDesktop (data) {
@@ -216,27 +256,32 @@ export default {
     },
     // 音效设置
     changeSound (val) {
+      let value = (this.sound.max * val) / 100
+      let local = window.localStorage
+      local.setItem('soundSize', value)
       this.$audio.setvol(val)
       // 保存设置的音效
       this.$store.dispatch('getMusic', {
         music: this.music,
         sound: {
           max: this.sound.max,
-          cur: val
+          cur: value
         }
       })
-      let local = window.localStorage
-      local.setItem('soundSize', val)
+     // let local = window.localStorage
+    //  local.setItem('soundSize', val)
     },
     // 音乐设置
     changeMusic (val) {
-      let local = window.localStorage
+      let value = (this.music.max * val) / 100
+   //   let local = window.localStorage
+    //  local.setItem('musicSize', value)
        // 调用android原生内部方法
       this.$JsBridge.callHandler(
         'setSound' // 原生的方法名
-        , {'param': val.toString()} // 带个原生方法的参数
+        , {'param': value.toString()} // 带个原生方法的参数
         , function (responseData) { // 响应原生回调方法
-          local.setItem('musicSize', val)
+
         }
       )
        // 保存设置的音效
@@ -314,6 +359,10 @@ export default {
             width: 16%;
             margin-right: 30px;
           }
+          .bar-box{
+            flex: 1;
+            width: 76%;
+          }
         }
       }
     }
@@ -321,6 +370,6 @@ export default {
       margin-top: 50px;
     }
   }
-
 }
+
 </style>

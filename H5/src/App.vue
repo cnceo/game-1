@@ -35,6 +35,16 @@ export default {
   mounted () {
     // 获取Android传来的数据
     let vm = this
+    // vm.$store.dispatch('getMusic', {
+    //   sound: {
+    //     max: vm.$audio.max,
+    //     cur: vm.$audio.volume
+    //   },
+    //   music: {
+    //     max: 30,
+    //     cur: 10
+    //   }
+    // })
     // 获取系统音量信息
     this.$JsBridge.registerHandler('getSound', function (data, responseCallback) {
       // 将原生带来的参数，显示在show标签位置

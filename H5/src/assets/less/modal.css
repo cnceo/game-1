@@ -1,16 +1,17 @@
 /*规则*/
 #app .rule-modal .modal-content {
-  width: 62%;
+  width: 72%;
   background-size: 100% 100%;
 }
 #app .rule-modal .modal-content .rule-body .game-tabs {
-  width: 25%;
+  width: 28%;
   flex: none;
 }
 #app .rule-modal .rule-title {
   width: 50%;
 }
 #app .msg-modal .modal-content {
+  height: 56%;
   background: url('../imgs/img_Message_messagebackground.png') 0 0 no-repeat;
   background-size: 100% 100%;
 }
@@ -21,6 +22,7 @@
   line-height: 24px;
 }
 #app .set-modal .modal-content {
+  height: 62%;
   padding: 20px;
   background: url('../imgs/img_Setup_Settingbackground.png') 0 0 no-repeat;
   background-size: 100% 100%;
@@ -51,11 +53,16 @@
   right: 0;
 }
 #app .create-modal .modal-content {
-  width: 75%;
+  width: 74%;
   height: 70%;
   background-size: 100% 100%;
 }
+#app .create-modal .create-title {
+  width: 50%;
+}
 #app .join-modal .modal-content {
+  width: 68%;
+  height: 75%;
   padding: 30px;
 }
 #app .join-modal .modal-content .join-body {
@@ -82,4 +89,45 @@
 #app .share-modal .modal-content .share-title {
   width: 50%;
   margin: 0 auto;
+}
+#app .exit-modal .modal-content {
+  height: 45%;
+}
+.ivu-slider {
+  width: 90%;
+}
+.ivu-slider .ivu-slider-wrap {
+  position: relative;
+  height: 12px;
+  border-radius: 6px;
+  background: #FFF;
+  cursor: pointer;
+}
+.ivu-slider .ivu-slider-bar {
+  height: 12px;
+  border-radius: 6px;
+  background: #ace93c;
+  cursor: pointer;
+}
+.ivu-slider .ivu-slider-button-wrap {
+  width: 40px;
+  height: 25px;
+  background: url('../imgs/img_Setuphualun.png');
+  background-size: 100% 100%;
+  cursor: pointer;
+}
+.ivu-slider .ivu-slider-button {
+  opacity: 0;
+}
+.vue-slider-component .vue-slider-process {
+  background: #ace93c;
+}
+.vue-slider-component .vue-slider-dot.vue-slider-always .vue-slider-tooltip-wrap {
+  display: none!important;
+}
+.vue-slider-component .vue-slider-dot {
+  border-radius: 50%;
+  background: url('../imgs/img_Setuphualun.png');
+  background-size: 100% 100%;
+  cursor: pointer;
 }
