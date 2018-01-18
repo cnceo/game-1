@@ -336,13 +336,14 @@ export default {
           .label{
           // flex: 0 0 180px;
             width: 25%;
-            margin-top: 10px;
+            margin-top: 12px;
             vertical-align: middle;
           }
         }
         .row:last-child {
           .label{
-            width: 23%;
+            width: 27%;
+            margin-top: 15px;
           }
         }
       }

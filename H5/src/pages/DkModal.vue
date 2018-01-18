@@ -20,7 +20,7 @@
             <div class="img">
               <img src="../assets/imgs/img_Daikai_guize.png" alt="" height="100%">
             </div>
-            <span></span>
+            <span v-html="rules"></span>
           </li>
         </ul>
       </div>
@@ -47,7 +47,8 @@ export default {
     return {
       showDk: false,
       roomNum: '',
-      gameMsg: {}
+      gameMsg: {},
+      rules: ''
     }
   },
   props: {
@@ -60,6 +61,10 @@ export default {
       default: function () {
         return {}
       }
+    },
+    ru: {
+      type: String,
+      default: ''
     }
   },
   watch: {
@@ -68,6 +73,9 @@ export default {
     },
     ds (val) {
       this.gameMsg = val
+    },
+    ru (val) {
+      this.rules = val
     }
   },
   created () {
@@ -165,7 +173,7 @@ export default {
         }
         li.rule{
           display: flex;
-          height: 72px;
+        //  height: 72px;
           .img{
             flex: 0 0 80px;
             height: 40px;
@@ -173,6 +181,11 @@ export default {
           }
           span{
             flex: 1;
+            width: calc(~"100% - 200px");
+            margin-left: 15px;
+            font-size: 42px;
+            word-wrap: break-word;
+            vertical-align: top;
           }
         }
       }

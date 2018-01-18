@@ -12,7 +12,7 @@
           </div>
          <div class="msg-box">
             <div class="user-id-card">
-              <div class="user-name f-relative">{{userInfo.nickname}}</div></br>
+              <div class="user-name f-relative">{{userInfo.nickname}}</div>
             </div>
             <div class="user-room-card">
               <div class="user-id f-relative">{{userInfo.id}}</div>
@@ -61,7 +61,7 @@
     <div class="z-bg" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1">
       <img src="../assets/imgs/background.png" alt=""  width="100%">
     </div>
-    <div class="z-bg" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; background: rgba(0, 0, 0, .5)" v-show="loadRoom">
+    <div class="z-bg" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10001; background: rgba(0, 0, 0, .5)" v-show="loadRoom">
       <img src="../assets/imgs/loading.gif" alt=""  style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%)" width="56px" height="56px">
     </div>
     <!--规则-->
@@ -237,7 +237,7 @@
     <!-- 混推 -->
     <ht-game :ht="showHt" @on-close="closeHt"></ht-game>
     <!-- 代开 -->
-    <dk-modal :dk="showDkModal" :ds="gameDatas" @on-close="closeDk"></dk-modal>
+    <dk-modal :dk="showDkModal" :ds="gameDatas" @on-close="closeDk" :ru="dkRules"></dk-modal>
 
   </div>
 </template>
@@ -336,6 +336,7 @@ export default {
       qtRules: '',
       htRules: '',
       djRules: '',
+      dkRules: '',
       createRoomData1: {
         round: 30,
         score: 20,
@@ -493,12 +494,15 @@ export default {
     },
     qtRule (val) {
       this.qtRules = val.model
+      this.dkRules = val.model
     },
     htRule (val) {
       this.htRules = val.model
+      this.dkRules = val.model
     },
     djRule (val) {
       this.djRules = val.model
+      this.dkRules = val.model
     }
   },
   methods: {
@@ -585,6 +589,7 @@ export default {
           let data = window.JSON.parse(responseData)
           vm.loadQt = false
           vm.qtRules = data.model
+          vm.dkRules = data.model
           vm.$store.dispatch('qtRuleAjax', data)
         }
       )
@@ -604,6 +609,7 @@ export default {
         , function (responseData) { // 响应原生回调方法
           let data = window.JSON.parse(responseData)
           vm.htRules = data.model
+          vm.dkRules = data.model
           vm.loadHt = false
           vm.$store.dispatch('htRuleAjax', data)
         }
@@ -624,6 +630,7 @@ export default {
         , function (responseData) { // 响应原生回调方法
           let data = window.JSON.parse(responseData)
           vm.djRules = data.model
+          vm.dkRules = data.model
           vm.loadDj = false
           vm.$store.dispatch('djRuleAjax', data)
         }
@@ -737,15 +744,35 @@ export default {
     // 是否代开房间
     invoiceGameRoom (e) {
       this.$audio.play(this.$audio.btn)
+      this.selectData = {}
       if (this.selectTypes === 0) {
         this.createRoomData1.substitute = true
+        if (this.isFirstQt) {
+          this.qtAjax()
+          this.isFirstQt = false
+        } else {
+          this.dkRules = this.qtRules
+        }
       } else if (this.selectTypes === 1) {
         this.createRoomData2.substitute = true
+        if (this.isFirstHt) {
+          this.htAjax()
+          this.isFirstHt = false
+        } else {
+          this.dkRules = this.htRules
+        }
       } else {
         this.createRoomData3.substitute = true
+        if (this.isFirstDj) {
+          this.djAjax()
+          this.isFirstDj = false
+        } else {
+          this.dkRules = this.djRules
+        }
       }
-      this.selectData = {}
-      this.create()
+      setTimeout(() => {
+        this.create()
+      }, 1000)
     },
     create () {
       let type = null
@@ -1086,13 +1113,13 @@ export default {
         position: relative;
         width: 210px;
         height: 50px;
-        line-height: 50px;
-        padding-left: 80px;
+        line-height: 45px;
+        padding-left: 72px;
         padding-top: 6px;
         text-align: left;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
+        // text-overflow: ellipsis;
+        // white-space: nowrap;
+        // overflow: hidden;
         color: #fff;
       }
       .user-avatar{
@@ -1128,24 +1155,33 @@ export default {
       }
       .msg-box{
         flex: 1;
-        padding: 12px 0;
+        padding: 15px 0;
         .user-id-card{
+          flex: 0 0 auto;
           .user-name{
+          //  flex: 0 0 auto;
+          //  width: auto;
             background-image: url('../assets/imgs/username.png');
             background-size: 100% 100%;
           }
         }
         .user-room-card{
+          margin-top: 20px;
+          display: flex;
           .user-card{
             display: inline-block;
+            flex: 0 0 auto;
             background: url('../assets/imgs/roomcard.png') 0 0 no-repeat;
             background-size: 100% 100%;
+            vertical-align: top;
           }
           .user-id{
             display: inline-block;
+            flex: 0 0 auto;
             margin-right: 30px;
             background: url('../assets/imgs/userID.png') 0 0 no-repeat;
             background-size: 100% 100%;
+            vertical-align: top;
           }
         }
       }
@@ -1232,6 +1268,24 @@ export default {
       margin-top: 38px;
       img{
         width: 100%;
+      }
+    }
+  }
+}
+.create-content{
+  .game-tabs{
+    flex: 0 0 240px;
+    width: 240px;
+    padding: 0 5px 0 40px;
+    span{
+      display: block;
+      width: 100%;
+      height: 68px;
+      line-height: 68px;
+      margin-top: 38px;
+      img{
+        width: 100%;
+        height: 100%;
       }
     }
   }
@@ -1329,15 +1383,15 @@ export default {
 }
 .create-body{
   font-size: 0;
-.row{
-  // display: flex;
-  flex-direction: row;
-  align-items: center;
-  .label{
-    display: inline-block;
-    //flex: 0 0 100px;
-    width: 100px;
-    vertical-align: top;
+  .row{
+    // display: flex;
+    flex-direction: row;
+    align-items: center;
+    .label{
+      display: inline-block;
+      //flex: 0 0 100px;
+      width: 100px;
+      vertical-align: top;
   }
 
   .bar{
@@ -1362,7 +1416,7 @@ export default {
     .game-box{
       height: 100%;
       .row{
-        padding: 25px 0 25px 0;
+        padding: 25px 0 30px 0;
       }
     }
   }

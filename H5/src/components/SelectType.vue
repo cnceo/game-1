@@ -13,7 +13,7 @@
           <img :src="item.img" v-show="!!item.img" height="100%"/>
           <span v-show="!!item.label" class="text">{{item.label}}</span>
         </div>
-      </li> 
+      </li>
     </ul>
     <ul>
       <li v-for="(item, index) in types" :key="index" class="row" v-show="index > 2"  :class="{'g-top': index > 2}">
@@ -28,7 +28,7 @@
           <img :src="item.img" v-show="!!item.img" height="100%"/>
           <span v-show="!!item.label" class="text">{{item.label}}</span>
         </div>
-      </li> 
+      </li>
     </ul>
   </div>
 </template>
@@ -82,16 +82,17 @@ export default {
   ul {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: top;
     .row{
       display: flex;
       flex-direction: row;
       align-items: center;
       margin-left: 30px;
+    //  margin-top: 12px;
       .label{
         flex: 0 0 50px;
         width: 50px;
-        height: 50px;
+        height: 56px;
         margin-right: 15px;
         background: url('../assets/imgs/img_Create_Marquee.png') 0 0 no-repeat;
         background-size: 100% 100%;
@@ -108,10 +109,10 @@ export default {
       }
     }
     .g-top{
-        margin-top: 50px;
+        margin-top: 52px;
     }
   }
-  
+
 }
 
 </style>

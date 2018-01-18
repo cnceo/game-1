@@ -1,15 +1,15 @@
 <template>
   <div class="game-modal" v-show="show">
     <div class="modal-content" :class="{'s-right': sites}">
-      
+
       <div class="modal-bg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1">
         <slot name="modal-bg" height="100%">
         </slot>
       </div>
-      
+
       <div class="game-title">
         <slot name="title"></slot>
-      </div>  
+      </div>
       <div class="game-body">
         <slot name="body"></slot>
       </div>
@@ -76,7 +76,7 @@ export default {
 
 <style scoped lang="less">
 .game-modal{
-  
+  position: relative;
   .modal-content{
     position: fixed;
     top: 50%;
@@ -85,7 +85,7 @@ export default {
     height: 68%;
     transform: translate(50%, -50%);
    // background: rgba(0, 0, 0, .8);
-    z-index: 1000;
+    z-index: 10000;
     .game-title{
       position: absolute;
       top: -10px;

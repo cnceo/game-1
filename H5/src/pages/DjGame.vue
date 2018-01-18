@@ -141,7 +141,7 @@
               <img src="../assets/imgs/img_Create_buqiangzhuang.png" alt="" width= "100%">
             </div>
             <span class="cur" v-if="qz" @touchstart="isQz" :class="{'active': qz}">
-              <img src="../assets/imgs/img_Create_buzhuang.png" alt="" width= "100%" height= "100%">
+              <img src="../assets/imgs/img_Create_buzhuang.png" alt="" width= "100%" height="100%">
             </span>
             <span class="cur" v-else @touchstart="isQz">
               <img src="../assets/imgs/img_Create_qz.png" alt="" width= "100%" height= "100%">
@@ -150,9 +150,14 @@
           <p class="tip"></p>
         </div>
         <div class="message">
-          <span class="rate">{{Number(gameMsg.currentRound) + curRound}}/{{gameMsg.baseRound}}</span>
+          <ul class="power">
+            <li v-for="(item, index) in power" :key="index">
+              <span :class="{'red': item == 'red', 'green': item == 'green', 'item0': index === 0,
+               'item1': index === 1,  'item2': index === 2, 'item3': index === 3}"></span>
+            </li>
+          </ul>
           <span class="time">{{date}}</span>
-          <span class="power"></span>
+          <!-- <span class="power"></span> -->
         </div>
         <div class="blank g-flex">
         </div>
@@ -174,10 +179,10 @@
         </div>
       </div>
       <div class="intro g-flex">
-        <div class="help">
+        <div class="help" @touchend="gameRule">
           <img src="../assets/imgs/img_Room_lntroduction.png" alt="" width= "100%">
         </div>
-        <div class="play-info">
+        <div class="play-info" @touchend="gamePlay">
           <img src="../assets/imgs/img_Room_play.png" alt="" width= "100%">
         </div>
       </div>
@@ -249,6 +254,20 @@
     </div>
     <!-- 设置 -->
     <Setting :account="showAccount" ref="setting"></Setting>
+     <!-- 规则弹窗 -->
+    <Modal :showModal="showRuleModal"
+    class="exit-modal">
+    <div slot="modal-bg" class="modal-bg">
+      <img src="../assets/imgs/img-Stoppingdoor-background.png" alt=""  width="100%" height="100%">
+    </div>
+    </Modal>
+     <!-- 玩法弹窗 -->
+    <Modal :showModal="showPlayModal"
+    class="exit-modal">
+    <div slot="modal-bg" class="modal-bg">
+      <img src="../assets/imgs/img-Stoppingdoor-background.png" alt=""  width="100%" height="100%">
+    </div>
+    </Modal>
     <!-- 下注弹窗 -->
     <Modal :showModal="showXzModal"
     :showClose="showClose"
@@ -372,21 +391,26 @@
     <Modal :showModal="showReleaseReadyModal"
     :showClose="showClose"
     class="exit-modal">
+
     <div slot="modal-bg" class="modal-bg">
-      <img src="../assets/imgs/img-Stoppingdoor-background.png" alt=""  width="100%" height="100%">
+      <img src="../assets/imgs/img_Xuanze_beijing.png" alt=""  width="100%" height="100%">
     </div>
       <!-- <div slot="title" class="xz-title title-active">
          <img src="../assets/imgs/img_Bet_title.png" alt=""  width="100%">
       </div> -->
       <div slot="body" class="exit-body">
-      {{releaseReadyText}}
+        <div class="modal-timer">
+          <img src="../assets/imgs/img_Xuanze_shijian.png" alt=""  width="100%" height="100%">
+          <span class="text">{{sortTimer}}</span>
+        </div>
+        {{releaseReadyText}}
       </div>
       <div slot="foot" class="exit-foot">
         <div class="ok exit-btn" @touchstart="releaseReadyOk">
-           <img src="../assets/imgs/img_Buchong_yes.png" alt=""  width="100%">
+           <img src="../assets/imgs/img_Xuanze_shijian.png" alt=""  width="100%">
         </div>
         <div class="cancel exit-btn" @touchstart="releaseReadyCancel">
-           <img src="../assets/imgs/img_Buchong_no.png" alt=""  width="100%">
+           <img src="../assets/imgs/img_Xuanze_no.png" alt=""  width="100%">
         </div>
       </div>
     </Modal>
@@ -471,6 +495,8 @@ export default {
   data () {
     return {
       date: '', // 当前时间
+      sortTimer: 120,
+      sTimer: null,
       timer: null, // 定时器
       timer1: null,
       timer2: null,
@@ -480,7 +506,48 @@ export default {
       showDj: false, // 是否显示该游戏桌面
       showAccount: false, // 是否显示设置中的切换账号功能
       qz: false, // 抢庄切换
-      users: [], // 游戏中玩家列表
+      users: [
+        {
+          nickname: 'tomsfdsfdsfsdfsdf',
+          headimgurl: 'avatar',
+          ready: true,
+          roomOwner: true,
+          banker: true,
+          score: 1000
+        },
+        {
+          nickname: 'tom4',
+          headimgurl: 'avatar',
+          ready: false,
+          roomOwner: false,
+          banker: false,
+          score: 1000
+        },
+        {
+          nickname: 'tom3',
+          headimgurl: 'avatar',
+          ready: false,
+          roomOwner: false,
+          banker: false,
+          score: 1000
+        },
+        {
+          nickname: 'tom2',
+          headimgurl: 'avatar',
+          ready: false,
+          roomOwner: false,
+          banker: false,
+          score: 1000
+        },
+        {
+          nickname: 'tom1',
+          headimgurl: 'avatar',
+          ready: false,
+          roomOwner: false,
+          banker: false,
+          score: 1000
+        }
+      ], // 游戏中玩家列表
       showXzModal: false, // 是否显示下注弹窗
       showClose: false, // 是否显示弹窗关闭按钮
       site: true, // 弹窗显示位置
@@ -625,7 +692,10 @@ export default {
       allScores: [], // 单局结束统计
       curRound: 0, // 当前局数,
       coinUser: [],
-      bks: ['', '', '', '', '', '', '', '', '', '']
+      bks: ['', '', '', '', '', '', '', '', '', ''],
+      showRuleModal: false,
+      showPlayModal: false,
+      power: ['', '', '', '']
     }
   },
   props: {
@@ -716,6 +786,19 @@ export default {
     },
     registerFn () {
       let vm = this
+      // 获取系统电量
+      this.$JsBridge.registerHandler('updatePower', function (data, responseCallback) {
+        let powerSize = data
+        if (powerSize <= 100 && powerSize > 75) {
+          vm.power = ['green', 'green', 'green', 'green']
+        } else if (powerSize <= 75 && powerSize > 50) {
+          vm.power = ['green', 'green', 'green', '']
+        } else if (powerSize <= 50 && powerSize > 25) {
+          vm.power = ['green', 'green', '', '']
+        } else {
+          vm.power = ['red', '', '', '']
+        }
+      })
       // 系统更新加入游戏的用户列表
       this.$JsBridge.registerHandler('updateUsers', function (data, responseCallback) {
         // 将原生带来的参数，显示在show标签位置
@@ -1164,15 +1247,16 @@ export default {
         let flag = false
         let user = window.JSON.parse(data)
         if (user.disband === true) {
-          let msg = '房间已经解散'
+         // let msg = '房间已经解散'
           vm.closeTime()
-          vm.resetParams()
+         // vm.resetParams()
+          vm.gameOver()
           vm.showReleaseReadyModal = false
           vm.isFirst = true
           vm.isGameStart = false
           vm.curRound = 0
           vm.users = []
-          vm.$emit('on-close', msg)
+         // vm.$emit('on-close', msg)
         } else {
           if (Number(user.opeUserId) !== Number(vm.userId)) {
             user.dissolveUserList.forEach((its) => {
@@ -1181,10 +1265,15 @@ export default {
               }
             })
             if (!flag) {
-              console.log('aaaa')
               vm.disbandType = 2
-              vm.releaseReadyText = user.opeUserId + '在解散房间，您是否同意？'
+              vm.releaseReadyText = '玩家【' + user.opeUserId + '】申请解散房间，请等待其他玩家选择(超过120秒未作选择则默认该玩家同意)玩家【' + vm.userId + '】等待选择'
               vm.showReleaseReadyModal = true
+              vm.sTimer = setInterval(() => {
+                if (vm.sortTimer <= 0) {
+                  vm.releaseReadyOk()
+                }
+                vm.sortTimer -= 1
+              }, 1000)
             } else {
               vm.showReleaseReadyModal = false
             }
@@ -1379,13 +1468,16 @@ export default {
     },
     releaseReadyModal () {
       this.disbandType = 1
-      this.releaseReadyText = '游戏正在进行中，您确定要解散当前房间吗？'
+      this.releaseReadyText = '游戏正在进行中，您确定解散当前房间吗？'
       this.showReleaseReadyModal = true
     },
     releaseReadyCancel () {
       this.$audio.play(this.$audio.btn)
       this.disbandAgree = false
       this.askOtherAgree()
+      clearInterval(this.sTimer)
+      this.sTimer = null
+      this.sortTimer = 120
     //  this.showReleaseReadyModal = false
     },
     // 游戏进行中解散房间
@@ -1393,6 +1485,9 @@ export default {
       this.$audio.play(this.$audio.btn)
       this.disbandAgree = true
       this.askOtherAgree()
+      clearInterval(this.sTimer)
+      this.sTimer = null
+      this.sortTimer = 120
     //  this.showReleaseReadyModal = false
     },
     askOtherAgree () {
@@ -1656,6 +1751,7 @@ export default {
       //
       this.showShareModal = false
       this.resetParams()
+      this.curRound = 0
     },
     // 单局游戏结束参数重置
     resetParams () {
@@ -1707,6 +1803,12 @@ export default {
       this.coinUser = []
       this.bks = ['', '', '', '', '', '', '', '', '', '']
       this.curRound += 1
+    },
+    gameRule () {
+      this.showRuleModal = true
+    },
+    gamePlay () {
+      this.showPlayModal = true
     }
   }
 }
@@ -1738,12 +1840,12 @@ export default {
   padding: 2px;
   background: url('../assets/imgs/img_Room_announcement-background.png') 0 0 no-repeat;
   background-size: 100% 100%;
-  z-index: 100;
+  z-index: 1000;
   .user-site{
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 100;
+    z-index: 1000;
     .user-item{
       position: fixed;
       .avater{
@@ -1769,16 +1871,16 @@ export default {
         }
         .zuja{
           position: absolute;
-          top: 42px;
+          top: -10px;
           width: 42px;
           height: 42px;
-          z-index: -1;
+          z-index: 999;
         }
         .zuja.l-site{
-          left: -80px;
+          right: -30px;
         }
         .zuja.r-site{
-          right: -80px;
+          right: -30px;
         }
         .master{
           position: absolute;
@@ -1839,7 +1941,7 @@ export default {
         }
         .score{
           position: absolute;
-          z-index: 99999;
+          z-index: 9999;
         }
         .score .sign, .score .num{
           font-size: 48px;
@@ -1869,11 +1971,21 @@ export default {
           line-height: 42px;
           // background: url('../assets/imgs/img_Room_name.png') 0 0 no-repeat;
           // background-size: 100% 100%;
+          .text{
+            display: inline-block;
+            width: 64%;
+            line-height: 40px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: left;
+          }
         }
         .text{
           position: absolute;
+          line-height: 50px;
           top: 0;
-          left: 36%;
+          left: 30%;
         }
       }
       .g-inline{
@@ -1916,7 +2028,7 @@ export default {
       .xz-tip{
         position: absolute;
         width: 180px;
-        z-index: 99999;
+        z-index: 9999;
         img{
           width: 100%;
           height: 40px;
@@ -2057,7 +2169,7 @@ export default {
             top: 0;
             left: 0;
             width: 50%;
-            height: 98%;
+            height: 97%;
             transition: left 0.1s linear;
           }
           .cur.active{
@@ -2099,7 +2211,49 @@ export default {
       font-family: 'microsoft yahei';
       font-size: 22px;
       .time{
+        display: inline-block;
         margin-left: 30px;
+        vertical-align: top;
+      }
+      .power{
+        display: inline-block;
+        vertical-align: middle;
+        li{
+          display: inline-block;
+          position: relative;
+          width: 1vh;
+          height: 8vh;
+          line-height: 8vh;
+          margin-right: 5px;
+          span{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #9d9d9d;
+            width: 1vh;
+            height: 6vh;
+            border-radius: 2px;
+          }
+          span.item0{
+            height: 2vh;
+          }
+          span.item1{
+            height: 3vh;
+          }
+          span.item2{
+            height: 4vh;
+          }
+          span.item3{
+            height: 5vh;
+          }
+          span.red{
+            background: red;
+          }
+          span.green{
+            background: green;
+          }
+        }
       }
     }
     .games{
@@ -3048,6 +3202,21 @@ export default {
       flex: 0 0 30%;
     }
   }
+  .modal-timer{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 80px;
+    height: 80px;
+    .text{
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 48px;
+      color: #000;
+    }
+  }
 }
 .share-modal{
   .share-body{
@@ -3359,7 +3528,7 @@ export default {
 }
 /*下注动画*/
 @keyframes noDown0_0 {
-  
+
   0% {
     top: 400px;
     left: 20px;
@@ -3376,7 +3545,7 @@ export default {
   }
 }
 @keyframes noDown1_0 {
-  
+
   0% {
     top: 380px;
     left: -160px;
@@ -3393,7 +3562,7 @@ export default {
   }
 }
 @keyframes noDown2_0 {
-  
+
   0% {
     top: 400px;
     left: -360px;
@@ -3410,7 +3579,7 @@ export default {
   }
 }
 @keyframes noDown0_1 {
-  
+
   0% {
     top: 360px;
     left: 20px;
@@ -3427,7 +3596,7 @@ export default {
   }
 }
 @keyframes noDown1_1 {
- 
+
   0% {
     top: 360px;
     left: -120px;
@@ -3444,7 +3613,7 @@ export default {
   }
 }
 @keyframes noDown2_1 {
-  
+
   0% {
     top: 420px;
     left: -420px;
@@ -3461,7 +3630,7 @@ export default {
   }
 }
 @keyframes noDown0_2 {
-  
+
   0% {
     top: 200px;
     left: 900px;
@@ -3478,7 +3647,7 @@ export default {
   }
 }
 @keyframes noDown1_2 {
- 
+
   0% {
     top: 160px;
     left: 600px;
@@ -3495,7 +3664,7 @@ export default {
   }
 }
 @keyframes noDown2_2 {
- 
+
   0% {
     top: 210px;
     left: 300px;
@@ -3512,7 +3681,7 @@ export default {
   }
 }
 @keyframes noDown0_3 {
-  
+
   0% {
     top: 230px;
     left: 900px;
@@ -3529,7 +3698,7 @@ export default {
   }
 }
 @keyframes noDown1_3 {
-  
+
   0% {
     top: 230px;
     left: 600px;
@@ -3546,7 +3715,7 @@ export default {
   }
 }
 @keyframes noDown2_3 {
- 
+
   0% {
     top: 180px;
     left: 300px;
@@ -3563,7 +3732,7 @@ export default {
   }
 }
 @keyframes noDown0_4 {
-  
+
   0% {
     top: 200px;
     left: -200px;
@@ -3580,7 +3749,7 @@ export default {
   }
 }
 @keyframes noDown1_4 {
-  
+
   0% {
     top: 160px;
     left: -480px;
@@ -3597,7 +3766,7 @@ export default {
   }
 }
 @keyframes noDown2_4 {
-  
+
   0% {
     top: 210px;
     left: -640px;
@@ -3614,7 +3783,7 @@ export default {
   }
 }
 @keyframes noDown0_5 {
- 
+
   0% {
     top: 240px;
     left: -160px;
@@ -3631,7 +3800,7 @@ export default {
   }
 }
 @keyframes noDown1_5 {
- 
+
   0% {
     top: 250px;
     left: -480px;
@@ -3648,7 +3817,7 @@ export default {
   }
 }
 @keyframes noDown2_5 {
-  
+
   0% {
     top: 160px;
     left: -640px;
@@ -3665,7 +3834,7 @@ export default {
   }
 }
 @keyframes noDown0_6 {
-  
+
   0% {
     top: -50px;
     left: 900px;
@@ -3682,7 +3851,7 @@ export default {
   }
 }
 @keyframes noDown1_6 {
-  
+
   0% {
     top: -80px;
     left: 600px;
@@ -3699,7 +3868,7 @@ export default {
   }
 }
 @keyframes noDown2_6 {
- 
+
   0% {
     top: -50px;
     left: 300px;
@@ -3716,7 +3885,7 @@ export default {
   }
 }
 @keyframes noDown0_7 {
-  
+
   0% {
     top: -90px;
     left: 900px;
@@ -3733,7 +3902,7 @@ export default {
   }
 }
 @keyframes noDown1_7 {
-  
+
   0% {
     top: -30px;
     left: 600px;
@@ -3750,7 +3919,7 @@ export default {
   }
 }
 @keyframes noDown2_7 {
-  
+
   0% {
     top: -110px;
     left: 320px;
@@ -3767,7 +3936,7 @@ export default {
   }
 }
 @keyframes noDown0_8 {
-  
+
   0% {
     top: -50px;
     left: -200px;
@@ -3784,7 +3953,7 @@ export default {
   }
 }
 @keyframes noDown1_8 {
-  
+
   0% {
     top: -100px;
     left: -520px;
@@ -3801,7 +3970,7 @@ export default {
   }
 }
 @keyframes noDown2_8 {
-  
+
   0% {
     top: -50px;
     left: -640px;
@@ -3818,7 +3987,7 @@ export default {
   }
 }
 @keyframes noDown0_9 {
- 
+
   0% {
     top: -90px;
     left: -180px;
@@ -3835,7 +4004,7 @@ export default {
   }
 }
 @keyframes noDown1_9 {
-  
+
   0% {
     top: -30px;
     left: -480px;
@@ -3852,7 +4021,7 @@ export default {
   }
 }
 @keyframes noDown2_9 {
-  
+
   0% {
     top: -110px;
     left: -640px;
@@ -3870,7 +4039,7 @@ export default {
 }
 /***/
 @keyframes isDown0_0 {
-  
+
   0% {
     top: 400px;
     left: 20px;
@@ -3884,7 +4053,7 @@ export default {
   }
 }
 @keyframes isDown1_0 {
-  
+
   0% {
     top: 380px;
     left: -160px;
@@ -3898,7 +4067,7 @@ export default {
   }
 }
 @keyframes isDown2_0 {
-  
+
   0% {
     top: 400px;
     left: -360px;
@@ -3912,7 +4081,7 @@ export default {
   }
 }
 @keyframes isDown0_1 {
-  
+
   0% {
     top: 360px;
     left: 20px;
@@ -3926,7 +4095,7 @@ export default {
   }
 }
 @keyframes isDown1_1 {
- 
+
   0% {
     top: 360px;
     left: -120px;
@@ -3940,7 +4109,7 @@ export default {
   }
 }
 @keyframes isDown2_1 {
-  
+
   0% {
     top: 420px;
     left: -420px;
@@ -3954,7 +4123,7 @@ export default {
   }
 }
 @keyframes isDown0_2 {
-  
+
   0% {
     top: 200px;
     left: 900px;
@@ -3968,7 +4137,7 @@ export default {
   }
 }
 @keyframes isDown1_2 {
- 
+
   0% {
     top: 160px;
     left: 600px;
@@ -3982,7 +4151,7 @@ export default {
   }
 }
 @keyframes isDown2_2 {
- 
+
   0% {
     top: 210px;
     left: 300px;
@@ -3996,7 +4165,7 @@ export default {
   }
 }
 @keyframes isDown0_3 {
-  
+
   0% {
     top: 230px;
     left: 900px;
@@ -4010,7 +4179,7 @@ export default {
   }
 }
 @keyframes isDown1_3 {
-  
+
   0% {
     top: 230px;
     left: 600px;
@@ -4024,7 +4193,7 @@ export default {
   }
 }
 @keyframes isDown2_3 {
- 
+
   0% {
     top: 180px;
     left: 300px;
@@ -4038,7 +4207,7 @@ export default {
   }
 }
 @keyframes isDown0_4 {
-  
+
   0% {
     top: 200px;
     left: -200px;
@@ -4052,7 +4221,7 @@ export default {
   }
 }
 @keyframes isDown1_4 {
-  
+
   0% {
     top: 160px;
     left: -480px;
@@ -4066,7 +4235,7 @@ export default {
   }
 }
 @keyframes isDown2_4 {
-  
+
   0% {
     top: 210px;
     left: -640px;
@@ -4080,7 +4249,7 @@ export default {
   }
 }
 @keyframes isDown0_5 {
- 
+
   0% {
     top: 240px;
     left: -160px;
@@ -4094,7 +4263,7 @@ export default {
   }
 }
 @keyframes isDown1_5 {
- 
+
   0% {
     top: 250px;
     left: -480px;
@@ -4108,7 +4277,7 @@ export default {
   }
 }
 @keyframes isDown2_5 {
-  
+
   0% {
     top: 160px;
     left: -640px;
@@ -4122,7 +4291,7 @@ export default {
   }
 }
 @keyframes isDown0_6 {
-  
+
   0% {
     top: -50px;
     left: 900px;
@@ -4136,7 +4305,7 @@ export default {
   }
 }
 @keyframes isDown1_6 {
-  
+
   0% {
     top: -80px;
     left: 600px;
@@ -4150,7 +4319,7 @@ export default {
   }
 }
 @keyframes isDown2_6 {
- 
+
   0% {
     top: -50px;
     left: 300px;
@@ -4164,7 +4333,7 @@ export default {
   }
 }
 @keyframes isDown0_7 {
-  
+
   0% {
     top: -90px;
     left: 900px;
@@ -4178,7 +4347,7 @@ export default {
   }
 }
 @keyframes isDown1_7 {
-  
+
   0% {
     top: -30px;
     left: 600px;
@@ -4192,7 +4361,7 @@ export default {
   }
 }
 @keyframes isDown2_7 {
-  
+
   0% {
     top: -110px;
     left: 320px;
@@ -4206,7 +4375,7 @@ export default {
   }
 }
 @keyframes isDown0_8 {
-  
+
   0% {
     top: -50px;
     left: -200px;
@@ -4220,7 +4389,7 @@ export default {
   }
 }
 @keyframes isDown1_8 {
-  
+
   0% {
     top: -100px;
     left: -520px;
@@ -4234,7 +4403,7 @@ export default {
   }
 }
 @keyframes isDown2_8 {
-  
+
   0% {
     top: -50px;
     left: -640px;
@@ -4248,7 +4417,7 @@ export default {
   }
 }
 @keyframes isDown0_9 {
- 
+
   0% {
     top: -90px;
     left: -180px;
@@ -4262,7 +4431,7 @@ export default {
   }
 }
 @keyframes isDown1_9 {
-  
+
   0% {
     top: -30px;
     left: -480px;
@@ -4276,7 +4445,7 @@ export default {
   }
 }
 @keyframes isDown2_9 {
-  
+
   0% {
     top: -110px;
     left: -640px;
@@ -4726,8 +4895,8 @@ export default {
       left: 25%;
     /*  bottom: 180px; */
       top: -50px;
-      width: 12%;
-      height: 60px;
+      width: 13%;
+      height: 62px;
       border: 1px solid #ddd;
       z-index: 1;
       transform-style: preserve-3d; /*重要*/
