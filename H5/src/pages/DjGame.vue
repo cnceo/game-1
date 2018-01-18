@@ -390,7 +390,7 @@
     <!-- 游戏中解散房间弹窗 -->
     <Modal :showModal="showReleaseReadyModal"
     :showClose="showClose"
-    class="exit-modal">
+    class="exit-modal release-modal">
 
     <div slot="modal-bg" class="modal-bg">
       <img src="../assets/imgs/img_Xuanze_beijing.png" alt=""  width="100%" height="100%">
