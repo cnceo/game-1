@@ -176,14 +176,14 @@ export default {
         //  height: 72px;
           .img{
             flex: 0 0 80px;
-            height: 40px;
+            height: 42px;
             text-align: right;
           }
           span{
             flex: 1;
             width: calc(~"100% - 200px");
             margin-left: 15px;
-            font-size: 42px;
+            font-size: 38px;
             word-wrap: break-word;
             vertical-align: top;
           }

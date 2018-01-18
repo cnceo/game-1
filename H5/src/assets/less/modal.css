@@ -79,15 +79,18 @@
   width: 50%;
   margin: 0 auto;
 }
+#app .xz-modal .modal-content .game-body {
+  padding: 24px 0 30px 0;
+}
 #app .modal-bg {
   height: 100%;
 }
 #app .share-modal .modal-content {
-  width: 90%;
-  height: 90%;
+  width: 84%;
+  height: 88%;
 }
 #app .share-modal .modal-content .share-title {
-  width: 50%;
+  width: 38%;
   margin: 0 auto;
 }
 #app .exit-modal .modal-content {
@@ -95,7 +98,7 @@
 }
 #app .release-modal .modal-content {
   width: 72%;
-  height: 48%;
+  height: 56%;
 }
 .ivu-slider {
   width: 90%;

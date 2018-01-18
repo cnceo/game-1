@@ -401,15 +401,38 @@
       <div slot="body" class="exit-body">
         <div class="modal-timer" v-show="showTimer">
           <img src="../assets/imgs/img_Xuanze_shijian.png" alt=""  width="100%" height="100%">
-          <span class="text">{{sortTimer}}</span>
+          <span class="text" v-show="!showReleaseRoomBtns">{{sortTimer1}}</span>
+          <span class="text" v-show="showReleaseRoomBtns">{{sortTimer2}}</span>
         </div>
         {{releaseReadyText}}
       </div>
-      <div slot="foot" class="exit-foot">
+      <div slot="foot" class="exit-foot" v-show="showReleaseRoomBtns">
         <div class="ok exit-btn" @touchstart="releaseReadyOk">
            <img src="../assets/imgs/img_Xuanze_yes.png" alt=""  width="100%">
         </div>
         <div class="cancel exit-btn" @touchstart="releaseReadyCancel">
+           <img src="../assets/imgs/img_Xuanze_no.png" alt=""  width="100%">
+        </div>
+      </div>
+    </Modal>
+    <!-- 游戏中解散房间弹窗 -->
+    <Modal :showModal="showOwnerReleaseReadyModal"
+    :showClose="showClose"
+    class="exit-modal release-modal">
+    <div slot="modal-bg" class="modal-bg">
+      <img src="../assets/imgs/img_Xuanze_beijing.png" alt=""  width="100%" height="100%">
+    </div>
+      <!-- <div slot="title" class="xz-title title-active">
+         <img src="../assets/imgs/img_Bet_title.png" alt=""  width="100%">
+      </div> -->
+      <div slot="body" class="exit-body">
+        {{ownerReleaseReadyText}}
+      </div>
+      <div slot="foot" class="exit-foot">
+        <div class="ok exit-btn" @touchstart="ownerReleaseReadyOk">
+           <img src="../assets/imgs/img_Xuanze_yes.png" alt=""  width="100%">
+        </div>
+        <div class="cancel exit-btn" @touchstart="ownerReleaseReadyCancel">
            <img src="../assets/imgs/img_Xuanze_no.png" alt=""  width="100%">
         </div>
       </div>
@@ -495,9 +518,13 @@ export default {
   data () {
     return {
       date: '', // 当前时间
-      sortTimer: 120,
       showTimer: false,
-      sTimer: null,
+      sortTimer1: 120,
+      showTimer1: false,
+      sortTimer2: 120,
+      showTimer2: false,
+      sTimer1: null,
+      sTimer2: null,
       timer: null, // 定时器
       timer1: null,
       timer2: null,
@@ -690,13 +717,35 @@ export default {
       showScore: false,
       // collCoins: [true, true, true, true, true],
       showShareModal: false,
-      allScores: [], // 单局结束统计
+      allScores: [{
+        userWincore: 19,
+        headimgurl: '',
+        nickname: 'Jefferyadsfsdfsd',
+        userId: 123333,
+        winNum: 90,
+        loseNum: -90,
+        heNum: 90,
+        bankerNum: 193934
+      },
+      {
+        userWincore: 19,
+        headimgurl: '',
+        nickname: 'Jefferyadsfsdfsd',
+        userId: 123333,
+        winNum: 90,
+        loseNum: -90,
+        heNum: 90,
+        bankerNum: 193934
+      }], // 单局结束统计
       curRound: 0, // 当前局数,
       coinUser: [],
       bks: ['', '', '', '', '', '', '', '', '', ''],
       showRuleModal: false,
       showPlayModal: false,
-      power: ['', '', '', '']
+      power: ['', '', '', ''],
+      showReleaseRoomBtns: false,
+      showOwnerReleaseReadyModal: false,
+      ownerReleaseReadyText: ''
     }
   },
   props: {
@@ -1247,6 +1296,8 @@ export default {
         console.log('游戏中解散房间')
         let flag = false
         let user = window.JSON.parse(data)
+        console.log(data)
+        console.log(user.disband)
         if (user.disband === true) {
          // let msg = '房间已经解散'
           vm.closeTime()
@@ -1257,8 +1308,22 @@ export default {
           vm.isGameStart = false
           vm.curRound = 0
           vm.users = []
+          vm.showXzModal = false
          // vm.$emit('on-close', msg)
         } else {
+          console.log('hahhaha')
+          vm.releaseReadyText = '玩家【' + user.opeUserId + '】申请解散房间，请等待其他玩家选择(超过120秒未作选择则默认该玩家同意)玩家【' + vm.userId + '】等待选择'
+          vm.showReleaseReadyModal = true
+          vm.showTimer = true
+          vm.sTimer1 = setInterval(() => {
+            if (vm.sortTimer1 <= 0) {
+              clearInterval(vm.sTimer1)
+              vm.sTimer1 = null
+              vm.sortTimer1 = 120
+              vm.showTimer = false
+            }
+            vm.sortTimer1 -= 1
+          }, 1000)
           if (Number(user.opeUserId) !== Number(vm.userId)) {
             user.dissolveUserList.forEach((its) => {
               if (Number(its.userId) === Number(vm.userId)) {
@@ -1266,21 +1331,20 @@ export default {
               }
             })
             if (!flag) {
+              vm.showReleaseRoomBtns = true
               vm.disbandType = 2
-              vm.releaseReadyText = '玩家【' + user.opeUserId + '】申请解散房间，请等待其他玩家选择(超过120秒未作选择则默认该玩家同意)玩家【' + vm.userId + '】等待选择'
-              vm.showReleaseReadyModal = true
-              vm.showTimer = true
-              vm.sTimer = setInterval(() => {
-                if (vm.sortTimer <= 0) {
+              vm.sTimer2 = setInterval(() => {
+                if (vm.sortTimer2 <= 0) {
+                  console.log('超时了....')
                   vm.releaseReadyOk()
                 }
-                vm.sortTimer -= 1
+                vm.sortTimer2 -= 1
               }, 1000)
             } else {
-              vm.showReleaseReadyModal = false
+            //  vm.showReleaseReadyModal = false
             }
           } else {
-            vm.showReleaseReadyModal = false
+           // vm.showReleaseReadyModal = false
           }
         }
         // 调用responseCallback方法可以带传参数到原生
@@ -1470,17 +1534,29 @@ export default {
     },
     releaseReadyModal () {
       this.disbandType = 1
-      this.releaseReadyText = '游戏正在进行中，您确定解散当前房间吗？'
-      this.showReleaseReadyModal = true
+      this.ownerReleaseReadyText = '游戏正在进行中，您确定解散当前房间吗？'
+      this.showOwnerReleaseReadyModal = true
+    },
+    ownerReleaseReadyOk () {
+      this.$audio.play(this.$audio.btn)
+      this.askOtherAgree()
+      this.showOwnerReleaseReadyModal = false
+    },
+    ownerReleaseReadyCancel () {
+      this.$audio.play(this.$audio.btn)
+      this.showOwnerReleaseReadyModal = false
     },
     releaseReadyCancel () {
       this.$audio.play(this.$audio.btn)
       this.disbandAgree = false
       this.askOtherAgree()
-      clearInterval(this.sTimer)
-      this.sTimer = null
-      this.sortTimer = 120
+      clearInterval(this.sTimer2)
+      this.sTimer2 = null
+      this.sortTimer2 = 120
       this.showTimer = false
+      clearInterval(this.sTimer1)
+      this.sTimer1 = null
+      this.sortTimer1 = 120
     //  this.showReleaseReadyModal = false
     },
     // 游戏进行中解散房间
@@ -1488,10 +1564,13 @@ export default {
       this.$audio.play(this.$audio.btn)
       this.disbandAgree = true
       this.askOtherAgree()
-      clearInterval(this.sTimer)
-      this.sTimer = null
-      this.sortTimer = 120
+      clearInterval(this.sTimer2)
+      this.sTimer2 = null
+      this.sortTimer2 = 120
       this.showTimer = false
+      clearInterval(this.sTimer1)
+      this.sTimer1 = null
+      this.sortTimer1 = 120
     //  this.showReleaseReadyModal = false
     },
     askOtherAgree () {
@@ -2319,7 +2398,7 @@ export default {
     top: 49%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 999;
+    z-index: 1001;
     .chu,.tian,.kan{
       position: relative;
       height: 320px;
@@ -2328,14 +2407,14 @@ export default {
       position: absolute;
       top: 0;
       left: 0;
-      z-index: 1000;
+      z-index: 10001;
       span{
         position: absolute;
         display: block;
         width: 70px;
         height: 56px;
         border-radius: 50%;
-        z-index: 9999;
+        z-index: 10002;
       }
       .coin0{
       //  left: 60px;
@@ -3248,10 +3327,10 @@ export default {
           background-size: 100% 100%;
           .user-img{
             position: absolute;
-            top: -5px;
+             top: -5px;
             left: -4px;
-            width: 78px;
-            height: 78px;
+            width: 96px;
+            height: 96px;
             padding: 15px;
             border-radius: 20px;
             overflow: hidden;
@@ -3285,6 +3364,10 @@ export default {
             span{
               display: inline-block;
               vertical-align: middle;
+              width: 82%;
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
             }
           }
           .user-id{
@@ -3316,7 +3399,7 @@ export default {
         }
         .line{
           position: absolute;
-          bottom: 9px;
+          bottom: 21px;
           left: 0;
           width: 100%;
           height: 2px;
