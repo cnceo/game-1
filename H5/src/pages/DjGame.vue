@@ -407,7 +407,7 @@
       </div>
       <div slot="foot" class="exit-foot">
         <div class="ok exit-btn" @touchstart="releaseReadyOk">
-           <img src="../assets/imgs/img_Xuanze_shijian.png" alt=""  width="100%">
+           <img src="../assets/imgs/img_Xuanze_yes.png" alt=""  width="100%">
         </div>
         <div class="cancel exit-btn" @touchstart="releaseReadyCancel">
            <img src="../assets/imgs/img_Xuanze_no.png" alt=""  width="100%">
@@ -3208,16 +3208,16 @@ export default {
   }
   .modal-timer{
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 80px;
-    height: 80px;
+    top: -50px;
+    left: -50px;
+    width: 120px;
+    height: 120px;
     .text{
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 48px;
+      font-size: 42px;
       color: #000;
     }
   }
