@@ -4960,7 +4960,7 @@ export default {
   top: 10%;
   width: 100%;
   height: 35%;
-  z-index: 1000;
+  z-index: 1002;
   .card-list{
     position: relative;
    /* bottom: -75%; */
