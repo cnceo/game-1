@@ -58,7 +58,7 @@
         </div>
       </div>
     </div>
-    <div class="z-bg" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1">
+    <div class="z-bg" style="position: fixed; top: 0; left: 0; width: 100%; height: 150%; z-index: -1">
       <img src="../assets/imgs/background.png" alt=""  width="100%">
     </div>
     <div class="z-bg" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10001; background: rgba(0, 0, 0, .5)" v-show="loadRoom">
@@ -1162,7 +1162,9 @@ export default {
           //  flex: 0 0 auto;
           //  width: auto;
             background-image: url('../assets/imgs/username.png');
-            background-size: 100% 100%;
+            width: auto;
+            background-size: 25% 100%;
+            background-repeat: no-repeat;
           }
         }
         .user-room-card{

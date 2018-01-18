@@ -1311,26 +1311,38 @@ export default {
           vm.showXzModal = false
          // vm.$emit('on-close', msg)
         } else {
-          console.log('hahhaha')
-          vm.releaseReadyText = '玩家【' + user.opeUserId + '】申请解散房间，请等待其他玩家选择(超过120秒未作选择则默认该玩家同意)玩家【' + vm.userId + '】等待选择'
-          vm.showReleaseReadyModal = true
-          vm.showTimer = true
-          vm.sTimer1 = setInterval(() => {
-            if (vm.sortTimer1 <= 0) {
-              clearInterval(vm.sTimer1)
-              vm.sTimer1 = null
-              vm.sortTimer1 = 120
-              vm.showTimer = false
+          let reject = false
+          user.dissolveUserList.forEach((its) => {
+            if (its.agree === false) {
+              reject = true
             }
-            vm.sortTimer1 -= 1
-          }, 1000)
+          })
+          if (!reject) {
+            vm.releaseReadyText = '玩家【' + user.opeUserId + '】申请解散房间，请等待其他玩家选择(超过120秒未作选择则默认该玩家同意)玩家【' + vm.userId + '】等待选择'
+            vm.showReleaseReadyModal = true
+            vm.showTimer = true
+            vm.sTimer1 = setInterval(() => {
+              if (vm.sortTimer1 <= 0) {
+                clearInterval(vm.sTimer1)
+                vm.sTimer1 = null
+                vm.sortTimer1 = 120
+                vm.showTimer = false
+              }
+              vm.sortTimer1 -= 1
+            }, 1000)
+          } else {
+            vm.showReleaseReadyModal = false
+            vm.sTimer1 = null
+            vm.sortTimer1 = 120
+            vm.showTimer = false
+          }
           if (Number(user.opeUserId) !== Number(vm.userId)) {
             user.dissolveUserList.forEach((its) => {
               if (Number(its.userId) === Number(vm.userId)) {
                 flag = true
               }
             })
-            if (!flag) {
+            if (!flag && !reject) {
               vm.showReleaseRoomBtns = true
               vm.disbandType = 2
               vm.sTimer2 = setInterval(() => {
@@ -1928,7 +1940,7 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 1000;
+    z-index: 1001;
     .user-item{
       position: fixed;
       .avater{
@@ -1957,7 +1969,7 @@ export default {
           top: -10px;
           width: 42px;
           height: 42px;
-          z-index: 999;
+          z-index: 9999;
         }
         .zuja.l-site{
           right: -30px;
@@ -1986,7 +1998,7 @@ export default {
        //   left: 0;
           width: 100%;
           height: 100%;
-          z-index: 99;
+          z-index: 1006;
         }
 
         .result .win{
@@ -2398,7 +2410,7 @@ export default {
     top: 49%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 1001;
+    z-index: 1003;
     .chu,.tian,.kan{
       position: relative;
       height: 320px;
@@ -2407,14 +2419,14 @@ export default {
       position: absolute;
       top: 0;
       left: 0;
-      z-index: 10001;
+      z-index: 1004;
       span{
         position: absolute;
         display: block;
         width: 70px;
         height: 56px;
         border-radius: 50%;
-        z-index: 10002;
+        z-index: 1005;
       }
       .coin0{
       //  left: 60px;
