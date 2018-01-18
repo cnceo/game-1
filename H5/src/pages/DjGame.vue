@@ -399,7 +399,7 @@
          <img src="../assets/imgs/img_Bet_title.png" alt=""  width="100%">
       </div> -->
       <div slot="body" class="exit-body">
-        <div class="modal-timer">
+        <div class="modal-timer" v-show="showTimer">
           <img src="../assets/imgs/img_Xuanze_shijian.png" alt=""  width="100%" height="100%">
           <span class="text">{{sortTimer}}</span>
         </div>
@@ -496,6 +496,7 @@ export default {
     return {
       date: '', // 当前时间
       sortTimer: 120,
+      showTimer: false,
       sTimer: null,
       timer: null, // 定时器
       timer1: null,
@@ -1268,6 +1269,7 @@ export default {
               vm.disbandType = 2
               vm.releaseReadyText = '玩家【' + user.opeUserId + '】申请解散房间，请等待其他玩家选择(超过120秒未作选择则默认该玩家同意)玩家【' + vm.userId + '】等待选择'
               vm.showReleaseReadyModal = true
+              vm.showTimer = true
               vm.sTimer = setInterval(() => {
                 if (vm.sortTimer <= 0) {
                   vm.releaseReadyOk()
@@ -1478,6 +1480,7 @@ export default {
       clearInterval(this.sTimer)
       this.sTimer = null
       this.sortTimer = 120
+      this.showTimer = false
     //  this.showReleaseReadyModal = false
     },
     // 游戏进行中解散房间
@@ -1488,6 +1491,7 @@ export default {
       clearInterval(this.sTimer)
       this.sTimer = null
       this.sortTimer = 120
+      this.showTimer = false
     //  this.showReleaseReadyModal = false
     },
     askOtherAgree () {
