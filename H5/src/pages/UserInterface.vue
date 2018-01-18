@@ -10,14 +10,15 @@
               <img :src="userInfo.headimgurl" width="100%" />
             </div>
           </div>
-          <div class="user-id-card">
-            <div class="user-name f-relative">{{userInfo.nickname}}</div></br>
-            <div class="user-id f-relative">{{userInfo.id}}</div>
-          </div>
-          <div class="user-room-card">
-            <div class="user-black f-relative"></div></br>
-            <div class="user-card f-relative">{{userInfo.roomNum}}</div>
-          </div>
+         <div class="msg-box">
+            <div class="user-id-card">
+              <div class="user-name f-relative">{{userInfo.nickname}}</div></br>
+            </div>
+            <div class="user-room-card">
+              <div class="user-id f-relative">{{userInfo.id}}</div>
+              <div class="user-card f-relative">{{userInfo.roomNum}}</div>
+            </div>
+         </div>
         </div>
         <!--基本设置-->
         <ul class="base-setting g-flex-row">
@@ -61,7 +62,7 @@
       <img src="../assets/imgs/background.png" alt=""  width="100%">
     </div>
     <div class="z-bg" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; background: rgba(0, 0, 0, .5)" v-show="loadRoom">
-      <img src="../assets/imgs/loading.gif" alt=""  style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%)" width="80px" height="80px">
+      <img src="../assets/imgs/loading.gif" alt=""  style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%)" width="56px" height="56px">
     </div>
     <!--规则-->
     <Modal :showModal="showRuleModal"
@@ -1080,6 +1081,7 @@ export default {
       margin: 30px 0;
       font-size: 32px;
       color: #fff;
+      display: flex;
       .f-relative{
         position: relative;
         width: 210px;
@@ -1110,7 +1112,7 @@ export default {
           left: 0;
           // width: 118px;
           // height: 118px;
-           width: 140px;
+          width: 140px;
           height: 140px;
           padding: 15px;
           border-radius: 20px;
@@ -1124,21 +1126,27 @@ export default {
           }
         }
       }
-      .user-id-card{
-        margin-right: 30px;
-        .user-name{
-          background-image: url('../assets/imgs/username.png');
-          background-size: 100% 100%;
+      .msg-box{
+        flex: 1;
+        padding: 12px 0;
+        .user-id-card{
+          .user-name{
+            background-image: url('../assets/imgs/username.png');
+            background-size: 100% 100%;
+          }
         }
-        .user-id{
-          background: url('../assets/imgs/userID.png') 0 0 no-repeat;
-          background-size: 100% 100%;
-        }
-      }
-      .user-room-card{
-        .user-card{
-          background: url('../assets/imgs/roomcard.png') 0 0 no-repeat;
-          background-size: 100% 100%;
+        .user-room-card{
+          .user-card{
+            display: inline-block;
+            background: url('../assets/imgs/roomcard.png') 0 0 no-repeat;
+            background-size: 100% 100%;
+          }
+          .user-id{
+            display: inline-block;
+            margin-right: 30px;
+            background: url('../assets/imgs/userID.png') 0 0 no-repeat;
+            background-size: 100% 100%;
+          }
         }
       }
     }
