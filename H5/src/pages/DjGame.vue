@@ -208,7 +208,7 @@
     <div class="card-table g-flex-row" v-show="isGameStart">
       <div class="chu g-flex" v-for="(item, index) in tbg" :key="index"
       :class="{'chu': index === 0, 'tian': index === 1, 'kan': index === 2}">
-        <!-- <img :src="item" alt="" height="100%"> -->
+        <img :src="item" alt="" height="100%" style="opacity:0">
         <div class="coin-box" v-show="index === 0">
           <div class="coins chu-coins" v-show="menType">
             <span v-for="(item, index) in coins" :key="index" :class="{'coin0': index === 0,
@@ -708,10 +708,10 @@ export default {
       curCardBg: tabImgs.cards[3],
       cards: tabImgs.djCards, // 所有的牌组合方式
       cardList: [
-        {
-          bImg: tabImgs.cards[0],
-          fImg: tabImgs.cards[0]
-        }
+        // {
+        //   bImg: tabImgs.cards[0],
+        //   fImg: tabImgs.cards[0]
+        // }
       ], // 最终展示牌
       showCards: false, // 是否显示发牌
       checkResult1: false, // 查看牌1结果，翻牌
@@ -724,45 +724,47 @@ export default {
       menType: false, // 显示投注动画
     //  coinList: [], // 投注列表
       scores: [
-        {
-          winScore: +100
-        },
-        {
-          winScore: 0
-        },
-        {
-          winScore: +300
-        },
-        {
-          winScore: -400
-        },
-        {
-          winScore: +500
-        }
+        // {
+        //   winScore: +100
+        // },
+        // {
+        //   winScore: 0
+        // },
+        // {
+        //   winScore: +300
+        // },
+        // {
+        //   winScore: -400
+        // },
+        // {
+        //   winScore: +500
+        // }
       ], // 最终结果分数
       showScore: false,
       // collCoins: [true, true, true, true, true],
       showShareModal: false,
-      allScores: [{
-        userWincore: 19,
-        headimgurl: '',
-        nickname: 'Jefferyadsfsdfsd',
-        userId: 123333,
-        winNum: 90,
-        loseNum: -90,
-        heNum: 90,
-        bankerNum: 193934
-      },
-      {
-        userWincore: 19,
-        headimgurl: '',
-        nickname: 'Jefferyadsfsdfsd',
-        userId: 123333,
-        winNum: 90,
-        loseNum: -90,
-        heNum: 90,
-        bankerNum: 193934
-      }], // 单局结束统计
+      allScores: [
+      //   {
+      //   userWincore: 19,
+      //   headimgurl: '',
+      //   nickname: 'Jefferyadsfsdfsd',
+      //   userId: 123333,
+      //   winNum: 90,
+      //   loseNum: -90,
+      //   heNum: 90,
+      //   bankerNum: 193934
+      // },
+      // {
+      //   userWincore: 19,
+      //   headimgurl: '',
+      //   nickname: 'Jefferyadsfsdfsd',
+      //   userId: 123333,
+      //   winNum: 90,
+      //   loseNum: -90,
+      //   heNum: 90,
+      //   bankerNum: 193934
+      // }
+      ], // 单局结束统计
       curRound: 0, // 当前局数,
       coinUser: [],
       bks: ['', '', '', '', '', '', '', '', '', ''],
@@ -2136,6 +2138,7 @@ export default {
         position: absolute;
         top: 20px;
         width: 180px;
+        z-index: 1007;
       }
       .status.l-site{
           left: -280px;
@@ -2431,15 +2434,13 @@ export default {
       }
     }
   }
-  .card-table-bg{
-    z-index: 1000;
-  }
+  
   .card-table{
     position: absolute;
     top: 49%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 1004;
+    z-index: 1000;
     .chu,.tian,.kan{
       position: relative;
       height: 320px;
@@ -3192,6 +3193,9 @@ export default {
     //     left: 480px;
     //   }
     // }
+  }
+  .card-table-bg{
+    z-index: 998;
   }
   .yq-friend{
     position: absolute;
