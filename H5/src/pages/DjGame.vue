@@ -199,10 +199,16 @@
       </div>
     </div>
     <!-- 下注筹码 -->
-    <div class="card-table g-flex-row" v-show="isGameStart">
+    <div class="card-table card-table-bg g-flex-row" v-show="isGameStart">
       <div class="chu g-flex" v-for="(item, index) in tbg" :key="index"
       :class="{'chu': index === 0, 'tian': index === 1, 'kan': index === 2}">
         <img :src="item" alt="" height="100%">
+      </div>
+    </div>
+    <div class="card-table g-flex-row" v-show="isGameStart">
+      <div class="chu g-flex" v-for="(item, index) in tbg" :key="index"
+      :class="{'chu': index === 0, 'tian': index === 1, 'kan': index === 2}">
+        <!-- <img :src="item" alt="" height="100%"> -->
         <div class="coin-box" v-show="index === 0">
           <div class="coins chu-coins" v-show="menType">
             <span v-for="(item, index) in coins" :key="index" :class="{'coin0': index === 0,
@@ -240,7 +246,6 @@
           </div>
         </div>
       </div>
-
     </div>
 
     <!-- 邀请好友 -->
@@ -702,7 +707,12 @@ export default {
       isCurUserReady: false, // 当前玩家是否准备，不可抢庄
       curCardBg: tabImgs.cards[3],
       cards: tabImgs.djCards, // 所有的牌组合方式
-      cardList: [], // 最终展示牌
+      cardList: [
+        {
+          bImg: tabImgs.cards[0],
+          fImg: tabImgs.cards[0]
+        }
+      ], // 最终展示牌
       showCards: false, // 是否显示发牌
       checkResult1: false, // 查看牌1结果，翻牌
       checkResult2: false, // 查看牌2结果，翻牌
@@ -713,7 +723,23 @@ export default {
       // kanType: false, // 投注类型：坎门
       menType: false, // 显示投注动画
     //  coinList: [], // 投注列表
-      scores: [], // 最终结果分数
+      scores: [
+        {
+          winScore: +100
+        },
+        {
+          winScore: 0
+        },
+        {
+          winScore: +300
+        },
+        {
+          winScore: -400
+        },
+        {
+          winScore: +500
+        }
+      ], // 最终结果分数
       showScore: false,
       // collCoins: [true, true, true, true, true],
       showShareModal: false,
@@ -1935,12 +1961,12 @@ export default {
   padding: 2px;
   background: url('../assets/imgs/img_Room_announcement-background.png') 0 0 no-repeat;
   background-size: 100% 100%;
-  z-index: 1000;
+  z-index: 999;
   .user-site{
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 1001;
+    z-index: 1000;
     .user-item{
       position: fixed;
       .avater{
@@ -1969,7 +1995,7 @@ export default {
           top: -10px;
           width: 42px;
           height: 42px;
-          z-index: 9999;
+          z-index: 1002;
         }
         .zuja.l-site{
           right: -30px;
@@ -1998,7 +2024,7 @@ export default {
        //   left: 0;
           width: 100%;
           height: 100%;
-          z-index: 1006;
+          z-index: 1003;
         }
 
         .result .win{
@@ -2036,7 +2062,7 @@ export default {
         }
         .score{
           position: absolute;
-          z-index: 9999;
+          z-index: 1007;
         }
         .score .sign, .score .num{
           font-size: 48px;
@@ -2123,7 +2149,7 @@ export default {
       .xz-tip{
         position: absolute;
         width: 180px;
-        z-index: 9999;
+        z-index: 1007;
         img{
           width: 100%;
           height: 40px;
@@ -2405,12 +2431,15 @@ export default {
       }
     }
   }
+  .card-table-bg{
+    z-index: 1000;
+  }
   .card-table{
     position: absolute;
     top: 49%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 1003;
+    z-index: 1004;
     .chu,.tian,.kan{
       position: relative;
       height: 320px;
@@ -2419,14 +2448,14 @@ export default {
       position: absolute;
       top: 0;
       left: 0;
-      z-index: 1004;
+      z-index: 1005;
       span{
         position: absolute;
         display: block;
         width: 70px;
         height: 56px;
         border-radius: 50%;
-        z-index: 1005;
+        z-index: 1006;
       }
       .coin0{
       //  left: 60px;
@@ -3193,6 +3222,112 @@ export default {
       background-size: 100% 100%;
     }
   }
+  /**发牌动画**/
+  .cards{
+    position: absolute;
+    top: 10%;
+    width: 100%;
+    height: 35%;
+    z-index: 1001;
+    .card-list{
+      position: relative;
+    /* bottom: -75%; */
+      top: 15%;
+      width: 60%;
+      height: 60px;
+      left: 56%;
+      transform: translateX(-70%);
+      -webkit-perspective: 500;
+      -moz-perspective: 500;
+      -ms-perspective: 500;
+      perspective: 500;
+      -ms-transform: perspective(500px);
+      -moz-transform: perspective(500px); /*重要*/
+      li{
+        display: inline-block;
+        list-style: none;
+        position: absolute;
+        left: 25%;
+      /*  bottom: 180px; */
+        top: -50px;
+        width: 13%;
+        height: 62px;
+        border: 1px solid #ddd;
+        z-index: 1;
+        transform-style: preserve-3d; /*重要*/
+        transition: 0.6s;
+        transform-style: preserve-3d; /*重要*/
+        img{
+          width: 100%;
+        }
+        .front ,.back{
+          position: absolute;
+          left: 0;
+          top: 0;
+          backface-visibility: hidden;  /*重要*/
+          width: 100%;
+          // height: 100%;
+        }
+        .front {
+            transform: rotateY(0deg);
+            z-index: 2;
+        }
+        .back {
+            transform: rotateY(-180deg);
+        }
+      }
+      .reverse{
+        transform: rotateY(180deg);
+      }
+      .fanzhuan{
+        transform: rotateY(180deg);
+      // animation: reverseCard 0.3s linear 2s forwards;
+      }
+    .card0{
+        left: 35%;
+        z-index: 0;
+        animation: card0Move 0.3s linear 0.5s forwards;
+      }
+      .card1{
+        left: 40%;
+        z-index: 1;
+        animation: card1Move 0.3s linear 1s forwards;
+      }
+      .card2{
+        left: 45%;
+        z-index: 2;
+        animation: card2Move 0.3s linear 1.5s forwards;
+      }
+      .card3{
+        left: 50%;
+        z-index: 3;
+        animation: card3Move 0.3s linear 2s forwards;
+      }
+      .card4{
+        left: 55%;
+        z-index: 4;
+        animation: card4Move 0.3s linear 0.5s forwards;
+      }
+      .card5{
+        left: 60%;
+        z-index: 5;
+        animation: card5Move 0.3s linear 1s forwards;
+      }
+      .card6{
+        left: 65%;
+        z-index: 6;
+        animation: card6Move 0.3s linear 1.5s forwards;
+      }
+      .card7{
+        left: 70%;
+        z-index: 7;
+        animation: card7Move 0.3s linear 2s forwards;
+      }
+    }
+    .card-list.active{
+      animation: cardsMove 0.3s linear forwards;
+    }
+  }
 }
 .xz-modal{
   .xz-body{
@@ -3318,6 +3453,7 @@ export default {
     padding: 86px 0 10px 0;
     color: #fff;
     font-size: 48px;
+    overflow-x: auto;
     ul{
       display: flex;
     }
@@ -4966,112 +5102,7 @@ export default {
     transform: scale(1)
   }
 }
-/**发牌动画**/
-.cards{
-  position: absolute;
-  top: 10%;
-  width: 100%;
-  height: 35%;
-  z-index: 1002;
-  .card-list{
-    position: relative;
-   /* bottom: -75%; */
-    top: 15%;
-    width: 60%;
-    height: 60px;
-    left: 56%;
-    transform: translateX(-70%);
-    -webkit-perspective: 500;
-    -moz-perspective: 500;
-    -ms-perspective: 500;
-    perspective: 500;
-    -ms-transform: perspective(500px);
-    -moz-transform: perspective(500px); /*重要*/
-    li{
-      display: inline-block;
-      list-style: none;
-      position: absolute;
-      left: 25%;
-    /*  bottom: 180px; */
-      top: -50px;
-      width: 13%;
-      height: 62px;
-      border: 1px solid #ddd;
-      z-index: 1;
-      transform-style: preserve-3d; /*重要*/
-      transition: 0.6s;
-      transform-style: preserve-3d; /*重要*/
-      img{
-        width: 100%;
-      }
-      .front ,.back{
-        position: absolute;
-        left: 0;
-        top: 0;
-        backface-visibility: hidden;  /*重要*/
-        width: 100%;
-        // height: 100%;
-      }
-      .front {
-          transform: rotateY(0deg);
-          z-index: 2;
-      }
-      .back {
-          transform: rotateY(-180deg);
-      }
-    }
-    .reverse{
-      transform: rotateY(180deg);
-    }
-    .fanzhuan{
-      transform: rotateY(180deg);
-     // animation: reverseCard 0.3s linear 2s forwards;
-    }
-   .card0{
-      left: 35%;
-      z-index: 0;
-      animation: card0Move 0.3s linear 0.5s forwards;
-    }
-    .card1{
-      left: 40%;
-      z-index: 1;
-      animation: card1Move 0.3s linear 1s forwards;
-    }
-    .card2{
-      left: 45%;
-      z-index: 2;
-      animation: card2Move 0.3s linear 1.5s forwards;
-    }
-    .card3{
-      left: 50%;
-      z-index: 3;
-      animation: card3Move 0.3s linear 2s forwards;
-    }
-    .card4{
-      left: 55%;
-      z-index: 4;
-      animation: card4Move 0.3s linear 0.5s forwards;
-    }
-    .card5{
-      left: 60%;
-      z-index: 5;
-      animation: card5Move 0.3s linear 1s forwards;
-    }
-    .card6{
-      left: 65%;
-      z-index: 6;
-      animation: card6Move 0.3s linear 1.5s forwards;
-    }
-    .card7{
-      left: 70%;
-      z-index: 7;
-      animation: card7Move 0.3s linear 2s forwards;
-    }
-  }
-  .card-list.active{
-    animation: cardsMove 0.3s linear forwards;
-  }
-}
+
 @keyframes reverseCard {
   0%{
     transform: rotateY(0deg)
