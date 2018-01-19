@@ -58,8 +58,8 @@
         </div>
       </div>
     </div>
-    <div class="z-bg" style="position: fixed; top: 0; left: 0; width: 100%; height: 150%; z-index: -1">
-      <img src="../assets/imgs/background.png" alt=""  width="100%">
+    <div class="z-bg" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1">
+      <img src="../assets/imgs/background.png" alt=""  width="100%" height="100%">
     </div>
     <div class="z-bg" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10001; background: rgba(0, 0, 0, .5)" v-show="loadRoom">
       <img src="../assets/imgs/loading.gif" alt=""  style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%)" width="56px" height="56px">

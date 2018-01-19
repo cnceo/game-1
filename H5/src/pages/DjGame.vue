@@ -2,7 +2,7 @@
   <div class="game-face dj-room" v-show="showDj">
     <!-- <img src="../assets/game.png" width="100%"/> -->
     <div class="z-bg" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1">
-      <img src="../assets/imgs/img_Room_announcement-background.png" alt=""  width="100%">
+      <img src="../assets/imgs/img_Room_announcement-background.png" alt=""  width="100%" height="100%">
     </div>
     <!-- 用户位置 -->
     <div class="user-site" v-show="users.length >= 1 && users.length <= 5">
