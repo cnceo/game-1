@@ -261,6 +261,7 @@
     <Setting :account="showAccount" ref="setting"></Setting>
      <!-- 规则弹窗 -->
     <Modal :showModal="showRuleModal"
+    @on-close="closeRuleModal"
     class="exit-modal">
     <div slot="modal-bg" class="modal-bg">
       <img src="../assets/imgs/img-Stoppingdoor-background.png" alt=""  width="100%" height="100%">
@@ -268,6 +269,7 @@
     </Modal>
      <!-- 玩法弹窗 -->
     <Modal :showModal="showPlayModal"
+    @on-close="closePlayModal"
     class="exit-modal">
     <div slot="modal-bg" class="modal-bg">
       <img src="../assets/imgs/img-Stoppingdoor-background.png" alt=""  width="100%" height="100%">
@@ -476,27 +478,27 @@
                 </div>
               </div>
               <div class="item">
-               <img src="../assets/imgs/img-End-yingcishu.png" width="160px"/>
+               <img src="../assets/imgs/img-End-yingcishu.png"/>
                <span class="num">{{item.winNum}}</span>
                <span class="line"></span>
               </div>
               <div class="item">
-               <img src="../assets/imgs/img-End-shucishu.png" width="160px"/>
+               <img src="../assets/imgs/img-End-shucishu.png"/>
                <span class="num">{{item.loseNum}}</span>
                <span class="line"></span>
               </div>
               <div class="item">
-                <img src="../assets/imgs/img-End-hecishu.png" width="160px"/>
+                <img src="../assets/imgs/img-End-hecishu.png"/>
                 <span class="num">{{item.heNum}}</span>
                 <span class="line"></span>
               </div>
               <div class="item">
-               <img src="../assets/imgs/img-End-zhuangcishu.png" width="160px"/>
+               <img src="../assets/imgs/img-End-zhuangcishu.png"/>
                <span class="num">{{item.bankerNum}}</span>
                <span class="line"></span>
               </div>
               <div class="item">
-                <img src="../assets/imgs/img-End-totalscore.png" width="100px"/>
+                <img src="../assets/imgs/img-End-totalscore.png"/>
                 <span class="num">{{item.userWincore}}</span>
                 <!-- <span class="line"></span> -->
               </div>
@@ -744,28 +746,58 @@ export default {
       // collCoins: [true, true, true, true, true],
       showShareModal: false,
       allScores: [
-      //   {
-      //   userWincore: 19,
-      //   headimgurl: '',
-      //   nickname: 'Jefferyadsfsdfsd',
-      //   userId: 123333,
-      //   winNum: 90,
-      //   loseNum: -90,
-      //   heNum: 90,
-      //   bankerNum: 193934
-      // },
-      // {
-      //   userWincore: 19,
-      //   headimgurl: '',
-      //   nickname: 'Jefferyadsfsdfsd',
-      //   userId: 123333,
-      //   winNum: 90,
-      //   loseNum: -90,
-      //   heNum: 90,
-      //   bankerNum: 193934
-      // }
+        // {
+        //   userWincore: 19,
+        //   headimgurl: '',
+        //   nickname: 'Jefferyadsfsdfsd',
+        //   userId: 123333,
+        //   winNum: 90,
+        //   loseNum: -90,
+        //   heNum: 90,
+        //   bankerNum: 19
+        // },
+        // {
+        //   userWincore: 19,
+        //   headimgurl: '',
+        //   nickname: 'Jefferyadsfsdfsd',
+        //   userId: 123333,
+        //   winNum: 90,
+        //   loseNum: -90,
+        //   heNum: 90,
+        //   bankerNum: 19
+        // },
+        // {
+        //   userWincore: 19,
+        //   headimgurl: '',
+        //   nickname: 'Jefferyadsfsdfsd',
+        //   userId: 123333,
+        //   winNum: 90,
+        //   loseNum: -90,
+        //   heNum: 90,
+        //   bankerNum: 19
+        // },
+        // {
+        //   userWincore: 19,
+        //   headimgurl: '',
+        //   nickname: 'Jefferyadsfsdfsd',
+        //   userId: 123333,
+        //   winNum: 90,
+        //   loseNum: -90,
+        //   heNum: 90,
+        //   bankerNum: 19
+        // },
+        // {
+        //   userWincore: 19,
+        //   headimgurl: '',
+        //   nickname: 'Jefferyadsfsdfsd',
+        //   userId: 123333,
+        //   winNum: 90,
+        //   loseNum: -90,
+        //   heNum: 90,
+        //   bankerNum: 19
+        // }
       ], // 单局结束统计
-      curRound: 0, // 当前局数,
+      curRound: 1, // 当前局数,
       coinUser: [],
       bks: ['', '', '', '', '', '', '', '', '', ''],
       showRuleModal: false,
@@ -865,7 +897,7 @@ export default {
     registerFn () {
       let vm = this
       // 获取系统电量
-      this.$JsBridge.registerHandler('updatePower', function (data, responseCallback) {
+      this.$JsBridge.registerHandler('djUpdatePower', function (data, responseCallback) {
         let powerSize = data
         if (powerSize <= 100 && powerSize > 75) {
           vm.power = ['green', 'green', 'green', 'green']
@@ -878,7 +910,7 @@ export default {
         }
       })
       // 系统更新加入游戏的用户列表
-      this.$JsBridge.registerHandler('updateUsers', function (data, responseCallback) {
+      this.$JsBridge.registerHandler('djUpdateUsers', function (data, responseCallback) {
         // 将原生带来的参数，显示在show标签位置
         vm.users = []
         let arr = []
@@ -987,7 +1019,7 @@ export default {
         responseCallback('')
       })
       // 系统发牌
-      this.$JsBridge.registerHandler('updateCards', function (data, responseCallback) {
+      this.$JsBridge.registerHandler('djUpdateCards', function (data, responseCallback) {
         // 将原生带来的参数，显示在show标签位置
         vm.cardList = []
         let res = []
@@ -1048,7 +1080,7 @@ export default {
         responseCallback('')
       })
       // // 系统更新投注结果
-      this.$JsBridge.registerHandler('updateCoins', function (data, responseCallback) {
+      this.$JsBridge.registerHandler('djUpdateCoins', function (data, responseCallback) {
         vm.menType = true
         // 将原生带来的参数，显示在show标签位置
         let coins = window.JSON.parse(data)
@@ -1111,7 +1143,7 @@ export default {
         responseCallback('')
       })
       // 投注后更新结果
-      this.$JsBridge.registerHandler('updateResult', function (data, responseCallback) {
+      this.$JsBridge.registerHandler('djUpdateResult', function (data, responseCallback) {
         // 将原生带来的参数，显示在show标签位置
      //   vm.coinList = []
         let res = window.JSON.parse(data)
@@ -1235,9 +1267,12 @@ export default {
             let winer = false
             let bankerId = ''
             let curIndex = ''
-            result.forEach((item) => {
+            let bankerIndex = ''
+            let he = false
+            result.forEach((item, index) => {
               // 庄家赢了
               if (item.banker === true) {
+                bankerIndex = index
                 bankerId = item.userId
                 if (item.winScore > 0) {
                   winer = true
@@ -1245,6 +1280,16 @@ export default {
               }
               // 庄家输了
             })
+            // 判断是否平局（和）
+            if (bankerIndex === result.length - 1) {
+              if (result[bankerIndex] === result[bankerIndex - 1]) {
+                he = true
+              }
+            } else {
+              if (result[bankerIndex] === result[bankerIndex + 1]) {
+                he = true
+              }
+            }
             // 获取庄家位置
             vm.users.forEach((item, index) => {
               if (Number(item.userId) === Number(bankerId)) {
@@ -1253,39 +1298,51 @@ export default {
             })
             // 庄家赢了
             vm.timer4 = setTimeout(() => {
-              if (winer) {
-                console.log('庄家赢了')
-                if (Number(bankerId) === Number(vm.userId)) {
-                  console.log('是当前玩家')
-                  for (let i = 0; i < 10; i++) {
-                    if (i === 0 || i === 1) {
-                      coins[i] = 'move'
-                    } else {
-                      coins[i] = 'hide'
+              if (!he) {
+                if (winer) {
+                  console.log('庄家赢了')
+                  if (Number(bankerId) === Number(vm.userId)) {
+                    console.log('是当前玩家')
+                    for (let i = 0; i < 10; i++) {
+                      if (i === 0 || i === 1) {
+                        coins[i] = 'move'
+                      } else {
+                        coins[i] = 'hide'
+                      }
+                    }
+                  } else {
+                    console.log('不是当前玩家')
+                    for (let i = 0; i < 10; i++) {
+                      if ((i === (curIndex * 2)) || (i === (curIndex * 2 + 1))) {
+                        coins[i] = 'move'
+                      } else {
+                        coins[i] = 'hide'
+                      }
                     }
                   }
                 } else {
-                  console.log('不是当前玩家')
+                  // 闲家赢了
+                  console.log('闲家赢了')
                   for (let i = 0; i < 10; i++) {
-                    if ((i === (curIndex * 2)) || (i === (curIndex * 2 + 1))) {
-                      coins[i] = 'move'
-                    } else {
+                    if ((i === (curIndex * 2)) || (i === (curIndex * 2 + 1)) || i >= (result.length * 2)) {
                       coins[i] = 'hide'
+                    } else {
+                      coins[i] = 'move'
                     }
                   }
                 }
               } else {
-                // 闲家赢了
-                console.log('闲家赢了')
                 for (let i = 0; i < 10; i++) {
-                  if ((i === (curIndex * 2)) || (i === (curIndex * 2 + 1)) || i >= (result.length * 2)) {
+                  if (i >= (result.length * 2)) {
                     coins[i] = 'hide'
                   } else {
                     coins[i] = 'move'
                   }
                 }
               }
+              console.log(coins)
               vm.coins.forEach((item, index) => {
+                item.down = 'active'
                 item.show = coins[index]
               })
             }, 6000)
@@ -1302,7 +1359,7 @@ export default {
         responseCallback('')
       })
        // 游戏未开始解散房间
-      this.$JsBridge.registerHandler('releaseWait', function (data, responseCallback) {
+      this.$JsBridge.registerHandler('djReleaseWait', function (data, responseCallback) {
         console.log('游戏未开始解散房间')
         // 将原生带来的参数，显示在show标签位置
        // vm.users = window.JSON.parse(data)
@@ -1312,14 +1369,14 @@ export default {
         vm.showReleaseWaitModal = false
         vm.isFirst = true
         vm.isGameStart = false
-        vm.curRound = 0
+        vm.curRound = 1
         vm.users = []
         vm.$emit('on-close', msg)
         // 调用responseCallback方法可以带传参数到原生
         responseCallback('')
       })
       // 游戏中解散房间
-      this.$JsBridge.registerHandler('releaseReady', function (data, responseCallback) {
+      this.$JsBridge.registerHandler('djReleaseReady', function (data, responseCallback) {
         // 将原生带来的参数，显示在show标签位置
         console.log('游戏中解散房间')
         let flag = false
@@ -1334,7 +1391,7 @@ export default {
           vm.showReleaseReadyModal = false
           vm.isFirst = true
           vm.isGameStart = false
-          vm.curRound = 0
+          vm.curRound = 1
           vm.users = []
           vm.showXzModal = false
          // vm.$emit('on-close', msg)
@@ -1388,6 +1445,30 @@ export default {
           }
         }
         // 调用responseCallback方法可以带传参数到原生
+        responseCallback('')
+      })
+       // 断线重新连接
+      this.$JsBridge.registerHandler('djResetConnect', function (data, responseCallback) {
+        let sign = vm.$sn({
+          userId: vm.userId,
+          roomId: vm.roomId
+        })
+        let params = window.JSON.stringify({
+          host: this.$url,
+          path: this.$interface['/app'],
+          params: {
+            command: 1013,
+            data: {
+              userId: vm.userId,
+              roomId: vm.roomId,
+              sign: sign
+            }
+          }
+        })
+        responseCallback(params)
+      })
+      this.$JsBridge.registerHandler('djConnectGame', function (data, responseCallback) {
+        console.log(data)
         responseCallback('')
       })
     },
@@ -1515,7 +1596,7 @@ export default {
           vm.showExitModal = false
           vm.isFirst = true
           vm.isGameStart = false
-          vm.curRound = 0
+          vm.curRound = 1
           let msg = '您已经退出了房间'
           vm.closeTime()
           vm.resetParams()
@@ -1874,7 +1955,23 @@ export default {
       //
       this.showShareModal = false
       this.resetParams()
-      this.curRound = 0
+      this.curRound = 1
+      let params = window.JSON.stringify({
+        numId: this.gameMsg.numId,
+        baseScore: this.gameMsg.baseScore,
+        baseRound: this.gameMsg.baseRound
+      })
+      this.$JsBridge.callHandler(
+        'share' // 原生的方法名
+        , {'param': params} // 带个原生方法的参数
+        , function (responseData) { // 响应原生回调方法
+          // if (Number(window.JSON.parse(responseData)) === 200) {
+          //   vm.$router.push({path: router, params: {}})
+          // }
+          //
+          console.log('分享成功')
+        }
+      )
     },
     // 单局游戏结束参数重置
     resetParams () {
@@ -1932,6 +2029,12 @@ export default {
     },
     gamePlay () {
       this.showPlayModal = true
+    },
+    closeRuleModal () {
+      this.showRuleModal = false
+    },
+    closePlayModal () {
+      this.showPlayModal = false
     }
   }
 }
@@ -2465,6 +2568,7 @@ export default {
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin0.active{
+        opacity: 1;
        // animation: coinMove0 0.2s linear forwards;
       }
       .coin0.hide{
@@ -2478,6 +2582,7 @@ export default {
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin1.active{
+        opacity: 1;
       //  animation: coinMove1 0.2s linear forwards;
       }
       .coin1.hide{
@@ -2492,6 +2597,7 @@ export default {
       }
 
       .coin2.active{
+        opacity: 1;
       //  animation: coinMove2 0.2s linear forwards;
       }
 
@@ -2506,6 +2612,7 @@ export default {
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin3.active{
+        opacity: 1;
       // animation: coinMove3 0.2s linear forwards;
       }
 
@@ -2520,6 +2627,7 @@ export default {
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin4.active{
+        opacity: 1;
        // animation: coinMove4 0.2s linear forwards;
       }
 
@@ -2534,6 +2642,7 @@ export default {
        box-shadow: 5px 5px 15px 2px #333;
       }
       .coin5.active{
+        opacity: 1;
       //  animation: coinMove5 0.2s linear forwards;
       }
 
@@ -2548,6 +2657,7 @@ export default {
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin6.active{
+        opacity: 1;
       // animation: coinMove6 0.2s linear forwards;
       }
 
@@ -2562,6 +2672,7 @@ export default {
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin7.active{
+        opacity: 1;
       // animation: coinMove7 0.2s linear forwards;
       }
 
@@ -2576,6 +2687,7 @@ export default {
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin8.active{
+        opacity: 1;
       // animation: coinMove8 0.2s linear forwards;
       }
 
@@ -2590,6 +2702,7 @@ export default {
         box-shadow: 5px 5px 15px 2px #333;
       }
       .coin9.active{
+        opacity: 1;
       // animation: coinMove9 0.2s linear forwards;
       }
 
@@ -3465,8 +3578,9 @@ export default {
       flex: 1;
       margin: 0 10px;
       .user-tit{
-        display: flex;
-        padding: 15px 20px;
+      //  display: flex;
+        padding: 10px 12px 0;
+        text-align: left;
         .user-avatar{
           position: relative;
           flex: 0 0 100px;
@@ -3499,12 +3613,12 @@ export default {
           display: inline-block;
           flex: 1;
         //  width: calc(~"100% - 200px");
-          padding-left: 15px;
-          margin-right: 30px;
+       //   padding-left: 15px;
+        //  margin-right: 30px;
           font-size: 32px;
           text-align: left;
           .user-name{
-            padding: 0 15px 0 0;
+          //  padding: 0 15px 0 0;
             margin: 5px 0;
             border-radius: 12px;
           //  background: rgba(0, 0, 0, .5) url('../assets/imgs/img-End-netname.png') 0 0 no-repeat;
@@ -3516,14 +3630,14 @@ export default {
             span{
               display: inline-block;
               vertical-align: middle;
-              width: 82%;
+              width: 72%;
               overflow: hidden;
               white-space: nowrap;
               text-overflow: ellipsis;
             }
           }
           .user-id{
-            padding: 0 15px 0 0;
+          //  padding: 0 15px 0 0;
             margin: 5px 0;
             border-radius: 12px;
           //  background: rgba(0, 0, 0, .5) url('../assets/imgs/img-End-id.png') 0 0 no-repeat;
@@ -3543,19 +3657,39 @@ export default {
         position: relative;
         text-align: left;
         margin: 0 20px;
+        height: 56px;
+        display: flex;
+        img{
+          flex: 0 0 156px;
+          width: 156px;
+          height: 32px;
+          margin-top: 10px;
+        }
         .num{
           font-size: 32px;
-          position: absolute;
-          top: 2px;
-          right: 20px;
+         // position: absolute;
+         position: relative;
+          top: -6px;
+         // right: 20px;
+          flex: 1;
+           margin-top: 10px;
+          text-align: right;
+          vertical-align: bottom;
         }
         .line{
           position: absolute;
-          bottom: 21px;
+          bottom: 7px;
           left: 0;
           width: 100%;
           height: 2px;
           background: #efefef;
+        }
+      }
+      .item:last-child{
+        img{
+           flex: 0 0 124px;
+            width: 124px;
+            height: 24px;
         }
       }
     }

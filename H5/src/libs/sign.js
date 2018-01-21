@@ -16,5 +16,15 @@ Sign.install = function (Vue, options) {
     ajaxParams += 'sign' + '=' + this.$md5(str)
     return ajaxParams
   }
+  Vue.prototype.$sn = function (params) {
+    let str = 'meizhuangdaka.com?&'
+    let sign = ''
+    Object.keys(params).sort().forEach((key) => {
+     // ajaxParams += key + '=' + params[key] + '&'
+      str += key + '=' + params[key] + '?&'
+    })
+    sign = this.$md5(str)
+    return sign
+  }
 }
 export default Sign

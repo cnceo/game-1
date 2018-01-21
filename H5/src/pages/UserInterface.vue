@@ -959,9 +959,23 @@ export default {
     },
     enterRoom () {
       console.log(this.roomId)
+      let type = ''
+      if (this.gameType === 1) {
+        type = 'qt'
+      } else if (this.gameType === 2) {
+        type = 'ht'
+      } else if (this.gameType === 3) {
+        type = 'dj'
+      }
+      let sign = this.$sn({
+        userId: this.userId,
+        roomId: this.roomId
+      })
       let ajaxParams = window.JSON.stringify({
         host: this.$url,
         path: this.$interface['/app'],
+        type: type,
+        sign: sign,
         params: {
           command: 1001,
           data: {'roomId': this.roomId, 'userId': this.userId}
