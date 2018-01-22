@@ -16,7 +16,7 @@
       </li>
     </ul>
     <ul>
-      <li v-for="(item, index) in types" :key="index" class="row" v-show="index > 2"  :class="{'g-top': index > 2}">
+      <li v-for="(item, index) in types" :key="index" class="row" v-show="index > 2"  :class="{'g-top': disabled == false && index > 2, 't-top': disabled == true}">
         <span class="label" @touchstart="selectType(index)" style="border-color: #f00">
           <img src="../assets/imgs/img_Create_yes.png" alt=""  v-if="item.select" width="100%">
         </span>
@@ -117,6 +117,9 @@ export default {
     }
     .g-top{
         margin-top: 52px;
+    }
+    .t-top{
+      margin-top: 3vh;
     }
   }
 
