@@ -912,231 +912,25 @@ export default {
       // 系统更新加入游戏的用户列表
       this.$JsBridge.registerHandler('djUpdateUsers', function (data, responseCallback) {
         // 将原生带来的参数，显示在show标签位置
-        vm.users = []
-        let arr = []
         let arrs = []
         arrs = window.JSON.parse(data)
-        arrs.forEach((item) => {
-          if (item != null) {
-            arr.push(item)
-          }
-        })
-        // 游戏开始，禁止用户加入
-        // if (vm.isGameStart) {
-        //   return
-        // }
-        // 如果人数最少2人，即可开始游戏
-        if (arr.length < MIN_USER) {
-          arr.forEach((item) => {
-            if (Number(item.userId) === Number(vm.userId)) {
-              item.curUser = true
-              // 匹配最大下注值
-              vm.getRoomMsg()
-              // 房间创建者可以邀请好友
-              if (item.roomOwner) {
-                vm.isMaster = true
-              } else {
-                vm.isMaster = false
-              }
-              //  // 当前玩家若是庄家，不显示下注
-              // if (item.banker === true) {
-              //   vm.isShowXz = false
-              // } else {
-              //   vm.isShowXz = true
-              // }
-              // 当前玩家准备后不可以抢庄
-              if (item.ready === true) {
-                vm.isCurUserReady = true
-              } else {
-                vm.isCurUserReady = false
-              }
-              item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
-              vm.users.unshift(item)
-            } else {
-              item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
-              vm.users.push(item)
-            }
-          })
-        } else {
-          arr.forEach((item) => {
-            if (Number(item.userId) === Number(vm.userId)) {
-              item.curUser = true
-              item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
-              // 匹配最大下注值
-              vm.getRoomMsg()
-              // 房间创建者可以邀请好友
-              if (item.roomOwner) {
-                vm.isMaster = true
-              } else {
-                vm.isMaster = false
-              }
-               // 当前玩家若是庄家，不显示下注
-              if (item.banker === true) {
-                vm.isShowXz = false
-              } else {
-                vm.isShowXz = true
-              }
-              // 当前玩家准备后不可以抢庄
-              if (item.ready === true) {
-                vm.isCurUserReady = true
-              } else {
-                vm.isCurUserReady = false
-              }
-              vm.users.unshift(item)
-            } else {
-              item.curUser = false
-              item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
-              vm.users.push(item)
-            }
-          })
-          // 显示准备按钮
-          if (!vm.isStartReady) {
-            vm.isStartReady = true
-          } else {
-            // 其他玩家点击准备按钮,房主显示开始游戏按钮
-            if (vm.isOtherReady(vm.users)) {
-              vm.isFriends = true
-            }
-            // 判断是否都已经准备就绪
-            if (vm.isAllUserReady(vm.users)) {
-              console.log('所有人准备就绪')
-              vm.isStartReady = false
-              vm.isFriends = false
-              vm.isMaster = false
-              // 禁止抢庄
-              vm.isGameStart = true
-              // 开始发牌
-              vm.users.forEach((its) => {
-                if (Number(its.userId) === Number(vm.userId) && (its.banker === true)) {
-                  console.log('发牌了')
-                  vm.playCards()
-                }
-              })
-            }
-          }
-        }
+        vm.updateUsers(arrs)
         // 调用responseCallback方法可以带传参数到原生
         responseCallback('')
       })
       // 系统发牌
       this.$JsBridge.registerHandler('djUpdateCards', function (data, responseCallback) {
         // 将原生带来的参数，显示在show标签位置
-        vm.cardList = []
-        let res = []
-        let obj = {}
         let list = window.JSON.parse(data)
-        list.forEach((item, index) => {
-          if (Number(item.doorNum) === 0) {
-            obj = item
-          } else {
-            res.push(item)
-          }
-        })
-        res.push(obj)
-        res.forEach((item, index) => {
-          // 大九
-          if (item.pokerList.length === 1) {
-            let arr1 = []
-            for (let key in item.pokerList[0]) {
-              arr1.push(item.pokerList[0][key])
-            }
-            for (let i = 0; i < vm.cards.length; i++) {
-              let arr2 = []
-              if (vm.cards[i] instanceof Object) {
-                for (let key in vm.cards[i]) {
-                  if (key !== 'img') {
-                    arr2.push(vm.cards[i][key])
-                  }
-                }
-              }
-               // 匹配对应的牌
-              if (vm.regCard(arr1, arr2)) {
-                vm.cardList.push({
-                  bImg: vm.curCardBg,
-                  fImg: vm.cards[i].img
-                })
-              }
-            }
-          }
-        })
-        vm.showCards = true
-        vm.timer1 = setTimeout(() => {
-          vm.checkResult1 = true
-          vm.isDownSu = true
-          vm.users.forEach((item) => {
-            if (Number(item.userId) === Number(vm.userId)) {
-              item.xz = 0
-            } else {
-              item.xz = 1
-            }
-          })
-          vm.timer2 = setTimeout(() => {
-            if (vm.isShowXz) {
-              vm.showXzModal = true
-            }
-          }, 500)
-        }, 3000)
+        vm.updateCards(list)
         // 调用responseCallback方法可以带传参数到原生
         responseCallback('')
       })
       // // 系统更新投注结果
       this.$JsBridge.registerHandler('djUpdateCoins', function (data, responseCallback) {
-        vm.menType = true
         // 将原生带来的参数，显示在show标签位置
         let coins = window.JSON.parse(data)
-        console.log('投注结果收到了')
-        console.log(coins)
-        coins.forEach((item) => {
-          let flag = false
-          let index = 0
-          if (item.betting === true) {
-            console.log('aaa')
-            vm.coinUser.forEach((its) => {
-              if (Number(its) === Number(item.userId)) {
-                console.log(its)
-                console.log(item.userId)
-                flag = true
-              }
-            })
-            console.log(flag)
-            if (!flag) {
-              console.log('bbb')
-              vm.coinUser.push(item.userId)
-              vm.users.forEach((it, i) => {
-                if (Number(it.userId) === Number(item.userId)) {
-                  index = i
-                }
-              })
-              if (vm.users.length === 2) {
-                vm.bks[index * 2] = 'isDown'
-                vm.bks[index * 2 + 1] = 'isDown'
-                vm.bks[6] = 'noDown'
-                vm.bks[7] = 'noDown'
-                vm.bks[8] = 'noDown'
-                vm.bks[9] = 'noDown'
-              } else if (vm.users.length === 3) {
-                vm.bks[index * 2] = 'isDown'
-                vm.bks[index * 2 + 1] = 'isDown'
-                vm.bks[7] = 'noDown'
-                vm.bks[8] = 'noDown'
-                vm.bks[9] = 'noDown'
-              } else if (vm.users.length === 4) {
-                vm.bks[index * 2] = 'isDown'
-                vm.bks[index * 2 + 1] = 'isDown'
-                vm.bks[8] = 'noDown'
-                vm.bks[9] = 'noDown'
-              } else if (vm.users.length === 5) {
-                vm.bks[index * 2] = 'isDown'
-                vm.bks[index * 2 + 1] = 'isDown'
-              }
-              console.log(vm.bks)
-              console.log(vm.bks.join('---'))
-              vm.coins.forEach((item, index) => {
-                item.down = vm.bks[index]
-              })
-            }
-          }
-        })
+        vm.updateCoins(coins)
         // vm.showDj = false
         // vm.$emit('on-close', vm.showDj)
         // 调用responseCallback方法可以带传参数到原生
@@ -1149,212 +943,7 @@ export default {
         let res = window.JSON.parse(data)
         let result = res.userGameVOList // 结果
         let list = res.doorVOList // 第二张牌
-        let scds = []
-        let status = []
-        let coins = []
-        let obj = {}
-        result.forEach((item) => {
-          let flag = false
-          let index = 0
-          if (item.betting === true) {
-            console.log('aaa')
-            vm.coinUser.forEach((its) => {
-              if (Number(its) === Number(item.userId)) {
-                console.log(its)
-                console.log(item.userId)
-                flag = true
-              }
-            })
-            console.log(flag)
-            if (!flag) {
-              console.log('bbb')
-              vm.coinUser.push(item.userId)
-              vm.users.forEach((it, i) => {
-                if (Number(it.userId) === Number(item.userId)) {
-                  index = i
-                }
-              })
-              if (vm.users.length === 2) {
-                vm.bks[index * 2] = 'isDown'
-                vm.bks[index * 2 + 1] = 'isDown'
-                vm.bks[6] = 'noDown'
-                vm.bks[7] = 'noDown'
-                vm.bks[8] = 'noDown'
-                vm.bks[9] = 'noDown'
-              } else if (vm.users.length === 3) {
-                vm.bks[index * 2] = 'isDown'
-                vm.bks[index * 2 + 1] = 'isDown'
-                vm.bks[7] = 'noDown'
-                vm.bks[8] = 'noDown'
-                vm.bks[9] = 'noDown'
-              } else if (vm.users.length === 4) {
-                vm.bks[index * 2] = 'isDown'
-                vm.bks[index * 2 + 1] = 'isDown'
-                vm.bks[8] = 'noDown'
-                vm.bks[9] = 'noDown'
-              } else if (vm.users.length === 5) {
-                vm.bks[index * 2] = 'isDown'
-                vm.bks[index * 2 + 1] = 'isDown'
-              }
-              console.log(vm.bks)
-              console.log(vm.bks.join('---'))
-              vm.bks.forEach((it, i) => {
-                if (!it) {
-                  vm.bks[i] = 'noDown'
-                }
-              })
-              console.log(vm.bks)
-              console.log(vm.bks.join('---'))
-              vm.coins.forEach((item, index) => {
-                item.down = vm.bks[index]
-              })
-            }
-          }
-        })
-        result.forEach((item) => {
-          if ((item.banker === false) && (item.betting === true)) {
-            status.push(item.betting)
-          }
-        })
-        list.forEach((item, index) => {
-          if (Number(item.doorNum) === 0) {
-            obj = item
-          } else {
-            scds.push(item)
-          }
-        })
-        scds.push(obj)
-        // 除庄家外，最后一个人投注完成,更新结果
-        if (status.length === result.length - 1) {
-          // 最后一个人完成投注
-          scds.forEach((item) => {
-            let arr1 = []
-            for (let key in item.pokerList[1]) {
-              arr1.push(item.pokerList[1][key])
-            }
-            for (let i = 0; i < vm.cards.length; i++) {
-              let arr2 = []
-              if (vm.cards[i] instanceof Object) {
-                for (let key in vm.cards[i]) {
-                  if (key !== 'img') {
-                    arr2.push(vm.cards[i][key])
-                  }
-                }
-              }
-               // 匹配对应的牌
-              if (vm.regCard(arr1, arr2)) {
-                vm.cardList.push({
-                  bImg: vm.curCardBg,
-                  fImg: vm.cards[i].img
-                })
-              }
-            }
-          })
-          vm.isDownSu = false
-          vm.menType = true
-          vm.timer3 = setTimeout(() => {
-            vm.checkResult2 = true
-            vm.scores = []
-            vm.showScore = true
-            vm.users.forEach((item) => {
-              for (let i = 0; i < result.length; i++) {
-                if (Number(item.userId) === Number(result[i].userId)) {
-                  vm.scores.push(result[i])
-                }
-              }
-            })
-            // 硬币动画 //coins 0, 1, 2, 3, 4
-            let winer = false
-            let bankerId = ''
-            let curIndex = ''
-            let bankerIndex = ''
-            let he = false
-            result.forEach((item, index) => {
-              // 庄家赢了
-              if (item.banker === true) {
-                bankerIndex = index
-                bankerId = item.userId
-                if (item.winScore > 0) {
-                  winer = true
-                }
-              }
-              // 庄家输了
-            })
-            // 判断是否平局（和）
-            if (bankerIndex === result.length - 1) {
-              if (result[bankerIndex] === result[bankerIndex - 1]) {
-                he = true
-              }
-            } else {
-              if (result[bankerIndex] === result[bankerIndex + 1]) {
-                he = true
-              }
-            }
-            // 获取庄家位置
-            vm.users.forEach((item, index) => {
-              if (Number(item.userId) === Number(bankerId)) {
-                curIndex = index
-              }
-            })
-            // 庄家赢了
-            vm.timer4 = setTimeout(() => {
-              if (!he) {
-                if (winer) {
-                  console.log('庄家赢了')
-                  if (Number(bankerId) === Number(vm.userId)) {
-                    console.log('是当前玩家')
-                    for (let i = 0; i < 10; i++) {
-                      if (i === 0 || i === 1) {
-                        coins[i] = 'move'
-                      } else {
-                        coins[i] = 'hide'
-                      }
-                    }
-                  } else {
-                    console.log('不是当前玩家')
-                    for (let i = 0; i < 10; i++) {
-                      if ((i === (curIndex * 2)) || (i === (curIndex * 2 + 1))) {
-                        coins[i] = 'move'
-                      } else {
-                        coins[i] = 'hide'
-                      }
-                    }
-                  }
-                } else {
-                  // 闲家赢了
-                  console.log('闲家赢了')
-                  for (let i = 0; i < 10; i++) {
-                    if ((i === (curIndex * 2)) || (i === (curIndex * 2 + 1)) || i >= (result.length * 2)) {
-                      coins[i] = 'hide'
-                    } else {
-                      coins[i] = 'move'
-                    }
-                  }
-                }
-              } else {
-                for (let i = 0; i < 10; i++) {
-                  if (i >= (result.length * 2)) {
-                    coins[i] = 'hide'
-                  } else {
-                    coins[i] = 'move'
-                  }
-                }
-              }
-              console.log(coins)
-              vm.coins.forEach((item, index) => {
-                item.down = 'active'
-                item.show = coins[index]
-              })
-            }, 6000)
-            vm.timer5 = setTimeout(() => {
-              if (res.gameover === true) {
-                vm.gameOver()
-              } else {
-                vm.resetParams()
-              }
-            }, 10000)
-          }, 4500)
-        }
+        vm.updateResult(result, list, res.gameover)
         // 调用responseCallback方法可以带传参数到原生
         responseCallback('')
       })
@@ -1469,6 +1058,22 @@ export default {
       })
       this.$JsBridge.registerHandler('djConnectGame', function (data, responseCallback) {
         console.log(data)
+        let res = window.JSON.parse(data)
+        if (res.needConnection === true) {
+          if (res.turnStep === 'UN_START' || res.turnStep === 'UN_BLOCK') {
+            vm.updateUsers(res.roomUserVOList)
+          } else if (res.turnStep === 'HAS_BLOCK') {
+            vm.updateUsers(res.roomUserVOList)
+            vm.updateCards(res.doorVOList)
+          } else if (res.turnStep === 'BETTING') {
+           // vm.updateUsers(res.roomUserVOList)
+           // vm.updateCards(res.doorVOList)
+           // vm.updateResult(res.userGameVOList)
+          } else if (res.turnStep === 'UN_PUSH_CARD' || res.turnStep === 'HAS_PUSH_CARD') {
+           // vm.updateUsers(res.roomUserVOList)
+           // vm.updateCards(res.doorVOList)
+          }
+        }
         responseCallback('')
       })
     },
@@ -2035,6 +1640,433 @@ export default {
     },
     closePlayModal () {
       this.showPlayModal = false
+    },
+    updateUsers (arrs) {
+      let vm = this
+      vm.users = []
+      let arr = []
+      arrs.forEach((item) => {
+        if (item != null) {
+          arr.push(item)
+        }
+      })
+      // 游戏开始，禁止用户加入
+      // if (vm.isGameStart) {
+      //   return
+      // }
+      // 如果人数最少2人，即可开始游戏
+      if (arr.length < MIN_USER) {
+        arr.forEach((item) => {
+          if (Number(item.userId) === Number(vm.userId)) {
+            item.curUser = true
+            // 匹配最大下注值
+            vm.getRoomMsg()
+            // 房间创建者可以邀请好友
+            if (item.roomOwner) {
+              vm.isMaster = true
+            } else {
+              vm.isMaster = false
+            }
+            //  // 当前玩家若是庄家，不显示下注
+            // if (item.banker === true) {
+            //   vm.isShowXz = false
+            // } else {
+            //   vm.isShowXz = true
+            // }
+            // 当前玩家准备后不可以抢庄
+            if (item.ready === true) {
+              vm.isCurUserReady = true
+            } else {
+              vm.isCurUserReady = false
+            }
+            item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
+            vm.users.unshift(item)
+          } else {
+            item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
+            vm.users.push(item)
+          }
+        })
+      } else {
+        arr.forEach((item) => {
+          if (Number(item.userId) === Number(vm.userId)) {
+            item.curUser = true
+            item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
+            // 匹配最大下注值
+            vm.getRoomMsg()
+            // 房间创建者可以邀请好友
+            if (item.roomOwner) {
+              vm.isMaster = true
+            } else {
+              vm.isMaster = false
+            }
+              // 当前玩家若是庄家，不显示下注
+            if (item.banker === true) {
+              vm.isShowXz = false
+            } else {
+              vm.isShowXz = true
+            }
+            // 当前玩家准备后不可以抢庄
+            if (item.ready === true) {
+              vm.isCurUserReady = true
+            } else {
+              vm.isCurUserReady = false
+            }
+            vm.users.unshift(item)
+          } else {
+            item.curUser = false
+            item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
+            vm.users.push(item)
+          }
+        })
+        // 显示准备按钮
+        if (!vm.isStartReady) {
+          vm.isStartReady = true
+        } else {
+          // 其他玩家点击准备按钮,房主显示开始游戏按钮
+          if (vm.isOtherReady(vm.users)) {
+            vm.isFriends = true
+          }
+          // 判断是否都已经准备就绪
+          if (vm.isAllUserReady(vm.users)) {
+            console.log('所有人准备就绪')
+            vm.isStartReady = false
+            vm.isFriends = false
+            vm.isMaster = false
+            // 禁止抢庄
+            vm.isGameStart = true
+            // 开始发牌
+            vm.users.forEach((its) => {
+              if (Number(its.userId) === Number(vm.userId) && (its.banker === true)) {
+                console.log('发牌了')
+                vm.playCards()
+              }
+            })
+          }
+        }
+      }
+    },
+    updateCards (list) {
+      let vm = this
+      vm.cardList = []
+      let res = []
+      let obj = {}
+      list.forEach((item, index) => {
+        if (Number(item.doorNum) === 0) {
+          obj = item
+        } else {
+          res.push(item)
+        }
+      })
+      res.push(obj)
+      res.forEach((item, index) => {
+        // 大九
+        if (item.pokerList.length === 1) {
+          let arr1 = []
+          for (let key in item.pokerList[0]) {
+            arr1.push(item.pokerList[0][key])
+          }
+          for (let i = 0; i < vm.cards.length; i++) {
+            let arr2 = []
+            if (vm.cards[i] instanceof Object) {
+              for (let key in vm.cards[i]) {
+                if (key !== 'img') {
+                  arr2.push(vm.cards[i][key])
+                }
+              }
+            }
+              // 匹配对应的牌
+            if (vm.regCard(arr1, arr2)) {
+              vm.cardList.push({
+                bImg: vm.curCardBg,
+                fImg: vm.cards[i].img
+              })
+            }
+          }
+        }
+      })
+      vm.showCards = true
+      vm.timer1 = setTimeout(() => {
+        vm.checkResult1 = true
+        vm.isDownSu = true
+        vm.users.forEach((item) => {
+          if (Number(item.userId) === Number(vm.userId)) {
+            item.xz = 0
+          } else {
+            item.xz = 1
+          }
+        })
+        vm.timer2 = setTimeout(() => {
+          if (vm.isShowXz) {
+            vm.showXzModal = true
+          }
+        }, 500)
+      }, 3000)
+    },
+    updateCoins (coins) {
+      let vm = this
+      vm.menType = true
+      console.log('投注结果收到了')
+      console.log(coins)
+      coins.forEach((item) => {
+        let flag = false
+        let index = 0
+        if (item.betting === true) {
+          console.log('aaa')
+          vm.coinUser.forEach((its) => {
+            if (Number(its) === Number(item.userId)) {
+              console.log(its)
+              console.log(item.userId)
+              flag = true
+            }
+          })
+          console.log(flag)
+          if (!flag) {
+            console.log('bbb')
+            vm.coinUser.push(item.userId)
+            vm.users.forEach((it, i) => {
+              if (Number(it.userId) === Number(item.userId)) {
+                index = i
+              }
+            })
+            if (vm.users.length === 2) {
+              vm.bks[index * 2] = 'isDown'
+              vm.bks[index * 2 + 1] = 'isDown'
+              vm.bks[6] = 'noDown'
+              vm.bks[7] = 'noDown'
+              vm.bks[8] = 'noDown'
+              vm.bks[9] = 'noDown'
+            } else if (vm.users.length === 3) {
+              vm.bks[index * 2] = 'isDown'
+              vm.bks[index * 2 + 1] = 'isDown'
+              vm.bks[7] = 'noDown'
+              vm.bks[8] = 'noDown'
+              vm.bks[9] = 'noDown'
+            } else if (vm.users.length === 4) {
+              vm.bks[index * 2] = 'isDown'
+              vm.bks[index * 2 + 1] = 'isDown'
+              vm.bks[8] = 'noDown'
+              vm.bks[9] = 'noDown'
+            } else if (vm.users.length === 5) {
+              vm.bks[index * 2] = 'isDown'
+              vm.bks[index * 2 + 1] = 'isDown'
+            }
+            console.log(vm.bks)
+            console.log(vm.bks.join('---'))
+            vm.coins.forEach((item, index) => {
+              item.down = vm.bks[index]
+            })
+          }
+        }
+      })
+    },
+    updateResult (result, list, gameover) {
+      let vm = this
+      let scds = []
+      let status = []
+      let coins = []
+      let obj = {}
+      result.forEach((item) => {
+        let flag = false
+        let index = 0
+        if (item.betting === true) {
+          console.log('aaa')
+          vm.coinUser.forEach((its) => {
+            if (Number(its) === Number(item.userId)) {
+              console.log(its)
+              console.log(item.userId)
+              flag = true
+            }
+          })
+          console.log(flag)
+          if (!flag) {
+            console.log('bbb')
+            vm.coinUser.push(item.userId)
+            vm.users.forEach((it, i) => {
+              if (Number(it.userId) === Number(item.userId)) {
+                index = i
+              }
+            })
+            if (vm.users.length === 2) {
+              vm.bks[index * 2] = 'isDown'
+              vm.bks[index * 2 + 1] = 'isDown'
+              vm.bks[6] = 'noDown'
+              vm.bks[7] = 'noDown'
+              vm.bks[8] = 'noDown'
+              vm.bks[9] = 'noDown'
+            } else if (vm.users.length === 3) {
+              vm.bks[index * 2] = 'isDown'
+              vm.bks[index * 2 + 1] = 'isDown'
+              vm.bks[7] = 'noDown'
+              vm.bks[8] = 'noDown'
+              vm.bks[9] = 'noDown'
+            } else if (vm.users.length === 4) {
+              vm.bks[index * 2] = 'isDown'
+              vm.bks[index * 2 + 1] = 'isDown'
+              vm.bks[8] = 'noDown'
+              vm.bks[9] = 'noDown'
+            } else if (vm.users.length === 5) {
+              vm.bks[index * 2] = 'isDown'
+              vm.bks[index * 2 + 1] = 'isDown'
+            }
+            console.log(vm.bks)
+            console.log(vm.bks.join('---'))
+            vm.bks.forEach((it, i) => {
+              if (!it) {
+                vm.bks[i] = 'noDown'
+              }
+            })
+            console.log(vm.bks)
+            console.log(vm.bks.join('---'))
+            vm.coins.forEach((item, index) => {
+              item.down = vm.bks[index]
+            })
+          }
+        }
+      })
+      result.forEach((item) => {
+        if ((item.banker === false) && (item.betting === true)) {
+          status.push(item.betting)
+        }
+      })
+      list.forEach((item, index) => {
+        if (Number(item.doorNum) === 0) {
+          obj = item
+        } else {
+          scds.push(item)
+        }
+      })
+      scds.push(obj)
+      // 除庄家外，最后一个人投注完成,更新结果
+      if (status.length === result.length - 1) {
+        // 最后一个人完成投注
+        scds.forEach((item) => {
+          let arr1 = []
+          for (let key in item.pokerList[1]) {
+            arr1.push(item.pokerList[1][key])
+          }
+          for (let i = 0; i < vm.cards.length; i++) {
+            let arr2 = []
+            if (vm.cards[i] instanceof Object) {
+              for (let key in vm.cards[i]) {
+                if (key !== 'img') {
+                  arr2.push(vm.cards[i][key])
+                }
+              }
+            }
+              // 匹配对应的牌
+            if (vm.regCard(arr1, arr2)) {
+              vm.cardList.push({
+                bImg: vm.curCardBg,
+                fImg: vm.cards[i].img
+              })
+            }
+          }
+        })
+        vm.isDownSu = false
+        vm.menType = true
+        vm.timer3 = setTimeout(() => {
+          vm.checkResult2 = true
+          vm.scores = []
+          vm.showScore = true
+          vm.users.forEach((item) => {
+            for (let i = 0; i < result.length; i++) {
+              if (Number(item.userId) === Number(result[i].userId)) {
+                vm.scores.push(result[i])
+              }
+            }
+          })
+          // 硬币动画 //coins 0, 1, 2, 3, 4
+          let winer = false
+          let bankerId = ''
+          let curIndex = ''
+          let bankerIndex = ''
+          let he = false
+          result.forEach((item, index) => {
+            // 庄家赢了
+            if (item.banker === true) {
+              bankerIndex = index
+              bankerId = item.userId
+              if (item.winScore > 0) {
+                winer = true
+              }
+            }
+            // 庄家输了
+          })
+          // 判断是否平局（和）
+          if (bankerIndex === result.length - 1) {
+            if (result[bankerIndex] === result[bankerIndex - 1]) {
+              he = true
+            }
+          } else {
+            if (result[bankerIndex] === result[bankerIndex + 1]) {
+              he = true
+            }
+          }
+          // 获取庄家位置
+          vm.users.forEach((item, index) => {
+            if (Number(item.userId) === Number(bankerId)) {
+              curIndex = index
+            }
+          })
+          // 庄家赢了
+          vm.timer4 = setTimeout(() => {
+            if (!he) {
+              if (winer) {
+                console.log('庄家赢了')
+                if (Number(bankerId) === Number(vm.userId)) {
+                  console.log('是当前玩家')
+                  for (let i = 0; i < 10; i++) {
+                    if (i === 0 || i === 1) {
+                      coins[i] = 'move'
+                    } else {
+                      coins[i] = 'hide'
+                    }
+                  }
+                } else {
+                  console.log('不是当前玩家')
+                  for (let i = 0; i < 10; i++) {
+                    if ((i === (curIndex * 2)) || (i === (curIndex * 2 + 1))) {
+                      coins[i] = 'move'
+                    } else {
+                      coins[i] = 'hide'
+                    }
+                  }
+                }
+              } else {
+                // 闲家赢了
+                console.log('闲家赢了')
+                for (let i = 0; i < 10; i++) {
+                  if ((i === (curIndex * 2)) || (i === (curIndex * 2 + 1)) || i >= (result.length * 2)) {
+                    coins[i] = 'hide'
+                  } else {
+                    coins[i] = 'move'
+                  }
+                }
+              }
+            } else {
+              for (let i = 0; i < 10; i++) {
+                if (i >= (result.length * 2)) {
+                  coins[i] = 'hide'
+                } else {
+                  coins[i] = 'move'
+                }
+              }
+            }
+            console.log(coins)
+            vm.coins.forEach((item, index) => {
+              item.down = 'active'
+              item.show = coins[index]
+            })
+          }, 6000)
+          vm.timer5 = setTimeout(() => {
+            if (gameover === true) {
+              vm.gameOver()
+            } else {
+              vm.resetParams()
+            }
+          }, 10000)
+        }, 4500)
+      }
     }
   }
 }
