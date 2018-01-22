@@ -20,7 +20,24 @@
             <div class="img">
               <img src="../assets/imgs/img_Daikai_guize.png" alt="" height="100%">
             </div>
-            <span v-html="rules"></span>
+            <div class="box">
+              <div class="row">
+                 <span class="label">
+                   <img src="../assets/imgs/img_Create_Thenumberofinnings.png" alt="" width="100%">
+                </span>
+                <div class="type">
+                  <selectType :types="ruleRound" :bigImg="bigImg" :disabled="disabled" class="bar"></selectType>
+                </div>
+              </div>
+              <div class="row">
+                 <span class="label">
+                   <img src="../assets/imgs/img_Create_Froction.png" alt="" width="100%">
+                </span>
+                <div class="type">
+                  <selectType :types="ruleScore" :bigImg="bigImg" :disabled="disabled" class="bar"></selectType>
+                </div>
+              </div>
+            </div>
           </li>
         </ul>
       </div>
@@ -48,7 +65,10 @@ export default {
       showDk: false,
       roomNum: '',
       gameMsg: {},
-      rules: ''
+      ruleScore: [],
+      ruleRound: [],
+      bigImg: false,
+      disabled: true
     }
   },
   props: {
@@ -62,9 +82,17 @@ export default {
         return {}
       }
     },
-    ru: {
-      type: String,
-      default: ''
+    score: {
+      type: Array,
+      default: function () {
+        return []
+      }
+    },
+    round: {
+      type: Array,
+      default: function () {
+        return []
+      }
     }
   },
   watch: {
@@ -74,8 +102,11 @@ export default {
     ds (val) {
       this.gameMsg = val
     },
-    ru (val) {
-      this.rules = val
+    score (val) {
+      this.ruleScore = val
+    },
+    round (val) {
+      this.ruleRound = val
     }
   },
   created () {
@@ -133,8 +164,8 @@ export default {
     position: fixed;
     top: 50%;
     right: 50%;
-    width: 60%;
-    height: 60%;
+    width: 72%;
+    height: 72%;
     transform: translate(50%, -50%);
    // background: rgba(0, 0, 0, .8);
     z-index: 1000;
@@ -154,38 +185,56 @@ export default {
       z-index: 1001;
     }
     .dk-body{
-      padding: 130px 50px 40px;
+      padding: 80px 50px 30px;
       color: #fff;
       font-size: 48px;
       ul{
         li.num{
           display: flex;
           height: 72px;
+          text-align: left;
           .img{
-            flex: 0 0 80px;
+          //  flex: 0 0 80px;
+            flex: 0 0 auto;
             height: 40px;
             text-align: right;
             padding-left: 64px;
           }
           span{
+            display: inline-block;
             flex: 1;
+            margin-left: 30px;
           }
         }
         li.rule{
           display: flex;
         //  height: 72px;
           .img{
-            flex: 0 0 80px;
+           // flex: 0 0 80px;
+            flex: 0 0 auto;
             height: 42px;
             text-align: right;
           }
-          span{
+          .box{
             flex: 1;
-            width: calc(~"100% - 200px");
+          //  width: calc(~"100% - 200px");
             margin-left: 15px;
             font-size: 38px;
             word-wrap: break-word;
             vertical-align: top;
+            .row{
+              display: flex;
+              padding: 0 1% 0 1%;
+              margin: 1vh 0 2vh;
+              //overflow: auto;
+              .label{
+                flex: 0 0 80px;
+                margin-top: 6px;
+              }
+              .type{
+                flex: 1;
+              }
+            }
           }
         }
       }
@@ -196,7 +245,7 @@ export default {
       padding: 0 10%;
       justify-content: space-between;
       .dk-btn{
-        flex: 0 0 38%;
+        flex: 0 0 35%;
       }
     }
   }
