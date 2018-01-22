@@ -237,7 +237,7 @@
     <!-- 混推 -->
     <ht-game :ht="showHt" @on-close="closeHt"></ht-game>
     <!-- 代开 -->
-    <dk-modal :dk="showDkModal" :ds="gameDatas" @on-close="closeDk" :ru="dkRules"></dk-modal>
+    <dk-modal :dk="showDkModal" :ds="gameDatas" @on-close="closeDk" :score="dkScore" :round="dkRound"></dk-modal>
 
   </div>
 </template>
@@ -371,7 +371,9 @@ export default {
       gameType: 1,
       cardBg: tabImgs.cards[3],
       loadRoom: false,
-      selectData: {}
+      selectData: {},
+      dkScore: [],
+      dkRound: []
     }
   },
   created () {
@@ -494,15 +496,15 @@ export default {
     },
     qtRule (val) {
       this.qtRules = val.model
-      this.dkRules = val.model
+    //  this.dkRules = val.model
     },
     htRule (val) {
       this.htRules = val.model
-      this.dkRules = val.model
+    //  this.dkRules = val.model
     },
     djRule (val) {
       this.djRules = val.model
-      this.dkRules = val.model
+    //  this.dkRules = val.model
     }
   },
   methods: {
@@ -589,7 +591,7 @@ export default {
           let data = window.JSON.parse(responseData)
           vm.loadQt = false
           vm.qtRules = data.model
-          vm.dkRules = data.model
+        //  vm.dkRules = data.model
           vm.$store.dispatch('qtRuleAjax', data)
         }
       )
@@ -609,7 +611,7 @@ export default {
         , function (responseData) { // 响应原生回调方法
           let data = window.JSON.parse(responseData)
           vm.htRules = data.model
-          vm.dkRules = data.model
+        //  vm.dkRules = data.model
           vm.loadHt = false
           vm.$store.dispatch('htRuleAjax', data)
         }
@@ -630,7 +632,7 @@ export default {
         , function (responseData) { // 响应原生回调方法
           let data = window.JSON.parse(responseData)
           vm.djRules = data.model
-          vm.dkRules = data.model
+        //  vm.dkRules = data.model
           vm.loadDj = false
           vm.$store.dispatch('djRuleAjax', data)
         }
@@ -747,28 +749,34 @@ export default {
       this.selectData = {}
       if (this.selectTypes === 0) {
         this.createRoomData1.substitute = true
-        if (this.isFirstQt) {
-          this.qtAjax()
-          this.isFirstQt = false
-        } else {
-          this.dkRules = this.qtRules
-        }
+        this.dkRound = this.ds1_1
+        this.dkScore = this.ds1_2
+        // if (this.isFirstQt) {
+        //   this.qtAjax()
+        //   this.isFirstQt = false
+        // } else {
+        //   this.dkRules = this.qtRules
+        // }
       } else if (this.selectTypes === 1) {
         this.createRoomData2.substitute = true
-        if (this.isFirstHt) {
-          this.htAjax()
-          this.isFirstHt = false
-        } else {
-          this.dkRules = this.htRules
-        }
+        this.dkRound = this.ds2_1
+        this.dkScore = this.ds2_2
+        // if (this.isFirstHt) {
+        //   this.htAjax()
+        //   this.isFirstHt = false
+        // } else {
+        //   this.dkRules = this.htRules
+        // }
       } else {
         this.createRoomData3.substitute = true
-        if (this.isFirstDj) {
-          this.djAjax()
-          this.isFirstDj = false
-        } else {
-          this.dkRules = this.djRules
-        }
+        this.dkRound = this.ds3_1
+        this.dkScore = this.ds3_2
+        // if (this.isFirstDj) {
+        //   this.djAjax()
+        //   this.isFirstDj = false
+        // } else {
+        //   this.dkRules = this.djRules
+        // }
       }
       setTimeout(() => {
         this.create()

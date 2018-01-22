@@ -20,7 +20,20 @@
             <div class="img">
               <img src="../assets/imgs/img_Daikai_guize.png" alt="" height="100%">
             </div>
-            <span v-html="rules"></span>
+            <div class="box">
+              <div class="row">
+                 <span class="label">
+                   <img src="../assets/imgs/img_Create_Thenumberofinnings.png" alt="" width="100%">
+                </span>
+                <selectType :types="ruleRound" :bigImg="bigImg" :disabled="disabled" class="bar"></selectType>
+              </div>
+              <div class="row">
+                 <span class="label">
+                   <img src="../assets/imgs/img_Create_Froction.png" alt="" width="100%">
+                </span>
+                <selectType :types="ruleScore" :bigImg="bigImg" :disabled="disabled" class="bar"></selectType>
+              </div>
+            </div>
           </li>
         </ul>
       </div>
@@ -48,7 +61,10 @@ export default {
       showDk: false,
       roomNum: '',
       gameMsg: {},
-      rules: ''
+      ruleScore: [],
+      ruleRound: [],
+      bigImg: false,
+      disabled: false
     }
   },
   props: {
@@ -62,9 +78,17 @@ export default {
         return {}
       }
     },
-    ru: {
-      type: String,
-      default: ''
+    score: {
+      type: Array,
+      default: function () {
+        return []
+      }
+    },
+    round: {
+      type: Array,
+      default: function () {
+        return []
+      }
     }
   },
   watch: {
@@ -74,8 +98,11 @@ export default {
     ds (val) {
       this.gameMsg = val
     },
-    ru (val) {
-      this.rules = val
+    score (val) {
+      this.ruleScore = val
+    },
+    round (val) {
+      this.ruleRound = val
     }
   },
   created () {
@@ -179,7 +206,7 @@ export default {
             height: 42px;
             text-align: right;
           }
-          span{
+          .box{
             flex: 1;
             width: calc(~"100% - 200px");
             margin-left: 15px;

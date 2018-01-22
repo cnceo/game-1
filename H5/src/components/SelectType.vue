@@ -46,6 +46,10 @@ export default {
     bigImg: {
       type: Boolean,
       default: true
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   watch: {
@@ -61,6 +65,9 @@ export default {
   methods: {
     // 创建房间选择的游戏类型参数
     selectType (index) {
+      if (this.disabled) {
+        return
+      }
       let value = ''
       this.types.forEach((item, ids) => {
         if (ids === index) {
