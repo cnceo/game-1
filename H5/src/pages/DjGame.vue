@@ -1004,33 +1004,35 @@ export default {
               }
               vm.sortTimer1 -= 1
             }, 1000)
+            if (Number(user.opeUserId) !== Number(vm.userId)) {
+              user.dissolveUserList.forEach((its) => {
+                if (Number(its.userId) === Number(vm.userId)) {
+                  flag = true
+                }
+              })
+              if (!flag && !reject) {
+                vm.showReleaseRoomBtns = true
+                vm.disbandType = 2
+                vm.sTimer2 = setInterval(() => {
+                  if (vm.sortTimer2 <= 0) {
+                    console.log('超时了....')
+                    vm.releaseReadyOk()
+                  }
+                  vm.sortTimer2 -= 1
+                }, 1000)
+              } else {
+              //  vm.showReleaseReadyModal = false
+              }
+            } else {
+              vm.showReleaseRoomBtns = false
+            // vm.showReleaseReadyModal = false
+            }
           } else {
+            vm.showReleaseRoomBtns = false
             vm.showReleaseReadyModal = false
             vm.sTimer1 = null
             vm.sortTimer1 = 120
             vm.showTimer = false
-          }
-          if (Number(user.opeUserId) !== Number(vm.userId)) {
-            user.dissolveUserList.forEach((its) => {
-              if (Number(its.userId) === Number(vm.userId)) {
-                flag = true
-              }
-            })
-            if (!flag && !reject) {
-              vm.showReleaseRoomBtns = true
-              vm.disbandType = 2
-              vm.sTimer2 = setInterval(() => {
-                if (vm.sortTimer2 <= 0) {
-                  console.log('超时了....')
-                  vm.releaseReadyOk()
-                }
-                vm.sortTimer2 -= 1
-              }, 1000)
-            } else {
-            //  vm.showReleaseReadyModal = false
-            }
-          } else {
-           // vm.showReleaseReadyModal = false
           }
         }
         // 调用responseCallback方法可以带传参数到原生
