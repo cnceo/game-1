@@ -1058,17 +1058,21 @@ export default {
       })
       this.$JsBridge.registerHandler('djConnectGame', function (data, responseCallback) {
         console.log(data)
+        console.log('断线重连了')
         let res = window.JSON.parse(data)
         if (res.needConnection === true) {
           if (res.turnStep === 'UN_START' || res.turnStep === 'UN_BLOCK') {
             vm.updateUsers(res.roomUserVOList)
           } else if (res.turnStep === 'HAS_BLOCK') {
+            console.log('哈哈哈')
+            vm.isMaster = false
+            vm.isStartReady = false
             vm.updateUsers(res.roomUserVOList)
             vm.updateCards(res.doorVOList)
           } else if (res.turnStep === 'BETTING') {
-           // vm.updateUsers(res.roomUserVOList)
-           // vm.updateCards(res.doorVOList)
-           // vm.updateResult(res.userGameVOList)
+            vm.updateUsers(res.roomUserVOList)
+            vm.updateCards(res.doorVOList)
+            vm.updateResult(res.userGameVOList)
           } else if (res.turnStep === 'UN_PUSH_CARD' || res.turnStep === 'HAS_PUSH_CARD') {
            // vm.updateUsers(res.roomUserVOList)
            // vm.updateCards(res.doorVOList)
@@ -2044,10 +2048,13 @@ export default {
                 }
               }
             } else {
+              console.log('和局')
               for (let i = 0; i < 10; i++) {
                 if (i >= (result.length * 2)) {
+                  console.log('隐藏的' + i)
                   coins[i] = 'hide'
                 } else {
+                  console.log('平分了')
                   coins[i] = 'move'
                 }
               }
@@ -3662,7 +3669,7 @@ export default {
             span{
               display: inline-block;
               vertical-align: middle;
-              width: 72%;
+              width: 62%;
               overflow: hidden;
               white-space: nowrap;
               text-overflow: ellipsis;
@@ -3743,7 +3750,7 @@ export default {
      justify-content: space-between;
      text-align: center;
     .share-btn{
-      flex: 0 0 24%;
+      flex: 0 0 240px;
       margin: 0 auto;
     }
   }
