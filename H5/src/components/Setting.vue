@@ -57,6 +57,27 @@
         </div>
       </div>
     </Modal>
+    <Modal :showModal="showChangeAccount"
+    @on-close="closeChangeAccount"
+    class="exit-modal">
+    <div slot="modal-bg" class="modal-bg">
+      <img src="../assets/imgs/img-Stoppingdoor-background.png" alt=""  width="100%" height="100%">
+    </div>
+      <!-- <div slot="title" class="xz-title title-active">
+         <img src="../assets/imgs/img_Bet_title.png" alt=""  width="100%">
+      </div> -->
+      <div slot="body" class="exit-body">
+      {{changeText}}
+      </div>
+      <div slot="foot" class="exit-foot">
+        <div class="ok exit-btn" @touchstart.stop="changeOk($event)">
+           <img src="../assets/imgs/img_Buchong_yes.png" alt=""  width="100%">
+        </div>
+        <div class="cancel exit-btn" @touchstart.stop="changeCancel($event)">
+           <img src="../assets/imgs/img_Buchong_no.png" alt=""  width="100%">
+        </div>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -187,7 +208,9 @@ export default {
           select: false,
           value: tabImgs.cards[5]
         }
-      ]
+      ],
+      showChangeAccount: false,
+      changeText: '您确定要退出当前账号吗？'
     }
   },
   created () {
@@ -301,6 +324,12 @@ export default {
     // 切换账号
     changeAccount () {
       this.$audio.play(this.$audio.btn)
+      this.showChangeAccount = true
+    },
+    changeOk (e) {
+     // e.preventDefault()
+      this.$audio.play(this.$audio.btn)
+      this.showChangeAccount = false
       // 调用android原生内部方法
       this.$JsBridge.callHandler(
         'changeAccount' // 原生的方法名
@@ -309,6 +338,13 @@ export default {
 
         }
       )
+    },
+    changeCancel () {
+      this.showChangeAccount = false
+    },
+    closeChangeAccount () {
+      this.$audio.play(this.$audio.btn)
+      this.showChangeAccount = false
     }
   }
 }
@@ -377,5 +413,20 @@ export default {
     }
   }
 }
-
+.exit-modal{
+  .exit-body{
+    padding: 60px 0;
+    color: #fff;
+    font-size: 42px;
+  }
+  .exit-foot{
+     display: flex;
+     flex-direction: row;
+     padding: 0 10%;
+     justify-content: space-between;
+    .exit-btn{
+      flex: 0 0 30%;
+    }
+  }
+}
 </style>

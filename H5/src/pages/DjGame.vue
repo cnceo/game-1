@@ -955,6 +955,7 @@ export default {
         let msg = '房主解散了房间'
         vm.closeTime()
         vm.resetParams()
+        vm.nextResetParams()
         vm.showReleaseWaitModal = false
         vm.isFirst = true
         vm.isGameStart = false
@@ -1211,6 +1212,7 @@ export default {
           let msg = '您已经退出了房间'
           vm.closeTime()
           vm.resetParams()
+          vm.nextResetParams()
           vm.$emit('on-close', msg)
         }
       )
@@ -1492,6 +1494,7 @@ export default {
           }
         }
       })
+      this.nextResetParams()
       // let vm = this
       this.$JsBridge.callHandler(
         'startReady' // 原生的方法名
@@ -1566,6 +1569,7 @@ export default {
       //
       this.showShareModal = false
       this.resetParams()
+      this.nextResetParams()
       this.curRound = 1
       let params = window.JSON.stringify({
         numId: this.gameMsg.numId,
@@ -1601,21 +1605,10 @@ export default {
       this.isCurUserReady = false
       // this.isGameStart = false
       this.isShowXz = true
-      this.showCards = false
-      this.checkResult1 = false
-      this.checkResult2 = false
       this.isDown = false
       this.isDownSu = false
-      this.menType = false
-      this.showScore = false
       this.qz = false
-      this.cardList = []
-      this.scores = []
       this.allScores = []
-      this.coins.forEach((item) => {
-        item.show = ''
-        item.down = ''
-      })
       this.timer = null
       this.timer1 = null
       this.timer2 = null
@@ -1634,6 +1627,19 @@ export default {
       this.coinUser = []
       this.bks = ['', '', '', '', '', '', '', '', '', '']
       this.curRound += 1
+    },
+    nextResetParams () {
+      this.showScore = false
+      this.scores = []
+      this.showCards = false
+      this.checkResult1 = false
+      this.checkResult2 = false
+      this.cardList = []
+      this.menType = false
+      this.coins.forEach((item) => {
+        item.show = ''
+        item.down = ''
+      })
     },
     gameRule () {
       this.showRuleModal = true
@@ -2578,7 +2584,7 @@ export default {
       }
     }
   }
-  
+
   .card-table{
     position: absolute;
     top: 49%;

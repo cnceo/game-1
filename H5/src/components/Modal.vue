@@ -105,8 +105,9 @@ export default {
     }
   }
   .modal-content.s-right{
-    right: 30px;
-    transform: translate(0, -50%);
+    right: 0;
+    top: 100%;
+    transform: translate(0, -100%);
   }
   .modal-mask{
     position: fixed;
