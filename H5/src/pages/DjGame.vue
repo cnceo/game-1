@@ -38,6 +38,39 @@
             </div>
           </div>
         </div>
+        <!-- <div class="status" :class="{'l-site': (index !== 0) && (index % 2 !== 0),
+         'r-site': (index % 2 === 0), 'c-site': (index === 0)}">
+            <span v-show="item.ready == false && item.roomOwner == false && item.curUser == true" @click="startReady">
+              <img src="../assets/imgs/img_Room_ready.png" alt="" width="100%" height="100%">
+            </span>
+            <span v-show="item.ready == true && item.roomOwner == false && isStartReady">
+              <img src="../assets/imgs/img_Room_readying.png" alt="" width="100%" height="100%">
+            </span>
+            <span v-show="item.ready == false && item.roomOwner == true && isFriends == true && isFirst == true" @click="startGame">
+              <img src="../assets/imgs/img_Buchong_kaishi.png" alt="" width="100%" height="100%">
+            </span>
+            <span v-show="item.ready == false && item.roomOwner == true && isFirst == false && item.curUser == true" @click="startReady">
+              <img src="../assets/imgs/img_Room_ready.png" alt="" width="100%" height="100%">
+            </span>
+            <span v-show="item.ready == true && item.roomOwner == true && isStartReady">
+              <img src="../assets/imgs/img_Room_readying.png" alt="" width="100%" height="100%">
+            </span>
+         </div> -->
+        <div class="xz-tip">
+          <span v-show="item.xz == 0 && item.banker == false && isDownSu == true">
+            <img src="../assets/imgs/img_Bet_qingxiazhu.png" alt="" width="100%" height="100%">
+          </span>
+          <span v-show="item.xz == 1 && item.banker == false && isDownSu == true">
+            <img src="../assets/imgs/img_Bet_zhengzaixiazhu.png" alt="" width="100%" height="100%">
+          </span>
+        </div>
+      </div>
+    </div>
+     <div class="user-site res-site" v-show="users.length >= 1 && users.length <= 5">
+      <div class="user-item" v-for="(item, index) in users" :key="index"
+      :class="{'site0': index === 0, 'site1': index === 1, 'site2': index === 2,
+      'site3': index === 3, 'site4': index === 4}">
+        
         <div class="status" :class="{'l-site': (index !== 0) && (index % 2 !== 0),
          'r-site': (index % 2 === 0), 'c-site': (index === 0)}">
             <span v-show="item.ready == false && item.roomOwner == false && item.curUser == true" @click="startReady">
@@ -56,14 +89,6 @@
               <img src="../assets/imgs/img_Room_readying.png" alt="" width="100%" height="100%">
             </span>
          </div>
-        <div class="xz-tip">
-          <span v-show="item.xz == 0 && item.banker == false && isDownSu == true">
-            <img src="../assets/imgs/img_Bet_qingxiazhu.png" alt="" width="100%" height="100%">
-          </span>
-          <span v-show="item.xz == 1 && item.banker == false && isDownSu == true">
-            <img src="../assets/imgs/img_Bet_zhengzaixiazhu.png" alt="" width="100%" height="100%">
-          </span>
-        </div>
       </div>
     </div>
     <!--最终结果页面-->
@@ -204,6 +229,9 @@
       :class="{'chu': index === 0, 'tian': index === 1, 'kan': index === 2}">
         <img :src="item" alt="" height="100%">
       </div>
+      <div class="card-tip" v-show="showCardTip">
+        <img src="../assets/imgs/img_Bet_touzhu.png" alt=""  width="100%" height="100%">
+      </div>
     </div>
     <div class="card-table g-flex-row" v-show="isGameStart">
       <div class="chu g-flex" v-for="(item, index) in tbg" :key="index"
@@ -246,6 +274,7 @@
           </div>
         </div>
       </div>
+      
     </div>
 
     <!-- 邀请好友 -->
@@ -287,6 +316,10 @@
          <img src="../assets/imgs/img_Bet_title.png" alt=""  width="100%">
       </div>
       <div slot="body" class="xz-body">
+        <div class="modal-timer" v-show="showXzSortTimer">
+          <img src="../assets/imgs/img_Xuanze_shijian.png" alt=""  width="100%" height="100%">
+          <span class="text">{{xzSortTimer}}</span>
+        </div>
         <ul>
           <li class="item">
             <span class="label">
@@ -346,7 +379,10 @@
       </div>
       <div slot="foot" class="xz-foot">
         <div class="ok xz-btn" @touchstart="xzOk">
-           <img src="../assets/imgs/img-Stoppingdoor-confirm.png" alt=""  width="100%">
+           <img src="../assets/imgs/img_Bet_touzhu.png" alt=""  width="100%" height="100%">
+        </div>
+        <div class="cancel xz-btn" @touchstart="xzCancel">
+           <img src="../assets/imgs/img_Bet_fangqi.png" alt=""  width="100%" height="100%">
         </div>
       </div>
     </Modal>
@@ -525,6 +561,8 @@ export default {
   data () {
     return {
       date: '', // 当前时间
+      showXzSortTimer: false,
+      xzSortTimer: 15,
       showTimer: false,
       sortTimer1: 120,
       showTimer1: false,
@@ -805,7 +843,8 @@ export default {
       power: ['', '', '', ''],
       showReleaseRoomBtns: false,
       showOwnerReleaseReadyModal: false,
-      ownerReleaseReadyText: ''
+      ownerReleaseReadyText: '',
+      showCardTip: false
     }
   },
   props: {
@@ -1797,8 +1836,14 @@ export default {
         }
       })
       vm.showCards = true
+      // let timert = setTimeout(() => {
+      //   vm.showCardTip = true
+      // }, 2000)
       vm.timer1 = setTimeout(() => {
+        // clearInterval(timert)
+        // timert = null
         vm.checkResult1 = true
+       // vm.showCardTip = false
         vm.isDownSu = true
         vm.users.forEach((item) => {
           if (Number(item.userId) === Number(vm.userId)) {
@@ -1810,6 +1855,16 @@ export default {
         vm.timer2 = setTimeout(() => {
           if (vm.isShowXz) {
             vm.showXzModal = true
+            vm.showXzSortTimer = true
+            let sortTimer = setInterval(() => {
+              if (vm.xzSortTimer <= 0) {
+                clearInterval(sortTimer)
+                sortTimer = null
+                vm.xzSortTimer = 120
+                vm.showXzSortTimer = false
+              }
+              vm.xzSortTimer -= 1
+            }, 1000)
           }
         }, 500)
       }, 3000)
@@ -1976,8 +2031,14 @@ export default {
         })
         vm.isDownSu = false
         vm.menType = true
+        let timert = setTimeout(() => {
+          vm.showCardTip = true
+        }, 2000)
         vm.timer3 = setTimeout(() => {
+          clearInterval(timert)
+          timert = null
           vm.checkResult2 = true
+          vm.showCardTip = false
           vm.scores = []
           vm.showScore = true
           vm.users.forEach((item) => {
@@ -2284,21 +2345,21 @@ export default {
       .msg.l-msg{
         left: -30px;
       }
-      .status{
-        position: absolute;
-        top: 20px;
-        width: 180px;
-        z-index: 1007;
-      }
-      .status.l-site{
-          left: -280px;
-        }
-      .status.r-site{
-          right: -220px;
-      }
-      .status.c-site{
-          right: 20px;
-      }
+      // .status{
+      //   position: absolute;
+      //   top: 20px;
+      //   width: 180px;
+      //   z-index: 1007;
+      // }
+      // .status.l-site{
+      //     left: -280px;
+      //   }
+      // .status.r-site{
+      //     right: -220px;
+      // }
+      // .status.c-site{
+      //     right: 20px;
+      // }
       .xz-tip{
         position: absolute;
         width: 180px;
@@ -2314,10 +2375,10 @@ export default {
       left: 40%;
       bottom: 0;
       transform: translateX(-50%);
-      .status{
-        top: 20px;
-        left: 240px;
-      }
+      // .status{
+      //   top: 20px;
+      //   left: 240px;
+      // }
       .msg{
          width: 370px;
       }
@@ -2423,6 +2484,30 @@ export default {
         right: 0px;
       }
     }
+  }
+  .res-site{
+    z-index: 1001;
+     .status{
+        position: absolute;
+        top: -166px;
+        width: 180px;
+        z-index: 1007;
+      }
+      .status.l-site{
+          left: -400px;
+        }
+      .status.r-site{
+          right: -340px;
+      }
+      .status.c-site{
+          right: 20px;
+      }
+      .site0{
+         .status{
+          top: -136px;
+          left: 60px;
+        }
+      }
   }
   .game-table{
     position: relative;
@@ -2594,6 +2679,13 @@ export default {
     .chu,.tian,.kan{
       position: relative;
       height: 320px;
+    }
+    .card-tip{
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      width: 24%;
+      transform: translate(-50%, 0%);
     }
     .coins{
       position: absolute;
@@ -3502,8 +3594,8 @@ export default {
         flex-direction: row;
         margin-bottom: 20px;
         .label{
-          flex: 0 0 150px;
-          width: 150px;
+          flex: 0 0 100px;
+          width: 100px;
           display: flex;
           align-items: center;
           img{
@@ -3512,8 +3604,10 @@ export default {
           }
         }
         .select-xz{
-          flex: 1;
-          width: 890px;
+         // flex: 1;
+        //  width: 890px;
+          flex: 0 0 auto;
+          width: auto;
           height: 84px;
           margin-left: 30px;
           background: #6dc4d8;
@@ -3596,7 +3690,9 @@ export default {
       flex: 0 0 30%;
     }
   }
-  .modal-timer{
+  
+}
+.modal-timer{
     position: absolute;
     top: -50px;
     left: -50px;
@@ -3611,7 +3707,6 @@ export default {
       color: #000;
     }
   }
-}
 .share-modal{
   .share-body{
     padding: 86px 0 10px 0;

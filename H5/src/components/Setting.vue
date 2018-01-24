@@ -1,6 +1,7 @@
 <template>
   <div class="setting-sound" ref="slider">
     <Modal :showModal="showSetModal"
+    :label="setLabel"
     @on-close="closeSetModal"
     class="set-modal">
       <div slot="title" class="set-title">
@@ -26,6 +27,9 @@
               </span>
               <selectType :types="ds0_2" class="bar" @on-select="selectCard"></selectType>
             </div>
+            <span class="toggle" @click="changeAccount" v-show="account">
+              <img src="../assets/imgs/img_Setup_Exchangeaccount.png" alt="" width="100%">
+            </span>
           </div>
           <div v-if="selectSet === 1">
             <ul class="sound-bar">
@@ -50,9 +54,9 @@
                 </div>
               </li>
             </ul>
-            <span class="toggle" @click="changeAccount" v-show="account">
+            <!-- <span class="toggle" @click="changeAccount" v-show="account">
               <img src="../assets/imgs/img_Setup_Exchangeaccount.png" alt="" width="100%">
-            </span>
+            </span> -->
           </div>
         </div>
       </div>
@@ -210,7 +214,7 @@ export default {
         }
       ],
       showChangeAccount: false,
-      changeText: '您确定要退出当前账号吗？'
+      changeText: '是否注销游戏'
     }
   },
   created () {
@@ -362,13 +366,13 @@ export default {
       }
     }
     .set-body{
-      margin-top: 30px;
+      margin-top: 12px;
       .set-box{
         .row {
           display: flex;
           flex-direction: row;
           align-items: center;
-          margin: 30px 0;
+          margin: 12px 0;
           .label{
           // flex: 0 0 180px;
             width: 25%;
@@ -395,7 +399,7 @@ export default {
     .set-body{
       .sound-bar{
         .row{
-          margin: 62px auto 0;
+          margin: 32px auto 32px;
           .label{
             flex: 0 0 16%;
             width: 16%;
@@ -409,10 +413,11 @@ export default {
       }
     }
     .toggle{
-      margin-top: 50px;
+      margin-top: 30px;
     }
   }
 }
+
 .exit-modal{
   .exit-body{
     padding: 60px 0;
