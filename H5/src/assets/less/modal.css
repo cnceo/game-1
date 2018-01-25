@@ -4,7 +4,7 @@
   background-size: 100% 100%;
 }
 #app .rule-modal .modal-content .rule-body .game-tabs {
-  width: 28%;
+  width: 24%;
   flex: none;
 }
 #app .rule-modal .rule-title {
@@ -56,7 +56,7 @@
   right: 0;
 }
 #app .create-modal .modal-content {
-  width: 74%;
+  width: 76%;
   height: 72%;
   background-size: 100% 100%;
 }
@@ -65,14 +65,14 @@
 }
 #app .join-modal .modal-content {
   width: 68%;
-  height: 75%;
+  height: 64%;
   padding: 30px;
 }
 #app .join-modal .modal-content .join-body {
   width: 100%;
 }
 #app .join-modal .join-title {
-  width: 50%;
+  width: 48%;
 }
 #app .lm-modal .lm-title {
   width: 50%;
@@ -83,11 +83,11 @@
   margin: 0 auto;
 }
 #app .xz-modal .modal-content {
-  width: 30%;
-  height: 48%;
+  width: 34%;
+  height: 44%;
 }
 #app .xz-modal .modal-content .game-body {
-  padding: 10px 0 10px 0;
+  padding: 10px 0 0 0;
 }
 #app .modal-bg {
   height: 100%;

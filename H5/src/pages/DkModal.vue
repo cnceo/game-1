@@ -213,6 +213,7 @@ export default {
            // flex: 0 0 80px;
             flex: 0 0 auto;
             height: 42px;
+            margin-top: 12px;
             text-align: right;
           }
           .box{

@@ -14,13 +14,13 @@
       <div slot="body" class="set-body">
         <div class="set-box">
           <div v-if="selectSet === 0">
-            <div class="row">
+            <div class="sub-row first-sub">
               <span class="label">
                 <img src="../assets/imgs/img_Setup_Desktop.png" alt="" width="100%">
               </span>
               <selectType :types="ds0_1" class="bar" @on-select="selectDesktop"></selectType>
             </div>
-            <div class="row">
+            <div class="sub-row">
               <span class="label">
                 <img src="../assets/imgs/img_Setup_Rowsurface.png" alt="" width="100%">
               </span>
@@ -369,7 +369,7 @@ export default {
      // margin-top: 30px;
       margin-top: 12px;
       .set-box{
-        .row {
+        .sub-row,.row {
           display: flex;
           flex-direction: row;
           align-items: center;
@@ -382,9 +382,9 @@ export default {
             vertical-align: middle;
           }
         }
-        .row:last-child {
+        .sub-row.first-sub {
           .label{
-            width: 27%;
+            width: 21%;
             margin-top: 15px;
           }
         }

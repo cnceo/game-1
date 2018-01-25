@@ -119,7 +119,7 @@ export default {
     transition: all .5s linear;
   }
   .modal-content.s-right.hide{
-    right: -30%;
+    right: -34%;
     transition: all .5s linear;
   }
   .modal-mask{

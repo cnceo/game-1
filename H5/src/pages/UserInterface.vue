@@ -78,7 +78,7 @@
         <div class="game-tabs">
           <span v-for="(item, index) in gameTabs" @touchstart="changeGame(index, $event)" :key="index"
           :class="{'game-active': item.select}">
-            <img :src="item.img" alt="">
+            <img :src="item.img" alt="" width="100%" height="100%">
           </span>
         </div>
         <div class="game-box">
@@ -1136,7 +1136,7 @@ export default {
         width: 210px;
         height: 50px;
         line-height: 45px;
-        padding-left: 72px;
+        padding-left: 78px;
         padding-top: 6px;
         text-align: left;
         // text-overflow: ellipsis;
@@ -1158,7 +1158,7 @@ export default {
         .user-img{
           position: absolute;
           top: -2px;
-          left: 0;
+          left: -10px;
           // width: 118px;
           // height: 118px;
           width: 140px;
@@ -1281,14 +1281,14 @@ export default {
 .rule-body, .create-content{
   display: flex;
   .game-tabs{
-    flex: 0 0 230px;
-    width: 230px;
+    flex: 0 0 200px;
+    width: 200px;
     padding: 0 5px 0 50px;
     span{
       display: block;
       width: 100%;
-      height: 70px;
-      line-height: 70px;
+      height: 72px;
+      line-height: 72px;
       margin-top: 38px;
       img{
         width: 100%;
@@ -1318,9 +1318,9 @@ export default {
 .rule-body{
   .game-box{
     flex: 0 0 58%;
-    padding: 0 5% 0 5%;
+    padding: 0 5% 0 2%;
     width: 82%;
-    height: 42vh;
+    height: 44vh;
     margin: 3vh 0 5vh 3%;
     overflow: auto;
     .item{
@@ -1337,7 +1337,7 @@ export default {
   }
 }
  .create-content{
-   padding-left: 32px;
+   padding-left: 24px;
    .game-box{
     flex: 0 0 70%;
     padding: 0 1% 0 1%;

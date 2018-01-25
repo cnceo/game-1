@@ -224,18 +224,55 @@
     </div>
     <!-- 下注筹码 -->
     <div class="card-table card-table-bg g-flex-row" v-show="isGameStart">
-      <div class="chu g-flex" v-for="(item, index) in tbg" :key="index"
-      :class="{'chu': index === 0, 'tian': index === 1, 'kan': index === 2}">
-        <img :src="item" alt="" height="100%">
+      <div class="chu g-flex">
+        <img src="../assets/imgs/img_Bet_chu.png" alt="" width="100%" height="100%">
+        <div class="xz-res" v-show="showXzTotal">
+          <img src="../assets/imgs/img_Bet_xiaobeijing.png" alt="" width="100%" height="100%">
+          <div class="xz-num">
+            <img src="../assets/imgs/img_Bet_jinbi.png" alt="" height="100%">
+            <span class="num">{{cmScore}}</span><!-- cmScore -->
+            <img src="../assets/imgs/img_Bet_jianhao.png" alt="" height="100%"
+             @click="deleteCmScore">
+          </div>
+        </div>
       </div>
-      <div class="card-tip" v-show="showCardTip">
-         <img src="../assets/imgs/img_Bet_touzhu.png" alt=""  width="100%" height="100%">
+       <div class="chu g-flex">
+        <img src="../assets/imgs/img_Bet_tian.png" alt="" height="100%">
+         <div class="xz-res" v-show="showXzTotal">
+          <img src="../assets/imgs/img_Bet_xiaobeijing.png" alt="" width="100%" height="100%">
+          <div class="xz-num">
+            <img src="../assets/imgs/img_Bet_jinbi.png" alt="" height="100%">
+            <span class="num">{{tmScore}}</span><!-- cmScore -->
+            <img src="../assets/imgs/img_Bet_jianhao.png" alt="" height="100%"
+             @click="deleteTmScore">
+          </div>
+        </div>
       </div>
-      <div class="xz-modal-timer" v-show="showXzSortTimer">
-        <img src="../assets/imgs/img_Xuanze_shijian.png" alt=""  width="100%" height="100%">
-        <span class="text">{{xzSortTimer}}</span>
+       <div class="chu g-flex">
+        <img src="../assets/imgs/img_Bet_kan.png" alt="" height="100%">
+         <div class="xz-res" v-show="showXzTotal">
+          <img src="../assets/imgs/img_Bet_xiaobeijing.png" alt="" width="100%" height="100%">
+          <div class="xz-num">
+            <img src="../assets/imgs/img_Bet_jinbi.png" alt="" height="100%">
+            <span class="num">{{kmScore}}</span><!-- cmScore -->
+            <img src="../assets/imgs/img_Bet_jianhao.png" alt="" height="100%"
+             @click="deleteKmScore">
+          </div>
+        </div>
       </div>
+      
     </div>
+    <div class="card-table card-table-tip g-flex-row">
+      <div class="chu g-flex">
+        <div class="card-tip" v-show="showCardTip">
+          <img src="../assets/imgs/img_Bet_touzhu.png" alt=""  width="100%" height="100%">
+        </div>
+        <div class="xz-modal-timer" v-show="showXzSortTimer">
+          <img src="../assets/imgs/img_Xuanze_shijian.png" alt=""  width="100%" height="100%">
+          <span class="text">{{xzSortTimer}}</span>
+        </div>
+      </div>
+    </div>    
     <div class="card-table g-flex-row" v-show="isGameStart">
       <div class="chu g-flex" v-for="(item, index) in tbg" :key="index"
       :class="{'chu': index === 0, 'tian': index === 1, 'kan': index === 2}">
@@ -566,6 +603,7 @@ export default {
   data () {
     return {
       date: '', // 当前时间
+      sortTimerVal: null,
       showXzSortTimer: false,
       xzSortTimer: 15,
       showTimer: false,
@@ -627,6 +665,7 @@ export default {
         }
       ], // 游戏中玩家列表
       showXzModal: false, // 是否显示下注弹窗
+      showXzTotal: false,
       showClose: false, // 是否显示弹窗关闭按钮
       site: true, // 弹窗显示位置
       mType: [
@@ -850,10 +889,9 @@ export default {
       showOwnerReleaseReadyModal: false,
       ownerReleaseReadyText: '',
       showCardTip: false,
-      showXzSortTimer: false,
-      xzSortTimer: 15,
       toggShow: false,
-      toggleXzModal: false
+      toggleXzModal: false,
+      canXz: true
     }
   },
   props: {
@@ -1004,6 +1042,7 @@ export default {
         vm.closeTime()
         vm.resetParams()
         vm.nextResetParams()
+        vm.lowz.pop()
         vm.showReleaseWaitModal = false
         vm.isFirst = true
         vm.isGameStart = false
@@ -1026,6 +1065,7 @@ export default {
           vm.closeTime()
          // vm.resetParams()
           vm.gameOver()
+          vm.lowz.pop()
           vm.showReleaseReadyModal = false
           vm.isFirst = true
           vm.isGameStart = false
@@ -1261,6 +1301,7 @@ export default {
           vm.closeTime()
           vm.resetParams()
           vm.nextResetParams()
+          vm.lowz.pop()
           vm.$emit('on-close', msg)
         }
       )
@@ -1396,6 +1437,9 @@ export default {
     // 删除出门投注分数
     deleteCmScore () {
       this.$audio.play(this.$audio.ui)
+      if (!this.canXz) {
+        return
+      }
       this.cmType = 0
       this.cmScore = 0
     },
@@ -1411,6 +1455,9 @@ export default {
     // 删除天门投注分数
     deleteTmScore () {
       this.$audio.play(this.$audio.ui)
+      if (!this.canXz) {
+        return
+      }
       this.tmType = 0
       this.tmScore = 0
     },
@@ -1426,18 +1473,39 @@ export default {
     // 删除坎门投注分数
     deleteKmScore () {
       this.$audio.play(this.$audio.ui)
+      if (!this.canXz) {
+        return
+      }
       this.kmType = 0
       this.kmScore = 0
+    },
+    clearXzTimer () {
+      clearInterval(this.sortTimerVal)
+      this.sortTimerVal = null
+      this.xzSortTimer = 15
+      this.showXzSortTimer = false
     },
     // 确定下注
     xzOk () {
       this.$audio.play(this.$audio.btn)
+      if (!this.canXz) {
+        return
+      }
+      this.canXz = false
+      this.clearXzTimer()
       this.xzData()
       // 后期需要注释
     },
     xzCancel () {
       this.$audio.play(this.$audio.btn)
-      this.cmScore = this.tmScore = this.kmScore = 0
+      if (!this.canXz) {
+        return
+      }
+      this.canXz = false
+      this.clearXzTimer()
+      this.cmScore = 0
+      this.tmScore = 0
+      this.kmScore = 0
       this.xzData()
     },
     xzData () {
@@ -1652,9 +1720,6 @@ export default {
     },
     // 单局游戏结束参数重置
     resetParams () {
-      this.cmScore = 0
-      this.tmScore = 0
-      this.kmScore = 0
       this.cmType = 0
       this.tmType = 0
       this.kmType = 0
@@ -1691,6 +1756,11 @@ export default {
       this.curRound += 1
     },
     nextResetParams () {
+      this.cmScore = 0
+      this.tmScore = 0
+      this.kmScore = 0
+      this.showXzTotal = false
+      this.canXz = true
       this.showScore = false
       this.scores = []
       this.showCards = false
@@ -1878,13 +1948,11 @@ export default {
         vm.timer2 = setTimeout(() => {
           if (vm.isShowXz) {
             vm.showXzModal = true
+            vm.showXzTotal = true
             vm.showXzSortTimer = true
-            let sortTimer = setInterval(() => {
+            vm.sortTimerVal = setInterval(() => {
               if (vm.xzSortTimer <= 0) {
-                clearInterval(sortTimer)
-                sortTimer = null
-                vm.xzSortTimer = 120
-                vm.showXzSortTimer = false
+                vm.clearXzTimer()
               }
               vm.xzSortTimer -= 1
             }, 1000)
@@ -2075,29 +2143,31 @@ export default {
           let winer = false
           let bankerId = ''
           let curIndex = ''
-          let bankerIndex = ''
+         // let bankerIndex = ''
           let he = false
           result.forEach((item, index) => {
             // 庄家赢了
             if (item.banker === true) {
-              bankerIndex = index
+            //  bankerIndex = index
               bankerId = item.userId
               if (item.winScore > 0) {
                 winer = true
+              } else if (Number(item.winScore) === 0) {
+                he = true
               }
             }
             // 庄家输了
           })
           // 判断是否平局（和）
-          if (bankerIndex === result.length - 1) {
-            if (result[bankerIndex] === result[bankerIndex - 1]) {
-              he = true
-            }
-          } else {
-            if (result[bankerIndex] === result[bankerIndex + 1]) {
-              he = true
-            }
-          }
+          // if (bankerIndex === result.length - 1) {
+          //   if (result[bankerIndex] === result[bankerIndex - 1]) {
+          //     he = true
+          //   }
+          // } else {
+          //   if (result[bankerIndex] === result[bankerIndex + 1]) {
+          //     he = true
+          //   }
+          // }
           // 获取庄家位置
           vm.users.forEach((item, index) => {
             if (Number(item.userId) === Number(bankerId)) {
@@ -2217,8 +2287,8 @@ export default {
           left: 0;
           // width: 100px;
           // height: 70px;
-           width: 124px;
-          height: 95px;
+           width: 96px;
+          height: 68px;
           padding: 11px 16px 15px 14px;
           overflow: hidden;
           img{
@@ -2296,21 +2366,21 @@ export default {
         //  left: 200px;
           animation: big 0.3s linear 5s forwards;
         }
-        .score{
-          position: absolute;
-          z-index: 1007;
-        }
-        .score .sign, .score .num{
-          font-family:'fzFont';
-          font-size: 56px;
-          letter-spacing: 6px;
-          color: #fff;
-          vertical-align: top;
-        }
-        .score .sign{
-          position: relative;
-          top: -8px;
-        }
+        // .score{
+        //   position: absolute;
+        //   z-index: 1007;
+        // }
+        // .score .sign, .score .num{
+        //   font-family:'fzFont';
+        //   font-size: 56px;
+        //   letter-spacing: 6px;
+        //   color: #fff;
+        //   vertical-align: top;
+        // }
+        // .score .sign{
+        //   position: relative;
+        //   top: -8px;
+        // }
       }
       .msg{
         position: relative;
@@ -2319,14 +2389,11 @@ export default {
         font-size: 24px;
         font-weight: bold;
         margin-top: 5px;
-        .money{
-          position: relative;
-          width: 180px;
-          height: 40px;
-          line-height: 42px;
-          margin-top: 5px;
-          // background: url('../assets/imgs/img_Room_goldcoin.png') 0 0 no-repeat;
-          // background-size: 100% 100%;
+        .text{
+          position: absolute;
+          line-height: 50px;
+          top: -0;
+          left: 30%;
         }
         .name{
           position: relative;
@@ -2344,12 +2411,18 @@ export default {
             white-space: nowrap;
             text-align: left;
           }
-        }
-        .text{
-          position: absolute;
-          line-height: 50px;
-          top: 0;
-          left: 30%;
+        }  
+        .money{
+          position: relative;
+          width: 180px;
+          height: 40px;
+          line-height: 42px;
+          margin-top: 5px;
+          // background: url('../assets/imgs/img_Room_goldcoin.png') 0 0 no-repeat;
+          // background-size: 100% 100%;
+          .text{
+            top: -3px;
+          }
         }
       }
       .g-inline{
@@ -2419,7 +2492,7 @@ export default {
       }
       .score{
         top: -40px;
-        right: -200px; // -50
+        right: -280px; // -50
         opacity: 0;
       }
       .score.showRes{
@@ -2440,7 +2513,7 @@ export default {
       }
       .score{
         top: -60px;
-        left: -300px; // -200
+        left: -270px; // -200
         opacity: 0;
       }
       .score.showRes{
@@ -2482,7 +2555,7 @@ export default {
       }
       .score{
         top: 20px;
-        left: -300px; // -200
+        left: -270px; // -200
         opacity: 0;
       }
       .score.showRes{
@@ -2517,6 +2590,21 @@ export default {
   }
   .res-site{
     z-index: 1001;
+    .score{
+      position: absolute;
+      z-index: 1007;
+    }
+    .score .sign, .score .num{
+      font-family:'fzFont';
+      font-size: 56px;
+      letter-spacing: 6px;
+      color: #fff;
+      vertical-align: top;
+    }
+    .score .sign{
+      position: relative;
+      top: -8px;
+    }
      .status{
         position: absolute;
         top: -166px;
@@ -2600,6 +2688,7 @@ export default {
       font-family: 'microsoft yahei';
       font-size: 22px;
       .time{
+        font-family: 'fzFont';
         display: inline-block;
         margin-left: 30px;
         vertical-align: top;
@@ -2689,7 +2778,7 @@ export default {
     left: 50%;
     transform: translateX(-50%);
     color: #fff;
-    font-family: 'microsoft yahei';
+    font-family: 'fzFont';
     font-size: 24px;
     .geme-type{
       margin-top: 12px;
@@ -2699,15 +2788,7 @@ export default {
       }
     }
   }
-  .card-table-bg{
-    .card-tip{
-      position: absolute;
-      top: 20%;
-      left: 50%;
-      width: 24%;
-      transform: translate(-50%, 0%);
-    }
-  }
+
   .card-table{
     position: absolute;
     top: 49%;
@@ -2717,13 +2798,6 @@ export default {
     .chu,.tian,.kan{
       position: relative;
       height: 320px;
-    }
-    .card-tip{
-      position: absolute;
-      top: 20%;
-      left: 50%;
-      width: 24%;
-      transform: translate(-50%, 0%);
     }
     .coins{
       position: absolute;
@@ -3484,8 +3558,49 @@ export default {
     //   }
     // }
   }
-  .card-table-bg{
+   .card-table-bg{
     z-index: 998;
+    .xz-res{
+      position: relative;
+      top: -16px;
+      height: 50px;
+      margin: 0 10px;
+      .xz-num{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 50px;
+        line-height: 50px;
+        display: flex;
+        text-align:justify;
+        text-justify:inter-ideograph;
+        .num{
+          flex: 1;
+          text-align: center;
+          display: inline-block;
+          color: #fff;
+          vertical-align: middle;
+        }
+        img{
+          flex: 0 0 auto;
+          display: inline-block;
+          vertical-align: middle;
+        }
+      }
+    }
+  }
+  .card-table-tip{
+    z-index: 1002;
+    .card-tip{
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      width: 92px;
+      height: 56px;
+      transform: translate(-50%, 0%);
+    }
+    
   }
   .yq-friend{
     position: absolute;
@@ -3626,11 +3741,11 @@ export default {
 .xz-modal{
   .xz-body{
     ul{
-      margin: 30px 20px 0 20px;
+      margin: 12px 12px 0 12px;
       li.item{
         display: flex;
         flex-direction: row;
-        margin-bottom: 20px;
+        margin-bottom: 12px;
         .label{
           // flex: 0 0 150px;
           // width: 150px;
@@ -3648,16 +3763,16 @@ export default {
           // width: 890px;
           flex: 0 0 auto;
           width: auto;
-          height: 72px;
-          margin-left: 30px;
+          height: 66px;
+          margin-left: 12px;
           background: #6dc4d8;
           border-radius: 30px;
           .nums{
             display: inline-block;
             .num{
               display: inline-block;
-              width: 72px;
-              height: 72px;
+              width: 66px;
+              height: 66px;
               margin-left: 20px;
               img{
                 display: inline-block;
@@ -3712,7 +3827,7 @@ export default {
       top: 15px;
       display: inline-block;
       width: 36%;
-      height: 20%;
+      height: 48px;
     }
   }
 }
@@ -3767,7 +3882,7 @@ export default {
 .toggle-arrow{
   position: absolute;
   top: 0px;
-  left: -80px;
+  left: -70px;
   width: 80px;
   height: 120px;
   .bg{
@@ -3786,7 +3901,7 @@ export default {
 }
 .share-modal{
   .share-body{
-    padding: 86px 0 10px 0;
+    padding: 72px 0 10px 0;
     color: #fff;
     font-size: 48px;
     overflow-x: auto;
@@ -3849,7 +3964,8 @@ export default {
             span{
               display: inline-block;
               vertical-align: middle;
-              width: 62%;
+             // width: 62%;
+              width: 68%;
               overflow: hidden;
               white-space: nowrap;
               text-overflow: ellipsis;
@@ -3930,7 +4046,7 @@ export default {
      justify-content: space-between;
      text-align: center;
     .share-btn{
-      flex: 0 0 240px;
+      flex: 0 0 200px;
       margin: 0 auto;
     }
   }
@@ -5384,21 +5500,21 @@ export default {
 /**分数动画**/
 @keyframes scores0 {
   0% {
-    right: -200px;
+    right: -230px;
     opacity: 1;
   }
   100%{
-    right: -250px;
+    right: -280px;
     opacity: 1;
   }
 }
 @keyframes scores1 {
   0% {
-    left: -300px;
+    left: -270px;
     opacity: 1;
   }
   100%{
-    left: -250px;
+    left: -220px;
     opacity: 1;
   }
 }
@@ -5414,11 +5530,11 @@ export default {
 }
 @keyframes scores3 {
   0% {
-    left: -300px;
+    left: -270px;
     opacity: 1;
   }
   100%{
-    left: -250px;
+    left: -220px;
     opacity: 1;
   }
 }
