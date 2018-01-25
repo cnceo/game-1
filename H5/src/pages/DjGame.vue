@@ -91,7 +91,7 @@
       </div>
     </div>
     <!--最终结果页面-->
-    <div class="user-site">
+    <div class="user-site res-site">
       <div class="user-item" v-for="(item, index) in scores" :key="index"
       :class="{'site0': index === 0, 'site1': index === 1, 'site2': index === 2,
       'site3': index === 3, 'site4': index === 4}" v-show="scores.length > 0">
