@@ -421,6 +421,7 @@ export default {
     }
   }
 }
+
 .exit-modal{
   .exit-body{
     padding: 60px 0;

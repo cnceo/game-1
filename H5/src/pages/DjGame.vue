@@ -277,6 +277,7 @@
           </div>
         </div>
       </div>
+
     </div>
 
     <!-- 邀请好友 -->
@@ -565,6 +566,8 @@ export default {
   data () {
     return {
       date: '', // 当前时间
+      showXzSortTimer: false,
+      xzSortTimer: 15,
       showTimer: false,
       sortTimer1: 120,
       showTimer1: false,
@@ -2714,6 +2717,13 @@ export default {
     .chu,.tian,.kan{
       position: relative;
       height: 320px;
+    }
+    .card-tip{
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      width: 24%;
+      transform: translate(-50%, 0%);
     }
     .coins{
       position: absolute;

@@ -61,14 +61,17 @@
         var docEl = doc.documentElement,
             resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
             recalc = function () {
+              console.log("aahahahahahahahahahahahhahah")
                 // 重置横竖屏
                 let sql = window.matchMedia('(orientation: portrait)').matches
                 if(window.orientation == 90 || window.orientation == -90 || sql === false){
                   // 横屏
                  // window.android.toastMessage("横屏")
+                 console.log("h5横屏")
                 } else {
                    // 竖屏
                  //  window.android.toastMessage("竖屏")
+                 console.log("h5横屏")
                 }
                /* setTimeout (() => {
                   var width = docEl.clientWidth;
