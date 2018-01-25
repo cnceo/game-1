@@ -38,6 +38,38 @@
             </div>
           </div>
         </div>
+        <!-- <div class="status" :class="{'l-site': (index !== 0) && (index % 2 !== 0),
+         'r-site': (index % 2 === 0), 'c-site': (index === 0)}">
+            <span v-show="item.ready == false && item.roomOwner == false && item.curUser == true" @click="startReady">
+              <img src="../assets/imgs/img_Room_ready.png" alt="" width="100%" height="100%">
+            </span>
+            <span v-show="item.ready == true && item.roomOwner == false && isStartReady">
+              <img src="../assets/imgs/img_Room_readying.png" alt="" width="100%" height="100%">
+            </span>
+            <span v-show="item.ready == false && item.roomOwner == true && isFriends == true && isFirst == true" @click="startGame">
+              <img src="../assets/imgs/img_Buchong_kaishi.png" alt="" width="100%" height="100%">
+            </span>
+            <span v-show="item.ready == false && item.roomOwner == true && isFirst == false && item.curUser == true" @click="startReady">
+              <img src="../assets/imgs/img_Room_ready.png" alt="" width="100%" height="100%">
+            </span>
+            <span v-show="item.ready == true && item.roomOwner == true && isStartReady">
+              <img src="../assets/imgs/img_Room_readying.png" alt="" width="100%" height="100%">
+            </span>
+         </div> -->
+        <div class="xz-tip">
+          <span v-show="item.xz == 0 && item.banker == false && isDownSu == true">
+            <img src="../assets/imgs/img_Bet_qingxiazhu.png" alt="" width="100%" height="100%">
+          </span>
+          <span v-show="item.xz == 1 && item.banker == false && isDownSu == true">
+            <img src="../assets/imgs/img_Bet_zhengzaixiazhu.png" alt="" width="100%" height="100%">
+          </span>
+        </div>
+      </div>
+    </div>
+     <div class="user-site res-site" v-show="users.length >= 1 && users.length <= 5">
+      <div class="user-item" v-for="(item, index) in users" :key="index"
+      :class="{'site0': index === 0, 'site1': index === 1, 'site2': index === 2,
+      'site3': index === 3, 'site4': index === 4}">
         <div class="status" :class="{'l-site': (index !== 0) && (index % 2 !== 0),
          'r-site': (index % 2 === 0), 'c-site': (index === 0)}">
             <span v-show="item.ready == false && item.roomOwner == false && item.curUser == true" @click="startReady">
@@ -56,14 +88,6 @@
               <img src="../assets/imgs/img_Room_readying.png" alt="" width="100%" height="100%">
             </span>
          </div>
-        <div class="xz-tip">
-          <span v-show="item.xz == 0 && item.banker == false && isDownSu == true">
-            <img src="../assets/imgs/img_Bet_qingxiazhu.png" alt="" width="100%" height="100%">
-          </span>
-          <span v-show="item.xz == 1 && item.banker == false && isDownSu == true">
-            <img src="../assets/imgs/img_Bet_zhengzaixiazhu.png" alt="" width="100%" height="100%">
-          </span>
-        </div>
       </div>
     </div>
     <!--最终结果页面-->
@@ -204,6 +228,13 @@
       :class="{'chu': index === 0, 'tian': index === 1, 'kan': index === 2}">
         <img :src="item" alt="" height="100%">
       </div>
+      <div class="card-tip" v-show="showCardTip">
+         <img src="../assets/imgs/img_Bet_touzhu.png" alt=""  width="100%" height="100%">
+      </div>
+      <div class="xz-modal-timer" v-show="showXzSortTimer">
+        <img src="../assets/imgs/img_Xuanze_shijian.png" alt=""  width="100%" height="100%">
+        <span class="text">{{xzSortTimer}}</span>
+      </div>
     </div>
     <div class="card-table g-flex-row" v-show="isGameStart">
       <div class="chu g-flex" v-for="(item, index) in tbg" :key="index"
@@ -279,6 +310,7 @@
     <Modal :showModal="showXzModal"
     :showClose="showClose"
     :site="site"
+    :hide="toggShow"
     class="xz-modal">
     <div slot="modal-bg" class="modal-bg">
       <img src="../assets/imgs/img_Bet_background.png" alt=""  width="100%" height="100%">
@@ -287,6 +319,11 @@
          <img src="../assets/imgs/img_Bet_title.png" alt=""  width="100%">
       </div>
       <div slot="body" class="xz-body">
+        <div class="toggle-arrow">
+          <div class="bg"><img src="../assets/imgs/img_Bet_beijing.png" alt="" width="100%" height="100%"></div>
+          <div class="arrow" v-show="toggleXzModal" @touchstart="toggleXz"><img src="../assets/imgs/img_Bet_zhankai.png" alt="" width="100%" height="100%"></div>
+          <div class="arrow" v-show="!toggleXzModal" @touchstart="toggleXz"><img src="../assets/imgs/img_Bet_shouqi.png" alt="" width="100%" height="100%"></div>
+        </div>
         <ul>
           <li class="item">
             <span class="label">
@@ -298,12 +335,12 @@
                   <img :src="item.img" alt="">
                 </span>
               </div>
-              <div class="total">
+              <!-- <div class="total">
                 <span class="res">{{cmScore}}</span>
                 <span class="close" @click="deleteCmScore">
                   <img src="../assets/imgs/img_Bet_huishan.png" alt="">
                 </span>
-              </div>
+              </div> -->
             </div>
           </li>
           <li class="item">
@@ -316,12 +353,12 @@
                   <img :src="item.img" alt="">
                 </span>
               </div>
-              <div class="total">
+              <!-- <div class="total">
                 <span class="res">{{tmScore}}</span>
                 <span class="close" @click="deleteTmScore">
                   <img src="../assets/imgs/img_Bet_huishan.png" alt="">
                 </span>
-              </div>
+              </div> -->
             </div>
           </li>
           <li class="item">
@@ -334,19 +371,22 @@
                   <img :src="item.img" alt="">
                 </span>
               </div>
-              <div class="total">
+              <!-- <div class="total">
                 <span class="res">{{kmScore}}</span>
                 <span class="close" @click="deleteKmScore">
                   <img src="../assets/imgs/img_Bet_huishan.png" alt="">
                 </span>
-              </div>
+              </div> -->
             </div>
           </li>
         </ul>
       </div>
       <div slot="foot" class="xz-foot">
         <div class="ok xz-btn" @touchstart="xzOk">
-           <img src="../assets/imgs/img-Stoppingdoor-confirm.png" alt=""  width="100%">
+           <img src="../assets/imgs/img_Bet_touzhu.png" alt=""  width="100%" height="100%">
+        </div>
+        <div class="cancel xz-btn" @touchstart="xzCancel">
+            <img src="../assets/imgs/img_Bet_fangqi.png" alt=""  width="100%" height="100%">
         </div>
       </div>
     </Modal>
@@ -805,7 +845,12 @@ export default {
       power: ['', '', '', ''],
       showReleaseRoomBtns: false,
       showOwnerReleaseReadyModal: false,
-      ownerReleaseReadyText: ''
+      ownerReleaseReadyText: '',
+      showCardTip: false,
+      showXzSortTimer: false,
+      xzSortTimer: 15,
+      toggShow: false,
+      toggleXzModal: false
     }
   },
   props: {
@@ -1384,28 +1429,38 @@ export default {
     // 确定下注
     xzOk () {
       this.$audio.play(this.$audio.btn)
+      this.xzData()
+      // 后期需要注释
+    },
+    xzCancel () {
+      this.$audio.play(this.$audio.btn)
+      this.cmScore = this.tmScore = this.kmScore = 0
+      this.xzData()
+    },
+    xzData () {
+      this.$audio.play(this.$audio.btn)
       if (this.isDown) {
         return
       }
       let userDoorVOList = []
-      if (this.cmScore) {
-        userDoorVOList.push({
-          doorNum: this.cmType,
-          score: this.cmScore
-        })
-      }
-      if (this.tmScore) {
-        userDoorVOList.push({
-          doorNum: this.tmType,
-          score: this.tmScore
-        })
-      }
-      if (this.kmScore) {
-        userDoorVOList.push({
-          doorNum: this.kmType,
-          score: this.kmScore
-        })
-      }
+   //   if (this.cmScore) {
+      userDoorVOList.push({
+        doorNum: this.cmType,
+        score: this.cmScore
+      })
+    //  }
+   //   if (this.tmScore) {
+      userDoorVOList.push({
+        doorNum: this.tmType,
+        score: this.tmScore
+      })
+    //  }
+    //  if (this.kmScore) {
+      userDoorVOList.push({
+        doorNum: this.kmType,
+        score: this.kmScore
+      })
+     // }
       let params = window.JSON.stringify({
         host: this.$url,
         path: this.$interface['/app'],
@@ -1431,7 +1486,11 @@ export default {
           //
         }
       )
-      // 后期需要注释
+    },
+    toggleXz () {
+      console.log('xxxs')
+      this.toggleXzModal = !this.toggleXzModal
+      this.toggShow = this.toggleXzModal
     },
     // 邀请好友
     invateFriend () {
@@ -1797,8 +1856,14 @@ export default {
         }
       })
       vm.showCards = true
+       // let timert = setTimeout(() => {
+       //   vm.showCardTip = true
+       // }, 2000)
       vm.timer1 = setTimeout(() => {
+         // clearInterval(timert)
+         // timert = null
         vm.checkResult1 = true
+        // vm.showCardTip = false
         vm.isDownSu = true
         vm.users.forEach((item) => {
           if (Number(item.userId) === Number(vm.userId)) {
@@ -1810,6 +1875,16 @@ export default {
         vm.timer2 = setTimeout(() => {
           if (vm.isShowXz) {
             vm.showXzModal = true
+            vm.showXzSortTimer = true
+            let sortTimer = setInterval(() => {
+              if (vm.xzSortTimer <= 0) {
+                clearInterval(sortTimer)
+                sortTimer = null
+                vm.xzSortTimer = 120
+                vm.showXzSortTimer = false
+              }
+              vm.xzSortTimer -= 1
+            }, 1000)
           }
         }, 500)
       }, 3000)
@@ -1976,8 +2051,14 @@ export default {
         })
         vm.isDownSu = false
         vm.menType = true
+        let timert = setTimeout(() => {
+          vm.showCardTip = true
+        }, 2000)
         vm.timer3 = setTimeout(() => {
+          clearInterval(timert)
+          timert = null
           vm.checkResult2 = true
+          vm.showCardTip = false
           vm.scores = []
           vm.showScore = true
           vm.users.forEach((item) => {
@@ -2217,8 +2298,15 @@ export default {
           z-index: 1007;
         }
         .score .sign, .score .num{
-          font-size: 48px;
+          font-family:'fzFont';
+          font-size: 56px;
+          letter-spacing: 6px;
           color: #fff;
+          vertical-align: top;
+        }
+        .score .sign{
+          position: relative;
+          top: -8px;
         }
       }
       .msg{
@@ -2284,21 +2372,21 @@ export default {
       .msg.l-msg{
         left: -30px;
       }
-      .status{
-        position: absolute;
-        top: 20px;
-        width: 180px;
-        z-index: 1007;
-      }
-      .status.l-site{
-          left: -280px;
-        }
-      .status.r-site{
-          right: -220px;
-      }
-      .status.c-site{
-          right: 20px;
-      }
+      // .status{
+      //   position: absolute;
+      //   top: 20px;
+      //   width: 180px;
+      //   z-index: 1007;
+      // }
+      // .status.l-site{
+      //     left: -280px;
+      //   }
+      // .status.r-site{
+      //     right: -220px;
+      // }
+      // .status.c-site{
+      //     right: 20px;
+      // }
       .xz-tip{
         position: absolute;
         width: 180px;
@@ -2314,10 +2402,10 @@ export default {
       left: 40%;
       bottom: 0;
       transform: translateX(-50%);
-      .status{
-        top: 20px;
-        left: 240px;
-      }
+      // .status{
+      //   top: 20px;
+      //   left: 240px;
+      // }
       .msg{
          width: 370px;
       }
@@ -2423,6 +2511,30 @@ export default {
         right: 0px;
       }
     }
+  }
+  .res-site{
+    z-index: 1001;
+     .status{
+        position: absolute;
+        top: -166px;
+        width: 180px;
+        z-index: 1007;
+      }
+      .status.l-site{
+          left: -400px;
+        }
+      .status.r-site{
+          right: -340px;
+      }
+      .status.c-site{
+          right: 20px;
+      }
+      .site0{
+         .status{
+          top: -136px;
+          left: 60px;
+        }
+      }
   }
   .game-table{
     position: relative;
@@ -2584,7 +2696,15 @@ export default {
       }
     }
   }
-
+  .card-table-bg{
+    .card-tip{
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      width: 24%;
+      transform: translate(-50%, 0%);
+    }
+  }
   .card-table{
     position: absolute;
     top: 49%;
@@ -3502,8 +3622,10 @@ export default {
         flex-direction: row;
         margin-bottom: 20px;
         .label{
-          flex: 0 0 150px;
-          width: 150px;
+          // flex: 0 0 150px;
+          // width: 150px;
+          flex: 0 0 100px;
+          width: 100px;
           display: flex;
           align-items: center;
           img{
@@ -3512,9 +3634,11 @@ export default {
           }
         }
         .select-xz{
-          flex: 1;
-          width: 890px;
-          height: 84px;
+          // flex: 1;
+          // width: 890px;
+          flex: 0 0 auto;
+          width: auto;
+          height: 72px;
           margin-left: 30px;
           background: #6dc4d8;
           border-radius: 30px;
@@ -3522,8 +3646,8 @@ export default {
             display: inline-block;
             .num{
               display: inline-block;
-              width: 80px;
-              height: 80px;
+              width: 72px;
+              height: 72px;
               margin-left: 20px;
               img{
                 display: inline-block;
@@ -3575,9 +3699,10 @@ export default {
      text-align: center;
     .xz-btn{
       position: relative;
-      top: -10px;
+      top: 15px;
       display: inline-block;
-      width: 32%;
+      width: 36%;
+      height: 20%;
     }
   }
 }
@@ -3596,7 +3721,9 @@ export default {
       flex: 0 0 30%;
     }
   }
-  .modal-timer{
+
+}
+.modal-timer{
     position: absolute;
     top: -50px;
     left: -50px;
@@ -3610,6 +3737,41 @@ export default {
       font-size: 42px;
       color: #000;
     }
+  }
+  .xz-modal-timer{
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    width: 120px;
+    height: 120px;
+    .text{
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 42px;
+      color: #000;
+    }
+  }
+.toggle-arrow{
+  position: absolute;
+  top: 0px;
+  left: -80px;
+  width: 80px;
+  height: 120px;
+  .bg{
+    width: 80px;
+    height: 120px;
+   // transform: rotate(180deg);
+  }
+  .arrow{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 42px;
+    color: #000;
   }
 }
 .share-modal{

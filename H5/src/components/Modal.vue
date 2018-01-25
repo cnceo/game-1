@@ -1,6 +1,6 @@
 <template>
   <div class="game-modal" v-show="show">
-    <div class="modal-content" :class="{'s-right': sites}">
+    <div class="modal-content" :class="{'s-right': sites, 'hide': toggShow}">
 
       <div class="modal-bg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1">
         <slot name="modal-bg" height="100%">
@@ -39,6 +39,10 @@ export default {
     site: {
       type: Boolean,
       default: false
+    },
+    hide: {
+      type: Boolean,
+      default: false
     }
   },
   watch: {
@@ -51,13 +55,17 @@ export default {
     // 弹窗位置（中间或右侧）
     site (val) {
       this.sites = val
+    },
+    hide (val) {
+      this.toggShow = val
     }
   },
   data () {
     return {
       show: false,
       showX: true,
-      sites: false
+      sites: false,
+      toggShow: false
     }
   },
   created () {
@@ -108,6 +116,11 @@ export default {
     right: 0;
     top: 100%;
     transform: translate(0, -100%);
+    transition: all .5s linear;
+  }
+  .modal-content.s-right.hide{
+    right: -30%;
+    transition: all .5s linear;
   }
   .modal-mask{
     position: fixed;

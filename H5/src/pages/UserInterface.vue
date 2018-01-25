@@ -1367,6 +1367,7 @@ export default {
           height: 64px;
           font-size: 0;
           .num-item{
+            font-family:'fzFont';
             display: inline-block;
             flex: 0 0 16.5%;
             width: 16.5%;

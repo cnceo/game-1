@@ -22,10 +22,13 @@
   line-height: 24px;
 }
 #app .set-modal .modal-content {
-  height: 62%;
+  height: auto;
   padding: 20px;
   background: url('../imgs/img_Setup_Settingbackground.png') 0 0 no-repeat;
   background-size: 100% 100%;
+}
+#app .set-modal .modal-content .game-body {
+  padding: 15px 0 0px 0;
 }
 #app .set-modal .game-title {
   text-align: center;
@@ -79,8 +82,12 @@
   width: 50%;
   margin: 0 auto;
 }
+#app .xz-modal .modal-content {
+  width: 30%;
+  height: 48%;
+}
 #app .xz-modal .modal-content .game-body {
-  padding: 24px 0 30px 0;
+  padding: 10px 0 10px 0;
 }
 #app .modal-bg {
   height: 100%;
@@ -99,6 +106,12 @@
 #app .release-modal .modal-content {
   width: 72%;
   height: 56%;
+}
+#app .change-account-modal .modal-content {
+  z-index: 10002;
+}
+#app .change-account-modal .modal-mask {
+  z-index: 10001;
 }
 .ivu-slider {
   width: 90%;
