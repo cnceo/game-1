@@ -70,7 +70,7 @@
       <div class="user-item" v-for="(item, index) in users" :key="index"
       :class="{'site0': index === 0, 'site1': index === 1, 'site2': index === 2,
       'site3': index === 3, 'site4': index === 4}">
-        
+
         <div class="status" :class="{'l-site': (index !== 0) && (index % 2 !== 0),
          'r-site': (index % 2 === 0), 'c-site': (index === 0)}">
             <span v-show="item.ready == false && item.roomOwner == false && item.curUser == true" @click="startReady">
@@ -274,7 +274,7 @@
           </div>
         </div>
       </div>
-      
+
     </div>
 
     <!-- 邀请好友 -->
@@ -3690,7 +3690,7 @@ export default {
       flex: 0 0 30%;
     }
   }
-  
+
 }
 .modal-timer{
     position: absolute;

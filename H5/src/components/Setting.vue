@@ -1,7 +1,6 @@
 <template>
   <div class="setting-sound" ref="slider">
     <Modal :showModal="showSetModal"
-    :label="setLabel"
     @on-close="closeSetModal"
     class="set-modal">
       <div slot="title" class="set-title">

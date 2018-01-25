@@ -5,44 +5,44 @@
     <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0"/>
     <title>game</title>
     <style>
-      @media screen and (orientation: portrait) {  
-		      html{  
-		         width : 100% ;  
-		         height : 100% ;  
-		          overflow : hidden;  
-		      }  
-		      body{  
-		          width : 100% ;  
-		         height : 100% ;  
-		          overflow : hidden;  
-		      }  
-		      #app{  
-		        position : absolute ;  
-            top : 0 ;  
-            left : 0 ;  
-            width : 100% ;  
-            height : 100% ;  
-		      }  
-		} 
-    	@media screen and (orientation: landscape) {  
-		      html{  
-		         width : 100% ;  
-		         height : 100% ;  
-		          overflow : hidden;  
-		      }  
-		      body{  
-		          width : 100% ;  
-		         height : 100% ;  
-		          overflow : hidden;  
-		      }  
+      @media screen and (orientation: portrait) {
+		      html{
+		         width : 100% ;
+		         height : 100% ;
+		          overflow : hidden;
+		      }
+		      body{
+		          width : 100% ;
+		         height : 100% ;
+		          overflow : hidden;
+		      }
 		      #app{
-		        position : absolute ;  
-            top : 0 ;   
-            left : 0 ;  
-            width : 100% ;  
-            height : 100% ;  
-		      }  
-		} 
+		        position : absolute ;
+            top : 0 ;
+            left : 0 ;
+            width : 100% ;
+            height : 100% ;
+		      }
+		}
+    	@media screen and (orientation: landscape) {
+		      html{
+		         width : 100% ;
+		         height : 100% ;
+		          overflow : hidden;
+		      }
+		      body{
+		          width : 100% ;
+		         height : 100% ;
+		          overflow : hidden;
+		      }
+		      #app{
+		        position : absolute ;
+            top : 0 ;
+            left : 0 ;
+            width : 100% ;
+            height : 100% ;
+		      }
+		}
     </style>
     <link rel="stylesheet" type="text/css" href="http://unpkg.com/iview/dist/styles/iview.css">
     <!-- <script type="text/javascript" src="http://unpkg.com/iview/dist/iview.min.js"></script> -->
@@ -60,14 +60,17 @@
         var docEl = doc.documentElement,
             resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
             recalc = function () {
+              console.log("aahahahahahahahahahahahhahah")
                 // 重置横竖屏
                 let sql = window.matchMedia('(orientation: portrait)').matches
                 if(window.orientation == 90 || window.orientation == -90 || sql === false){
                   // 横屏
                  // window.android.toastMessage("横屏")
+                 console.log("h5横屏")
                 } else {
                    // 竖屏
                  //  window.android.toastMessage("竖屏")
+                 console.log("h5横屏")
                 }
                /* setTimeout (() => {
                   var width = docEl.clientWidth;
@@ -75,7 +78,7 @@
                   if (width < height) {
                     console.log('竖屏...')
                   //  window.android.toastMessage(width + '&&&' + height)
-                    document.getElementById('app').style.width = height + 'px';  
+                    document.getElementById('app').style.width = height + 'px';
                     document.getElementById('app').style.height = width + 'px';
                     document.getElementById('app').style.top = (height-width)/2 + 'px';
                     document.getElementById('app').style.left = 0-(height-width)/2 + 'px';
@@ -88,7 +91,7 @@
                   //  window.android.toastMessage(width + "???" + height)
                     // document.getElementById('app').style.width = clientWidth + 'px'
                     // document.getElementById('app').style.height = clientHeight + 'px'
-                    document.getElementById('app').style.width = height + 'px';  
+                    document.getElementById('app').style.width = height + 'px';
                     document.getElementById('app').style.height = width + 'px';
                     document.getElementById('app').style.top = 0;
                     document.getElementById('app').style.left = 0;
@@ -98,7 +101,7 @@
                 }, 100)*/
                 // 设置字体
                 var clientWidth = docEl.clientWidth;
-                
+
                 if (!clientWidth) return;
                 docEl.style.fontSize = 18 * (clientWidth / 750) + 'px';
             };
