@@ -260,7 +260,7 @@
           </div>
         </div>
       </div>
-      
+
     </div>
     <div class="card-table card-table-tip g-flex-row">
       <div class="chu g-flex">
@@ -272,7 +272,7 @@
           <span class="text">{{xzSortTimer}}</span>
         </div>
       </div>
-    </div>    
+    </div>
     <div class="card-table g-flex-row" v-show="isGameStart">
       <div class="chu g-flex" v-for="(item, index) in tbg" :key="index"
       :class="{'chu': index === 0, 'tian': index === 1, 'kan': index === 2}">
@@ -623,46 +623,46 @@ export default {
       showAccount: false, // 是否显示设置中的切换账号功能
       qz: false, // 抢庄切换
       users: [
-        {
-          nickname: 'tomsfdsfdsfsdfsdf',
-          headimgurl: 'avatar',
-          ready: true,
-          roomOwner: true,
-          banker: true,
-          score: 1000
-        },
-        {
-          nickname: 'tom4',
-          headimgurl: 'avatar',
-          ready: false,
-          roomOwner: false,
-          banker: false,
-          score: 1000
-        },
-        {
-          nickname: 'tom3',
-          headimgurl: 'avatar',
-          ready: false,
-          roomOwner: false,
-          banker: false,
-          score: 1000
-        },
-        {
-          nickname: 'tom2',
-          headimgurl: 'avatar',
-          ready: false,
-          roomOwner: false,
-          banker: false,
-          score: 1000
-        },
-        {
-          nickname: 'tom1',
-          headimgurl: 'avatar',
-          ready: false,
-          roomOwner: false,
-          banker: false,
-          score: 1000
-        }
+        // {
+        //   nickname: 'tomsfdsfdsfsdfsdf',
+        //   headimgurl: 'avatar',
+        //   ready: true,
+        //   roomOwner: true,
+        //   banker: true,
+        //   score: 1000
+        // },
+        // {
+        //   nickname: 'tom4',
+        //   headimgurl: 'avatar',
+        //   ready: false,
+        //   roomOwner: false,
+        //   banker: false,
+        //   score: 1000
+        // },
+        // {
+        //   nickname: 'tom3',
+        //   headimgurl: 'avatar',
+        //   ready: false,
+        //   roomOwner: false,
+        //   banker: false,
+        //   score: 1000
+        // },
+        // {
+        //   nickname: 'tom2',
+        //   headimgurl: 'avatar',
+        //   ready: false,
+        //   roomOwner: false,
+        //   banker: false,
+        //   score: 1000
+        // },
+        // {
+        //   nickname: 'tom1',
+        //   headimgurl: 'avatar',
+        //   ready: false,
+        //   roomOwner: false,
+        //   banker: false,
+        //   score: 1000
+        // }
       ], // 游戏中玩家列表
       showXzModal: false, // 是否显示下注弹窗
       showXzTotal: false,
@@ -951,6 +951,9 @@ export default {
     },
     cardBg (val) {
       this.curCardBg = val
+      this.cardList.forEach((item) => {
+        item.bImg = this.curCardBg
+      })
     }
   },
   created () {
@@ -2324,48 +2327,48 @@ export default {
         .master.r-site{
           right: -90px;
         }
-        .result{
-          position: absolute;
-          top: 0;
-       //   left: 0;
-          width: 100%;
-          height: 100%;
-          z-index: 1003;
-        }
+      //   .result{
+      //     position: absolute;
+      //     top: 0;
+      //  //   left: 0;
+      //     width: 100%;
+      //     height: 100%;
+      //     z-index: 1003;
+      //   }
 
-        .result .win{
-          display: block;
-          width: 100%;
-          opacity: 0;
-          animation: small 0.3s linear 5s forwards;
-        }
-        .result .lost{
-          display: block;
-          width: 100%;
-          opacity: 0;
-          animation: small 0.3s linear 5s forwards;
-        }
-        .result .tie{
-          display: block;
-          width: 100%;
-          opacity: 0;
-          animation: small 0.3s linear 5s forwards;
-        }
-        .result.cur-user .win{
-          opacity: 0;
-        //  left: 200px;
-          animation: big 0.3s linear 5s forwards;
-        }
-        .result.cur-user .lost{
-          opacity: 0;
-        //  left: 200px;
-           animation: big 0.3s linear 5s forwards;
-        }
-        .result.cur-user .tie{
-          opacity: 0;
-        //  left: 200px;
-          animation: big 0.3s linear 5s forwards;
-        }
+      //   .result .win{
+      //     display: block;
+      //     width: 100%;
+      //     opacity: 0;
+      //     animation: small 0.3s linear 5s forwards;
+      //   }
+      //   .result .lost{
+      //     display: block;
+      //     width: 100%;
+      //     opacity: 0;
+      //     animation: small 0.3s linear 5s forwards;
+      //   }
+      //   .result .tie{
+      //     display: block;
+      //     width: 100%;
+      //     opacity: 0;
+      //     animation: small 0.3s linear 5s forwards;
+      //   }
+      //   .result.cur-user .win{
+      //     opacity: 0;
+      //   //  left: 200px;
+      //     animation: big 0.3s linear 5s forwards;
+      //   }
+      //   .result.cur-user .lost{
+      //     opacity: 0;
+      //   //  left: 200px;
+      //      animation: big 0.3s linear 5s forwards;
+      //   }
+      //   .result.cur-user .tie{
+      //     opacity: 0;
+      //   //  left: 200px;
+      //     animation: big 0.3s linear 5s forwards;
+      //   }
         // .score{
         //   position: absolute;
         //   z-index: 1007;
@@ -2411,7 +2414,7 @@ export default {
             white-space: nowrap;
             text-align: left;
           }
-        }  
+        }
         .money{
           position: relative;
           width: 180px;
@@ -2590,6 +2593,48 @@ export default {
   }
   .res-site{
     z-index: 1001;
+    .result{
+        position: absolute;
+        top: 0;
+      //   left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1003;
+      }
+
+      .result .win{
+        display: block;
+        width: 100%;
+        opacity: 0;
+        animation: small 0.3s linear 5s forwards;
+      }
+      .result .lost{
+        display: block;
+        width: 100%;
+        opacity: 0;
+        animation: small 0.3s linear 5s forwards;
+      }
+      .result .tie{
+        display: block;
+        width: 100%;
+        opacity: 0;
+        animation: small 0.3s linear 5s forwards;
+      }
+      .result.cur-user .win{
+        opacity: 0;
+      //  left: 200px;
+        animation: big 0.3s linear 5s forwards;
+      }
+      .result.cur-user .lost{
+        opacity: 0;
+      //  left: 200px;
+          animation: big 0.3s linear 5s forwards;
+      }
+      .result.cur-user .tie{
+        opacity: 0;
+      //  left: 200px;
+        animation: big 0.3s linear 5s forwards;
+      }
     .score{
       position: absolute;
       z-index: 1007;
@@ -2609,7 +2654,7 @@ export default {
         position: absolute;
         top: -166px;
         width: 180px;
-        z-index: 1007;
+        z-index: 1009;
       }
       .status.l-site{
           left: -400px;
@@ -2803,7 +2848,8 @@ export default {
       position: absolute;
       top: 0;
       left: 0;
-      z-index: 1005;
+    //  z-index: 1005;
+      z-index: 1008;
       span{
         position: absolute;
         display: block;
@@ -3600,7 +3646,7 @@ export default {
       height: 56px;
       transform: translate(-50%, 0%);
     }
-    
+
   }
   .yq-friend{
     position: absolute;

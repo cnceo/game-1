@@ -798,12 +798,12 @@ export default {
       } else if (this.selectTypes === 1) {
         this.selectData = this.createRoomData2
         type = 2
-        this.showTip = true
-        this.tipMsg = '建设中...'
-        setTimeout(() => {
-          this.showTip = false
-        }, 1000)
-        return
+        // this.showTip = true
+        // this.tipMsg = '建设中...'
+        // setTimeout(() => {
+        //   this.showTip = false
+        // }, 1000)
+        // return
        // this.router = '/ht'
       } else {
         this.selectData = this.createRoomData3
