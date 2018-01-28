@@ -180,6 +180,23 @@ export default {
       // ],
       ds0_1: [
         {
+          img: tabImgs.games[0],
+          select: true,
+          value: tabImgs.games[0]
+        },
+        {
+          img: tabImgs.games[1],
+          select: false,
+          value: tabImgs.games[1]
+        },
+        {
+          img: tabImgs.games[2],
+          select: false,
+          value: tabImgs.games[2]
+        }
+      ],
+      ds0_2: [
+        {
           img: tabImgs.cards[0],
           select: true,
           value: tabImgs.cards[0]
@@ -193,23 +210,6 @@ export default {
           img: tabImgs.cards[2],
           select: false,
           value: tabImgs.cards[2]
-        }
-      ],
-      ds0_2: [
-        {
-          img: tabImgs.cards[3],
-          select: true,
-          value: tabImgs.cards[3]
-        },
-        {
-          img: tabImgs.cards[4],
-          select: false,
-          value: tabImgs.cards[4]
-        },
-        {
-          img: tabImgs.cards[5],
-          select: false,
-          value: tabImgs.cards[5]
         }
       ],
       showChangeAccount: false,
@@ -278,12 +278,13 @@ export default {
     // 选择桌面
     selectDesktop (data) {
       this.$audio.play(this.$audio.ui)
+      this.$emit('on-select-desktop', data)
      // console.log(data)
     },
     // 选择牌面
     selectCard (data) {
       this.$audio.play(this.$audio.ui)
-      this.$emit('on-select', data)
+      this.$emit('on-select-card', data)
     // console.log(data)
     },
     // 音效设置
@@ -377,14 +378,14 @@ export default {
           margin: 12px 0;
           .label{
           // flex: 0 0 180px;
-            width: 25%;
+            width: 17%;
             margin-top: 12px;
             vertical-align: middle;
           }
         }
         .sub-row.first-sub {
           .label{
-            width: 21%;
+            width: 17%;
             margin-top: 15px;
           }
         }

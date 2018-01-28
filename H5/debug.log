@@ -13,3 +13,4 @@
 [1223/153203.653:ERROR:process_info.cc(632)] range at 0xe19f6cce00000000, size 0x1bc fully unreadable
 [1223/153203.653:ERROR:process_info.cc(632)] range at 0xe19f6cee00000000, size 0x1bc fully unreadable
 [1223/153203.653:ERROR:process_info.cc(632)] range at 0x0, size 0x1bc fully unreadable
+[0128/181738.220:ERROR:file_io.cc(134)] WriteFile: 管道正在被关闭。 (0xE8)

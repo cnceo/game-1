@@ -12,7 +12,10 @@
           </div>
          <div class="msg-box">
             <div class="user-id-card">
-              <div class="user-name f-relative">{{userInfo.nickname}}</div>
+              <div class="user-name f-relative">
+                <img src="../assets/imgs/img_Hall_titleofgame.png" height="100%"/>
+              </div>
+               <div class="line">{{userInfo.nickname}}</div>
             </div>
             <div class="user-room-card">
               <div class="user-id f-relative">{{userInfo.id}}</div>
@@ -116,7 +119,7 @@
     </Modal>
 
     <!--设置-->
-    <Setting ref="setting" @on-select="selectCardBg"></Setting>
+    <Setting ref="setting" @on-select-card="selectCardBg" @on-select-desktop="selectDesktopBg"></Setting>
 
     <!--创建房间-->
     <Modal :showModal="showCreateRoom"
@@ -187,7 +190,7 @@
               <img src="../assets/imgs/img_Create_Createaroom.png" alt="" width="100%">
             </span>
           </div>
-          <div class="toggle">
+          <div class="toggle" v-show="userInfo.lastGroupId == 1">
             <span class="box" @touchstart="invoiceGameRoom($event)">
               <img src="../assets/imgs/img_Create_Topoenaroom.png" alt="" width="100%">
             </span>
@@ -231,9 +234,11 @@
     <!-- 大九 -->
     <dj-game :dj="showDj" :uid="userId" :rid="roomId"
     :isOwner="isMaster" :ds="gameDatas" :cardBg="cardBg"
-    @on-close="closeDj"></dj-game>
+    :desktopBg="desktopBg" @on-close="closeDj"></dj-game>
     <!-- 清推 -->
-    <qt-game :qt="showQt" :cardBg="cardBg" @on-close="closeQt"></qt-game>
+    <qt-game :qt="showQt"  :uid="userId" :rid="roomId"
+    :isOwner="isMaster" :ds="gameDatas" :cardBg="cardBg" 
+    :desktopBg="desktopBg" @on-close="closeQt"></qt-game>
     <!-- 混推 -->
     <ht-game :ht="showHt" @on-close="closeHt"></ht-game>
     <!-- 代开 -->
@@ -256,7 +261,8 @@ export default {
         id: '',
         nickname: '',
         roomNum: '',
-        headimgurl: ''
+        headimgurl: '',
+        lastGroupId: 0
       },
       showRuleModal: false,
       showMsgModal: false,
@@ -369,7 +375,8 @@ export default {
       loadDj: false,
       isFirstDj: true,
       gameType: 1,
-      cardBg: tabImgs.cards[3],
+      cardBg: tabImgs.cards[0],
+      desktopBg: tabImgs.games[0],
       loadRoom: false,
       selectData: {},
       dkScore: [],
@@ -410,7 +417,8 @@ export default {
     this.handleArray([this.gameTabs, this.createRoomTabs], this.tabs)
     this.handleArray([this.ds1_1, this.ds2_1, this.ds3_1], this.ds1)
     this.handleArray([this.ds1_2, this.ds2_2, this.ds3_2], this.ds2)
-    this.cardBg = tabImgs.cards[3]
+    this.cardBg = tabImgs.cards[0]
+    this.desktopBg = tabImgs.games[0]
     // 注册交互时间
     // this.registerFn()
   },
@@ -469,7 +477,7 @@ export default {
               , function (responseData) { // 响应原生回调方法
                 let data = window.JSON.parse(responseData)
                 vm.dtMsg = data.model
-                document.getElementById('horse').style.width = vm.dtMsg.toString().length * 50 + 'px'
+               // document.getElementById('horse').style.width = vm.dtMsg.toString().length * 50 + 'px'
                 vm.$store.dispatch('publicAjax', data)
               }
             )
@@ -788,23 +796,23 @@ export default {
       if (this.selectTypes === 0) {
         this.selectData = this.createRoomData1
         type = 1
-        this.showTip = true
-        this.tipMsg = '建设中...'
-        setTimeout(() => {
-          this.showTip = false
-        }, 1000)
-        return
-       // this.router = '/qt'
-      } else if (this.selectTypes === 1) {
-        this.selectData = this.createRoomData2
-        type = 2
         // this.showTip = true
         // this.tipMsg = '建设中...'
         // setTimeout(() => {
         //   this.showTip = false
         // }, 1000)
         // return
-       // this.router = '/ht'
+       // this.router = '/qt'
+      } else if (this.selectTypes === 1) {
+        this.selectData = this.createRoomData2
+        type = 2
+        this.showTip = true
+        this.tipMsg = '建设中...'
+        setTimeout(() => {
+          this.showTip = false
+        }, 1000)
+        return
+      // this.router = '/ht'
       } else {
         this.selectData = this.createRoomData3
         type = 3
@@ -1040,6 +1048,10 @@ export default {
     selectCardBg (url) {
       this.cardBg = url
     },
+    // 选择桌面面背景
+    selectDesktopBg (url) {
+      this.desktopBg = url
+    },
      // 关闭加入房间弹窗
     closeJoinRoom () {
       this.showJoinRoom = false
@@ -1133,11 +1145,11 @@ export default {
       display: flex;
       .f-relative{
         position: relative;
-        width: 210px;
+        width: 180px;
         height: 50px;
         line-height: 45px;
-        padding-left: 78px;
-        padding-top: 6px;
+        padding-left: 80px;
+        padding-top: 8px;
         text-align: left;
         // text-overflow: ellipsis;
         // white-space: nowrap;
@@ -1177,16 +1189,39 @@ export default {
       }
       .msg-box{
         flex: 1;
-        padding: 15px 0;
+        padding: 12px 0;
         .user-id-card{
+          position: relative;
           flex: 0 0 auto;
           .user-name{
           //  flex: 0 0 auto;
           //  width: auto;
-            background-image: url('../assets/imgs/username.png');
+          //  background-image: url('../assets/imgs/img_Hall_titleofgame.png');
             width: auto;
-            background-size: 25% 100%;
+            // background-size: 25% 100%;
+            background-size: contain;
             background-repeat: no-repeat;
+            img{
+              position: absolute;
+              top: 0;
+              left: 0;
+              height: 56px;
+              z-index: 2;
+            }
+          }
+          .line{
+            position: absolute;
+            top: 8px;
+            left: 50px;
+            border: 4px solid #948790;
+            border-left: none;
+            border-radius: 18px;
+            box-shadow: 0 0 5px 3px #544150;
+            width: auto;
+            padding-left: 30px;
+            padding-right: 15px;
+            height:40px;
+            z-index: 1;
           }
         }
         .user-room-card{
@@ -1356,7 +1391,7 @@ export default {
         align-items: center;
         flex: 1;
         width: 100%;
-        height: 64px;
+        height: 86px;
         // padding: 10px 14%;
         background: url('../assets/imgs/img_Join_input.png') 0 0 no-repeat;
         background-size: 100% 100%;
@@ -1364,15 +1399,16 @@ export default {
           display: flex;
           flex-direction: row;
           width: 100%;
-          height: 64px;
+          height: 86px;
+          line-height: 86px;
           font-size: 0;
           .num-item{
             font-family:'fzFont';
             display: inline-block;
             flex: 0 0 16.5%;
             width: 16.5%;
-            height: 68px;
-            line-height: 68px;
+            height: 86px;
+            line-height: 86px;
             text-align: center;
             font-size: 52px;
             color: #fff;
@@ -1394,7 +1430,7 @@ export default {
           .num-cell{
             flex: 1;
             width: 24%;
-            height: 68px;
+            height: 86px;
             margin-top: 20px;
             color: pink;
           }
@@ -1488,7 +1524,7 @@ export default {
 @keyframes horse
 {
     0%   {left:0px;}
-    50% {left:-75%;}
-    100% {left:-150%;}
+    50% {left:-61%;}
+    100% {left:-122%;}
 }
 </style>

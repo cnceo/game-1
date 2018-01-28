@@ -109,7 +109,8 @@ export default {
         }
       }
       .select-info1{
-        flex: 1;
+        flex: 0 0  120px;
+        width: 120px;
       }
       .select-info2{
        height: 50px;

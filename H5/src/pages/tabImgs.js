@@ -19,16 +19,17 @@ import score3 from '../assets/imgs/img_Create_100points.png'
 import score4 from '../assets/imgs/img_Create_200points.png'
 
 // 设置游戏局数
-import table1 from '../assets/imgs/img_Create_10Ju.png'
-import table2 from '../assets/imgs/img_Create_30Ju.png'
+import table1 from '../assets/imgs/img_Create_30Ju.png'
+import table2 from '../assets/imgs/img_Create_60Ju.png'
 
 // 桌面和游戏设置背景图片
-import card1 from '../assets/imgs/card1.png'
-import card2 from '../assets/imgs/card2.png'
-import card3 from '../assets/imgs/card3.png'
-import card4 from '../assets/imgs/img_Setup_Card1.png'
-import card5 from '../assets/imgs/img_Setup_Card2.png'
-import card6 from '../assets/imgs/img_Setup_Card3.png'
+import card1 from '../assets/card_bg/img-Zhipai-beimian1.png'
+import card2 from '../assets/card_bg/img-Zhipai-beimian2.png'
+import card3 from '../assets/card_bg/img-Zhipai-beimian3.png'
+import card4 from '../assets/card_bg/img-Zhipai-beimian4.png'
+import game1 from '../assets/game_bg/img_Room_announcement-background1.png'
+import game2 from '../assets/game_bg/img_Room_announcement-background2.png'
+import game3 from '../assets/game_bg/img_Room_announcement-background3.png'
 
 // 加入房间数字图片
 import num1 from '../assets/imgs/img_Join_1.png'
@@ -132,6 +133,9 @@ import D4_11 from '../assets/cards/img-Redpeach-11.png'
 import D4_12 from '../assets/cards/img-Redpeach-12.png'
 import D4_13 from '../assets/cards/img-Redpeach-13.png'
 
+// 大小王(3:小王6:大王)
+import D5_3 from '../assets/cards/img-King-small.png'
+import D5_6 from '../assets/cards/img-King-big.png'
 let arrs = [
   {
     type: 1,
@@ -392,6 +396,16 @@ let arrs = [
     type: 4,
     value: 13,
     img: D4_13
+  },
+  {
+    type: 5,
+    value: 3,
+    img: D5_3
+  },
+  {
+    type: 5,
+    value: 6,
+    img: D5_6
   }]
 // let djCards = []
 // for (let i = 1; i <= 4; i++) {
@@ -410,7 +424,8 @@ const tabsImgs = {
   hoverTabs: [tab1Hover, tab2Hover],
   scores: [score1, score2, score3, score4],
   tables: [table1, table2],
-  cards: [card1, card2, card3, card4, card5, card6],
+  cards: [card1, card2, card3, card4],
+  games: [game1, game2, game3],
   nums: [
     [{img: num1, num: 1}, {img: num2, num: 2}, {img: num3, num: 3}],
     [{img: num4, num: 4}, {img: num5, num: 5}, {img: num6, num: 6}],

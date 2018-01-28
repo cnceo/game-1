@@ -2,7 +2,7 @@
   <div class="game-face dj-room" v-show="showDj">
     <!-- <img src="../assets/game.png" width="100%"/> -->
     <div class="z-bg" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1">
-      <img src="../assets/imgs/img_Room_announcement-background.png" alt=""  width="100%" height="100%">
+      <img :src="curDesktopBg" alt=""  width="100%" height="100%">
     </div>
     <!-- 用户位置 -->
     <div class="user-site" v-show="users.length >= 1 && users.length <= 5">
@@ -66,30 +66,7 @@
         </div>
       </div>
     </div>
-     <div class="user-site res-site" v-show="users.length >= 1 && users.length <= 5">
-      <div class="user-item" v-for="(item, index) in users" :key="index"
-      :class="{'site0': index === 0, 'site1': index === 1, 'site2': index === 2,
-      'site3': index === 3, 'site4': index === 4}">
-        <div class="status" :class="{'l-site': (index !== 0) && (index % 2 !== 0),
-         'r-site': (index % 2 === 0), 'c-site': (index === 0)}">
-            <span v-show="item.ready == false && item.roomOwner == false && item.curUser == true" @click="startReady">
-              <img src="../assets/imgs/img_Room_ready.png" alt="" width="100%" height="100%">
-            </span>
-            <span v-show="item.ready == true && item.roomOwner == false && isStartReady">
-              <img src="../assets/imgs/img_Room_readying.png" alt="" width="100%" height="100%">
-            </span>
-            <span v-show="item.ready == false && item.roomOwner == true && isFriends == true && isFirst == true" @click="startGame">
-              <img src="../assets/imgs/img_Buchong_kaishi.png" alt="" width="100%" height="100%">
-            </span>
-            <span v-show="item.ready == false && item.roomOwner == true && isFirst == false && item.curUser == true" @click="startReady">
-              <img src="../assets/imgs/img_Room_ready.png" alt="" width="100%" height="100%">
-            </span>
-            <span v-show="item.ready == true && item.roomOwner == true && isStartReady">
-              <img src="../assets/imgs/img_Room_readying.png" alt="" width="100%" height="100%">
-            </span>
-         </div>
-      </div>
-    </div>
+    
     <!--最终结果页面-->
     <div class="user-site res-site">
       <div class="user-item" v-for="(item, index) in scores" :key="index"
@@ -129,6 +106,30 @@
             </ul>
           </div> -->
         </div>
+      </div>
+    </div>
+     <div class="user-site res-site" v-show="users.length >= 1 && users.length <= 5">
+      <div class="user-item" v-for="(item, index) in users" :key="index"
+      :class="{'site0': index === 0, 'site1': index === 1, 'site2': index === 2,
+      'site3': index === 3, 'site4': index === 4}">
+        <div class="status" :class="{'l-site': (index !== 0) && (index % 2 !== 0),
+         'r-site': (index % 2 === 0), 'c-site': (index === 0)}">
+            <span v-show="item.ready == false && item.roomOwner == false && item.curUser == true" @click="startReady">
+              <img src="../assets/imgs/img_Room_ready.png" alt="" width="100%" height="100%">
+            </span>
+            <span v-show="item.ready == true && item.roomOwner == false && isStartReady">
+              <img src="../assets/imgs/img_Room_readying.png" alt="" width="100%" height="100%">
+            </span>
+            <span v-show="item.ready == false && item.roomOwner == true && isFriends == true && isFirst == true" @click="startGame">
+              <img src="../assets/imgs/img_Buchong_kaishi.png" alt="" width="100%" height="100%">
+            </span>
+            <span v-show="item.ready == false && item.roomOwner == true && isFirst == false && item.curUser == true" @click="startReady">
+              <img src="../assets/imgs/img_Room_ready.png" alt="" width="100%" height="100%">
+            </span>
+            <span v-show="item.ready == true && item.roomOwner == true && isStartReady">
+              <img src="../assets/imgs/img_Room_readying.png" alt="" width="100%" height="100%">
+            </span>
+         </div>
       </div>
     </div>
     <!-- 发牌区域 -->
@@ -202,7 +203,7 @@
           v-else @touchstart="exitRoom">
         </div>
       </div>
-      <div class="intro g-flex">
+      <div class="intro g-flex" style="display: none;">
         <div class="help" @touchend="gameRule">
           <img src="../assets/imgs/img_Room_lntroduction.png" alt="" width= "100%">
         </div>
@@ -213,7 +214,7 @@
     </div>
     <!-- 游戏信息 -->
     <div class="game-info">
-      <div class="room-num">房间号： {{gameMsg.numId}}</div>
+      <div class="room-num" style="display: none">房间号： {{gameMsg.numId}}</div>
       <div class="geme-type">
         <span v-show="gameMsg.gameType == '1'">清推</span>
         <span v-show="gameMsg.gameType == '2'">混推</span>
@@ -264,8 +265,20 @@
     </div>
     <div class="card-table card-table-tip g-flex-row">
       <div class="chu g-flex">
-        <div class="card-tip" v-show="showCardTip">
-          <img src="../assets/imgs/img_Bet_touzhu.png" alt=""  width="100%" height="100%">
+        <div class="card-tip kaiju" v-show="showCardTip1">
+          <img src="../assets/imgs/img_Daikai_kaiju.png" alt=""  width="100%" height="100%">
+        </div>
+        <div class="card-tip kaipai" v-show="showCardTip2">
+          <img src="../assets/imgs/img_Daikai_kaipai.png" alt=""  width="100%" height="100%">
+        </div>
+        <div class="card-tip touzhu" v-show="showCardTip3">
+          <img src="../assets/imgs/img_Daikai_touzhu.png" alt=""  width="100%" height="100%">
+        </div>
+        <div class="card-tip tongpei" v-show="showCardTip4">
+          <img src="../assets/imgs/img_Daikai_tongpei.png" alt=""  width="100%" height="100%">
+        </div>
+         <div class="card-tip tongsha" v-show="showCardTip5">
+          <img src="../assets/imgs/img_Daikai_tongsha.png" alt=""  width="100%" height="100%">
         </div>
         <div class="xz-modal-timer" v-show="showXzSortTimer">
           <img src="../assets/imgs/img_Xuanze_shijian.png" alt=""  width="100%" height="100%">
@@ -322,12 +335,13 @@
       <img src="../assets/imgs/img_Room_lnvitefriends.png" alt="" width= "100%">
     </div>
     <!-- 交流 -->
-    <div class="talk">
+    <div class="talk" style="display: none;">
       <div class="voice"></div>
       <div class="txt-msg"></div>
     </div>
     <!-- 设置 -->
-    <Setting :account="showAccount" ref="setting"></Setting>
+    <Setting :account="showAccount" ref="setting"  @on-select-card="selectCardBg"
+    @on-select-desktop="selectDesktopBg"></Setting>
      <!-- 规则弹窗 -->
     <Modal :showModal="showRuleModal"
     @on-close="closeRuleModal"
@@ -789,13 +803,46 @@ export default {
       showReleaseReadyModal: false,
       releaseReadyText: '', // 游戏中解散房间提示文字
       isCurUserReady: false, // 当前玩家是否准备，不可抢庄
-      curCardBg: tabImgs.cards[3],
+      curCardBg: tabImgs.cards[0],
+      curDesktopBg: tabImgs.games[0],
       cards: tabImgs.djCards, // 所有的牌组合方式
       cardList: [
-        // {
-        //   bImg: tabImgs.cards[0],
-        //   fImg: tabImgs.cards[0]
-        // }
+        {
+          bImg: tabImgs.cards[0],
+          fImg: tabImgs.cards[0]
+        },
+        {
+          bImg: tabImgs.cards[0],
+          fImg: tabImgs.cards[0]
+        },
+        {
+          bImg: tabImgs.cards[0],
+          fImg: tabImgs.cards[0]
+        },
+        {
+          bImg: tabImgs.cards[0],
+          fImg: tabImgs.cards[0]
+        },
+        {
+          bImg: tabImgs.cards[0],
+          fImg: tabImgs.cards[0]
+        },
+        {
+          bImg: tabImgs.cards[0],
+          fImg: tabImgs.cards[0]
+        },
+        {
+          bImg: tabImgs.cards[0],
+          fImg: tabImgs.cards[0]
+        },
+        {
+          bImg: tabImgs.cards[0],
+          fImg: tabImgs.cards[0]
+        },
+        {
+          bImg: tabImgs.cards[0],
+          fImg: tabImgs.cards[0]
+        }
       ], // 最终展示牌
       showCards: false, // 是否显示发牌
       checkResult1: false, // 查看牌1结果，翻牌
@@ -888,7 +935,11 @@ export default {
       showReleaseRoomBtns: false,
       showOwnerReleaseReadyModal: false,
       ownerReleaseReadyText: '',
-      showCardTip: false,
+      showCardTip1: false,
+      showCardTip2: false,
+      showCardTip3: false,
+      showCardTip4: false,
+      showCardTip5: false,
       toggShow: false,
       toggleXzModal: false,
       canXz: true
@@ -918,6 +969,10 @@ export default {
       dafault: false
     },
     cardBg: {
+      type: String,
+      dafault: ''
+    },
+    desktopBg: {
       type: String,
       dafault: ''
     }
@@ -954,6 +1009,9 @@ export default {
       this.cardList.forEach((item) => {
         item.bImg = this.curCardBg
       })
+    },
+    desktopBg (val) {
+      this.curDesktopBg = val
     }
   },
   created () {
@@ -961,6 +1019,7 @@ export default {
    // this.users = this.ds
     this.gameMsg = this.ds
     this.curCardBg = this.cardBg
+    this.curDesktopBg = this.desktopBg
     // 注册交互事件
     this.registerFn()
     // 获取当前时间
@@ -970,6 +1029,16 @@ export default {
     this.closeTime()
   },
   methods: {
+    // 选择牌面背景
+    selectCardBg (url) {
+      this.curCardBg = url
+      this.cardList.forEach((item) => {
+        item.bImg = this.curCardBg
+      })
+    },
+    selectDesktopBg (url) {
+      this.curDesktopBg = url
+    },
     closeTime () {
       clearInterval(this.timer)
       this.timer = null
@@ -1699,11 +1768,7 @@ export default {
     },
     // 单局结束分享
     share () {
-      //
-      this.showShareModal = false
-      this.resetParams()
-      this.nextResetParams()
-      this.curRound = 1
+      let vm = this
       let params = window.JSON.stringify({
         numId: this.gameMsg.numId,
         baseScore: this.gameMsg.baseScore,
@@ -1718,6 +1783,11 @@ export default {
           // }
           //
           console.log('分享成功')
+          vm.showShareModal = false
+          vm.resetParams()
+          vm.nextResetParams()
+          vm.curRound = 1
+          vm.qz = false
         }
       )
     },
@@ -1737,8 +1807,9 @@ export default {
       this.isShowXz = true
       this.isDown = false
       this.isDownSu = false
-      this.qz = false
+    //  this.qz = false
       this.allScores = []
+      this.showScore = false
       this.timer = null
       this.timer1 = null
       this.timer2 = null
@@ -1764,7 +1835,6 @@ export default {
       this.kmScore = 0
       this.showXzTotal = false
       this.canXz = true
-      this.showScore = false
       this.scores = []
       this.showCards = false
       this.checkResult1 = false
@@ -1802,6 +1872,7 @@ export default {
       //   return
       // }
       // 如果人数最少2人，即可开始游戏
+      let ii = 1
       if (arr.length < MIN_USER) {
         arr.forEach((item) => {
           if (Number(item.userId) === Number(vm.userId)) {
@@ -1827,10 +1898,21 @@ export default {
               vm.isCurUserReady = false
             }
             item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
-            vm.users.unshift(item)
+           // vm.users.unshift(item)
+            let obj = {}
+            for (let key in item) {
+              vm.$set(obj, key, item[key])
+            }
+            vm.$set(vm.users, 0, obj)
           } else {
             item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
-            vm.users.push(item)
+           // vm.users.push(item)
+            let obj = {}
+            for (let key in item) {
+              vm.$set(obj, key, item[key])
+            }
+            vm.$set(vm.users, ii, obj)
+            ii++
           }
         })
       } else {
@@ -1858,11 +1940,22 @@ export default {
             } else {
               vm.isCurUserReady = false
             }
-            vm.users.unshift(item)
+           // vm.users.unshift(item)
+            let obj = {}
+            for (let key in item) {
+              vm.$set(obj, key, item[key])
+            }
+            vm.$set(vm.users, 0, obj)
           } else {
             item.curUser = false
             item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
-            vm.users.push(item)
+            // vm.users.push(item)
+            let obj = {}
+            for (let key in item) {
+              vm.$set(obj, key, item[key])
+            }
+            vm.$set(vm.users, ii, obj)
+            ii++
           }
         })
         // 显示准备按钮
@@ -1881,6 +1974,13 @@ export default {
             vm.isMaster = false
             // 禁止抢庄
             vm.isGameStart = true
+            vm.$audio.play1(vm.$audio.sg)
+            vm.showCardTip1 = true
+            let timert = setTimeout(() => {
+              clearInterval(timert)
+              timert = null
+              vm.showCardTip1 = false
+            }, 1000)
             // 开始发牌
             vm.users.forEach((its) => {
               if (Number(its.userId) === Number(vm.userId) && (its.banker === true)) {
@@ -1933,13 +2033,14 @@ export default {
       })
       vm.showCards = true
        // let timert = setTimeout(() => {
-       //   vm.showCardTip = true
-       // }, 2000)
+      // vm.$audio.play3(vm.$audio.pk)
+       //   vm.showCardTip2 = true
+       // }, 3000)
       vm.timer1 = setTimeout(() => {
          // clearInterval(timert)
          // timert = null
         vm.checkResult1 = true
-        // vm.showCardTip = false
+        // vm.showCardTip2 = false
         vm.isDownSu = true
         vm.users.forEach((item) => {
           if (Number(item.userId) === Number(vm.userId)) {
@@ -2013,6 +2114,13 @@ export default {
             }
             console.log(vm.bks)
             console.log(vm.bks.join('---'))
+            vm.$audio.play2(vm.$audio.dx)
+            vm.showCardTip3 = true
+            let timert = setTimeout(() => {
+              clearInterval(timert)
+              timert = null
+              vm.showCardTip3 = false
+            }, 2000)
             vm.coins.forEach((item, index) => {
               item.down = vm.bks[index]
             })
@@ -2078,6 +2186,13 @@ export default {
             })
             console.log(vm.bks)
             console.log(vm.bks.join('---'))
+            vm.$audio.play2(vm.$audio.dx)
+            vm.showCardTip3 = true
+            let timert = setTimeout(() => {
+              clearInterval(timert)
+              timert = null
+              vm.showCardTip3 = false
+            }, 2000)
             vm.coins.forEach((item, index) => {
               item.down = vm.bks[index]
             })
@@ -2126,28 +2241,40 @@ export default {
         vm.isDownSu = false
         vm.menType = true
         let timert = setTimeout(() => {
-          vm.showCardTip = true
-        }, 2000)
+          vm.$audio.play3(vm.$audio.pk)
+          vm.showCardTip2 = true
+        }, 3000)
         vm.timer3 = setTimeout(() => {
           clearInterval(timert)
           timert = null
           vm.checkResult2 = true
-          vm.showCardTip = false
+          vm.showCardTip2 = false
           vm.scores = []
           vm.showScore = true
-          vm.users.forEach((item) => {
+          let as = []
+          vm.users.forEach((ite) => {
+            let obj = {}
+            for (let key in ite) {
+              obj[key] = ite[key]
+            }
+            as.push(obj)
+          })
+          as.forEach((item) => {
             for (let i = 0; i < result.length; i++) {
               if (Number(item.userId) === Number(result[i].userId)) {
                 vm.scores.push(result[i])
+                item.score = item.score + result[i].winScore
               }
             }
           })
+          console.log(window.JSON.stringify(vm.users))
           // 硬币动画 //coins 0, 1, 2, 3, 4
           let winer = false
           let bankerId = ''
           let curIndex = ''
          // let bankerIndex = ''
-          let he = false
+          let zjhe = false
+          let xjhe = []
           result.forEach((item, index) => {
             // 庄家赢了
             if (item.banker === true) {
@@ -2156,7 +2283,11 @@ export default {
               if (item.winScore > 0) {
                 winer = true
               } else if (Number(item.winScore) === 0) {
-                he = true
+                zjhe = true
+              }
+            } else {
+              if (Number(item.winScore) === 0) {
+                xjhe.push(index)
               }
             }
             // 庄家输了
@@ -2179,7 +2310,7 @@ export default {
           })
           // 庄家赢了
           vm.timer4 = setTimeout(() => {
-            if (!he) {
+            if (!zjhe) {
               if (winer) {
                 console.log('庄家赢了')
                 if (Number(bankerId) === Number(vm.userId)) {
@@ -2209,6 +2340,16 @@ export default {
                     coins[i] = 'hide'
                   } else {
                     coins[i] = 'move'
+                    result.forEach((it, ix) => {
+                      if (it.banker === false && it.betting === false) {
+                        vm.users.forEach((t, j) => {
+                          if (Number(t.userId) === Number(t.it)) {
+                            coins[j * 2] = 'hide'
+                            coins[j * 2 + 1] = 'hide'
+                          }
+                        })
+                      }
+                    })
                   }
                 }
               }
@@ -2229,6 +2370,8 @@ export default {
               item.down = 'active'
               item.show = coins[index]
             })
+            vm.$audio.play4(vm.$audio.px)
+            vm.users = as
           }, 6000)
           vm.timer5 = setTimeout(() => {
             if (gameover === true) {
@@ -2591,6 +2734,111 @@ export default {
       }
     }
   }
+  .cards{
+    position: absolute;
+    top: 8%;
+    width: 100%;
+    height: 35%;
+    z-index: 1001;
+    .card-list{
+      position: relative;
+    /* bottom: -75%; */
+      top: 15%;
+      width: 60%;
+      height: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      -webkit-perspective: 500;
+      -moz-perspective: 500;
+      -ms-perspective: 500;
+      perspective: 500;
+      -ms-transform: perspective(500px);
+      -moz-transform: perspective(500px); /*重要*/
+      li{
+        display: inline-block;
+        list-style: none;
+        position: absolute;
+        left: 25%;
+      /*  bottom: 180px; */
+        top: -50px;
+        width: 14%;
+        height: 64px;
+        border: 1px solid #ddd;
+        z-index: 1;
+        transform-style: preserve-3d; /*重要*/
+        transition: 0.6s;
+        transform-style: preserve-3d; /*重要*/
+        img{
+          width: 100%;
+        }
+        .front ,.back{
+          position: absolute;
+          left: 0;
+          top: 0;
+          backface-visibility: hidden;  /*重要*/
+          width: 100%;
+          // height: 100%;
+        }
+        .front {
+            transform: rotateY(0deg);
+            z-index: 2;
+        }
+        .back {
+            transform: rotateY(-180deg);
+        }
+      }
+      .reverse{
+        transform: rotateY(180deg);
+      }
+      .fanzhuan{
+        transform: rotateY(180deg);
+      // animation: reverseCard 0.3s linear 2s forwards;
+      }
+    .card0{
+        left: 35%;
+        z-index: 0;
+        animation: card0Move 0.3s linear 0.5s forwards;
+      }
+      .card1{
+        left: 40%;
+        z-index: 1;
+        animation: card1Move 0.3s linear 1s forwards;
+      }
+      .card2{
+        left: 45%;
+        z-index: 2;
+        animation: card2Move 0.3s linear 1.5s forwards;
+      }
+      .card3{
+        left: 50%;
+        z-index: 3;
+        animation: card3Move 0.3s linear 2s forwards;
+      }
+      .card4{
+        left: 55%;
+        z-index: 4;
+        animation: card4Move 0.3s linear 0.5s forwards;
+      }
+      .card5{
+        left: 60%;
+        z-index: 5;
+        animation: card5Move 0.3s linear 1s forwards;
+      }
+      .card6{
+        left: 65%;
+        z-index: 6;
+        animation: card6Move 0.3s linear 1.5s forwards;
+      }
+      .card7{
+        left: 70%;
+        z-index: 7;
+        animation: card7Move 0.3s linear 2s forwards;
+      }
+    }
+    .card-list.active{
+      animation: cardsMove 0.3s linear forwards;
+    }
+  }
   .res-site{
     z-index: 1001;
     .result{
@@ -2819,8 +3067,9 @@ export default {
   }
   .game-info{
     position: absolute;
-    top: 90px;
-    left: 50%;
+   // top: 90px;
+    top: 6px;
+    left: 46%;
     transform: translateX(-50%);
     color: #fff;
     font-family: 'fzFont';
@@ -3629,7 +3878,9 @@ export default {
           vertical-align: middle;
         }
         img{
-          flex: 0 0 auto;
+          flex: 0 0 50px;
+          width: 50px;
+          height: 50px;
           display: inline-block;
           vertical-align: middle;
         }
@@ -3640,10 +3891,10 @@ export default {
     z-index: 1002;
     .card-tip{
       position: absolute;
-      top: 20%;
+      top: 16%;
       left: 50%;
-      width: 92px;
-      height: 56px;
+      width: 110px;
+    //  height: 64px;
       transform: translate(-50%, 0%);
     }
 
@@ -3677,112 +3928,6 @@ export default {
       background-size: 100% 100%;
     }
   }
-  /**发牌动画**/
-  .cards{
-    position: absolute;
-    top: 10%;
-    width: 100%;
-    height: 35%;
-    z-index: 1001;
-    .card-list{
-      position: relative;
-    /* bottom: -75%; */
-      top: 15%;
-      width: 60%;
-      height: 60px;
-      left: 56%;
-      transform: translateX(-70%);
-      -webkit-perspective: 500;
-      -moz-perspective: 500;
-      -ms-perspective: 500;
-      perspective: 500;
-      -ms-transform: perspective(500px);
-      -moz-transform: perspective(500px); /*重要*/
-      li{
-        display: inline-block;
-        list-style: none;
-        position: absolute;
-        left: 25%;
-      /*  bottom: 180px; */
-        top: -50px;
-        width: 13%;
-        height: 62px;
-        border: 1px solid #ddd;
-        z-index: 1;
-        transform-style: preserve-3d; /*重要*/
-        transition: 0.6s;
-        transform-style: preserve-3d; /*重要*/
-        img{
-          width: 100%;
-        }
-        .front ,.back{
-          position: absolute;
-          left: 0;
-          top: 0;
-          backface-visibility: hidden;  /*重要*/
-          width: 100%;
-          // height: 100%;
-        }
-        .front {
-            transform: rotateY(0deg);
-            z-index: 2;
-        }
-        .back {
-            transform: rotateY(-180deg);
-        }
-      }
-      .reverse{
-        transform: rotateY(180deg);
-      }
-      .fanzhuan{
-        transform: rotateY(180deg);
-      // animation: reverseCard 0.3s linear 2s forwards;
-      }
-    .card0{
-        left: 35%;
-        z-index: 0;
-        animation: card0Move 0.3s linear 0.5s forwards;
-      }
-      .card1{
-        left: 40%;
-        z-index: 1;
-        animation: card1Move 0.3s linear 1s forwards;
-      }
-      .card2{
-        left: 45%;
-        z-index: 2;
-        animation: card2Move 0.3s linear 1.5s forwards;
-      }
-      .card3{
-        left: 50%;
-        z-index: 3;
-        animation: card3Move 0.3s linear 2s forwards;
-      }
-      .card4{
-        left: 55%;
-        z-index: 4;
-        animation: card4Move 0.3s linear 0.5s forwards;
-      }
-      .card5{
-        left: 60%;
-        z-index: 5;
-        animation: card5Move 0.3s linear 1s forwards;
-      }
-      .card6{
-        left: 65%;
-        z-index: 6;
-        animation: card6Move 0.3s linear 1.5s forwards;
-      }
-      .card7{
-        left: 70%;
-        z-index: 7;
-        animation: card7Move 0.3s linear 2s forwards;
-      }
-    }
-    .card-list.active{
-      animation: cardsMove 0.3s linear forwards;
-    }
-  }
 }
 .xz-modal{
   .xz-body{
@@ -3791,7 +3936,7 @@ export default {
       li.item{
         display: flex;
         flex-direction: row;
-        margin-bottom: 12px;
+        margin-bottom: 24px;
         .label{
           // flex: 0 0 150px;
           // width: 150px;
@@ -3809,7 +3954,7 @@ export default {
           // width: 890px;
           flex: 0 0 auto;
           width: auto;
-          height: 66px;
+          height: 78px;
           margin-left: 12px;
           background: #6dc4d8;
           border-radius: 30px;
@@ -3817,8 +3962,8 @@ export default {
             display: inline-block;
             .num{
               display: inline-block;
-              width: 66px;
-              height: 66px;
+              width: 78px;
+              height: 78px;
               margin-left: 20px;
               img{
                 display: inline-block;
@@ -3872,8 +4017,8 @@ export default {
       position: relative;
       top: 15px;
       display: inline-block;
-      width: 36%;
-      height: 48px;
+      width: 38%;
+      height: 60px;
     }
   }
 }
@@ -5647,8 +5792,8 @@ export default {
     top: -50px;
   }
   100%{
-    left: 21%;
-    top: 280px;
+    left: 2%;
+    top: 240px;
   }
 }
 @keyframes card1Move {
@@ -5658,8 +5803,8 @@ export default {
   }
   100%{
    // left: 26%;
-    left: 52%;
-    top: 280px;
+    left: 31%;
+    top: 240px;
   }
 }
 @keyframes card2Move {
@@ -5669,8 +5814,8 @@ export default {
   }
   100%{
    // left: 51%;
-    left: 82%;
-    top: 280px;
+    left: 59%;
+    top: 240px;
   }
 }
 @keyframes card3Move {
@@ -5680,7 +5825,7 @@ export default {
   }
   100%{
    // left: 56%;
-    left: 50%;
+    left: 31%;
     top: -50px;
   }
 }
@@ -5691,8 +5836,8 @@ export default {
   }
   100%{
    // left: 81%;
-    left: 26%;
-    top: 280px;
+    left: 8%;
+    top: 240px;
   }
 }
 @keyframes card5Move {
@@ -5702,8 +5847,8 @@ export default {
   }
   100%{
    // left: 86%;
-    left: 57%;
-    top: 280px;
+    left: 37%;
+    top: 240px;
   }
 }
 @keyframes card6Move {
@@ -5713,8 +5858,8 @@ export default {
   }
   100%{
    // left: 50%;
-    left: 87%;
-    top: 280px;
+    left: 65%;
+    top: 240px;
   }
 }
 @keyframes card7Move {
@@ -5723,7 +5868,7 @@ export default {
     top: -50px;
   }
   100%{
-    left: 55%;
+    left: 36%;
     top: -50px;
   }
 }

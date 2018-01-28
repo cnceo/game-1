@@ -22,6 +22,7 @@
   line-height: 24px;
 }
 #app .set-modal .modal-content {
+  width: 50%;
   height: auto;
   padding: 20px;
   background: url('../imgs/img_Setup_Settingbackground.png') 0 0 no-repeat;
@@ -65,7 +66,7 @@
 }
 #app .join-modal .modal-content {
   width: 68%;
-  height: 64%;
+  height: 68%;
   padding: 30px;
 }
 #app .join-modal .modal-content .join-body {
@@ -83,8 +84,8 @@
   margin: 0 auto;
 }
 #app .xz-modal .modal-content {
-  width: 34%;
-  height: 44%;
+  width: 38%;
+  height: 52%;
 }
 #app .xz-modal .modal-content .game-body {
   padding: 10px 0 0 0;

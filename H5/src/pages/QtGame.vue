@@ -1,8 +1,8 @@
 <template>
-  <div class="game-face dj-room" v-show="showQt">
+  <div class="game-face qt-room" v-show="showQt">
     <!-- <img src="../assets/game.png" width="100%"/> -->
     <div class="z-bg" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1">
-      <img src="../assets/imgs/img_Room_announcement-background.png" alt=""  width="100%" height="100%">
+      <img :src="curDesktopBg" alt=""  width="100%" height="100%">
     </div>
     <!-- 用户位置 -->
     <div class="user-site" v-show="users.length >= 1 && users.length <= 5">
@@ -66,30 +66,7 @@
         </div>
       </div>
     </div>
-     <div class="user-site res-site" v-show="users.length >= 1 && users.length <= 5">
-      <div class="user-item" v-for="(item, index) in users" :key="index"
-      :class="{'site0': index === 0, 'site1': index === 1, 'site2': index === 2,
-      'site3': index === 3, 'site4': index === 4}">
-        <div class="status" :class="{'l-site': (index !== 0) && (index % 2 !== 0),
-         'r-site': (index % 2 === 0), 'c-site': (index === 0)}">
-            <span v-show="item.ready == false && item.roomOwner == false && item.curUser == true" @click="startReady">
-              <img src="../assets/imgs/img_Room_ready.png" alt="" width="100%" height="100%">
-            </span>
-            <span v-show="item.ready == true && item.roomOwner == false && isStartReady">
-              <img src="../assets/imgs/img_Room_readying.png" alt="" width="100%" height="100%">
-            </span>
-            <span v-show="item.ready == false && item.roomOwner == true && isFriends == true && isFirst == true" @click="startGame">
-              <img src="../assets/imgs/img_Buchong_kaishi.png" alt="" width="100%" height="100%">
-            </span>
-            <span v-show="item.ready == false && item.roomOwner == true && isFirst == false && item.curUser == true" @click="startReady">
-              <img src="../assets/imgs/img_Room_ready.png" alt="" width="100%" height="100%">
-            </span>
-            <span v-show="item.ready == true && item.roomOwner == true && isStartReady">
-              <img src="../assets/imgs/img_Room_readying.png" alt="" width="100%" height="100%">
-            </span>
-         </div>
-      </div>
-    </div>
+    
     <!--最终结果页面-->
     <div class="user-site res-site">
       <div class="user-item" v-for="(item, index) in scores" :key="index"
@@ -131,22 +108,46 @@
         </div>
       </div>
     </div>
+     <div class="user-site res-site" v-show="users.length >= 1 && users.length <= 5">
+      <div class="user-item" v-for="(item, index) in users" :key="index"
+      :class="{'site0': index === 0, 'site1': index === 1, 'site2': index === 2,
+      'site3': index === 3, 'site4': index === 4}">
+        <div class="status" :class="{'l-site': (index !== 0) && (index % 2 !== 0),
+         'r-site': (index % 2 === 0), 'c-site': (index === 0)}">
+            <span v-show="item.ready == false && item.roomOwner == false && item.curUser == true" @click="startReady">
+              <img src="../assets/imgs/img_Room_ready.png" alt="" width="100%" height="100%">
+            </span>
+            <span v-show="item.ready == true && item.roomOwner == false && isStartReady">
+              <img src="../assets/imgs/img_Room_readying.png" alt="" width="100%" height="100%">
+            </span>
+            <span v-show="item.ready == false && item.roomOwner == true && isFriends == true && isFirst == true" @click="startGame">
+              <img src="../assets/imgs/img_Buchong_kaishi.png" alt="" width="100%" height="100%">
+            </span>
+            <span v-show="item.ready == false && item.roomOwner == true && isFirst == false && item.curUser == true" @click="startReady">
+              <img src="../assets/imgs/img_Room_ready.png" alt="" width="100%" height="100%">
+            </span>
+            <span v-show="item.ready == true && item.roomOwner == true && isStartReady">
+              <img src="../assets/imgs/img_Room_readying.png" alt="" width="100%" height="100%">
+            </span>
+         </div>
+      </div>
+    </div>
     <!-- 发牌区域 -->
      <div class="cards" v-show="showCards">
       <ul class="card-list" ref="card" v-show="showCards"
          :class="{'active': showCards}">
-        <li v-for="(item, index) in cardList" :key="index"
+        <!-- <li v-for="(item, index) in cardList" :key="index"
         v-if="index === 0 || index === 1 || index === 2 || index === 3"
         :class="{'card0': index === 0, 'card1': index === 1,
         'card2': index === 2, 'card3': index === 3, 'reverse': checkResult1}"
         >
           <img :src="item.bImg" alt="" class="front">
           <img :src="item.fImg" alt="" class="back">
-        </li>
+        </li> -->
         <li v-for="(item, index) in cardList" :key="index"
-        v-if="index === 4 || index === 5 || index === 6 || index === 7"
-        :class="{'card4': index === 4, 'card5': index === 5,
-        'card6': index === 6, 'card7': index === 7, 'reverse': checkResult2}"
+        :class="{'card0': index === 0, 'card1': index === 1, 'card2': index === 2, 'card3': index === 3,'card4': index === 4, 'card5': index === 5,
+        'card6': index === 6, 'card7': index === 7, 'card8': index === 8, 'card9': index === 9, 'card10': index === 10, 'card11': index === 11,
+        'card12': index === 12, 'card13': index === 13, 'card14': index === 14, 'card15': index === 15,'reverse': checkResult2}"
         >
           <img :src="item.bImg" alt="" class="front">
           <img :src="item.fImg" alt="" class="back">
@@ -202,7 +203,7 @@
           v-else @touchstart="exitRoom">
         </div>
       </div>
-      <div class="intro g-flex">
+      <div class="intro g-flex" style="display: none;">
         <div class="help" @touchend="gameRule">
           <img src="../assets/imgs/img_Room_lntroduction.png" alt="" width= "100%">
         </div>
@@ -213,7 +214,7 @@
     </div>
     <!-- 游戏信息 -->
     <div class="game-info">
-      <div class="room-num">房间号： {{gameMsg.numId}}</div>
+      <div class="room-num" style="display: none">房间号： {{gameMsg.numId}}</div>
       <div class="geme-type">
         <span v-show="gameMsg.gameType == '1'">清推</span>
         <span v-show="gameMsg.gameType == '2'">混推</span>
@@ -226,7 +227,7 @@
     <div class="card-table card-table-bg g-flex-row" v-show="isGameStart">
       <div class="chu g-flex">
         <img src="../assets/imgs/img_Bet_chu.png" alt="" width="100%" height="100%">
-        <div class="xz-res" v-show="showXzTotal">
+        <div class="xz-res" v-show="showXzTotal && !showLcmTip">
           <img src="../assets/imgs/img_Bet_xiaobeijing.png" alt="" width="100%" height="100%">
           <div class="xz-num">
             <img src="../assets/imgs/img_Bet_jinbi.png" alt="" height="100%">
@@ -235,10 +236,13 @@
              @click="deleteCmScore">
           </div>
         </div>
+        <div class="lm-tip" v-show="showLcmTip">
+          <img src="../assets/imgs/img_Bet_lanmen.png" alt="" width="100%" height="100%">
+        </div>
       </div>
        <div class="chu g-flex">
         <img src="../assets/imgs/img_Bet_tian.png" alt="" height="100%">
-         <div class="xz-res" v-show="showXzTotal">
+         <div class="xz-res" v-show="showXzTotal && !showLtmTip">
           <img src="../assets/imgs/img_Bet_xiaobeijing.png" alt="" width="100%" height="100%">
           <div class="xz-num">
             <img src="../assets/imgs/img_Bet_jinbi.png" alt="" height="100%">
@@ -247,10 +251,13 @@
              @click="deleteTmScore">
           </div>
         </div>
+        <div class="lm-tip" v-show="showLtmTip">
+          <img src="../assets/imgs/img_Bet_lanmen.png" alt="" width="100%" height="100%">
+        </div>
       </div>
        <div class="chu g-flex">
         <img src="../assets/imgs/img_Bet_kan.png" alt="" height="100%">
-         <div class="xz-res" v-show="showXzTotal">
+         <div class="xz-res" v-show="showXzTotal && !showLkmTip">
           <img src="../assets/imgs/img_Bet_xiaobeijing.png" alt="" width="100%" height="100%">
           <div class="xz-num">
             <img src="../assets/imgs/img_Bet_jinbi.png" alt="" height="100%">
@@ -259,13 +266,28 @@
              @click="deleteKmScore">
           </div>
         </div>
+        <div class="lm-tip" v-show="showLkmTip">
+          <img src="../assets/imgs/img_Bet_lanmen.png" alt="" width="100%" height="100%">
+        </div>
       </div>
 
     </div>
     <div class="card-table card-table-tip g-flex-row">
       <div class="chu g-flex">
-        <div class="card-tip" v-show="showCardTip">
-          <img src="../assets/imgs/img_Bet_touzhu.png" alt=""  width="100%" height="100%">
+        <div class="card-tip kaiju" v-show="showCardTip1">
+          <img src="../assets/imgs/img_Daikai_kaiju.png" alt=""  width="100%" height="100%">
+        </div>
+        <div class="card-tip kaipai" v-show="showCardTip2">
+          <img src="../assets/imgs/img_Daikai_kaipai.png" alt=""  width="100%" height="100%">
+        </div>
+        <div class="card-tip touzhu" v-show="showCardTip3">
+          <img src="../assets/imgs/img_Daikai_touzhu.png" alt=""  width="100%" height="100%">
+        </div>
+        <div class="card-tip tongpei" v-show="showCardTip4">
+          <img src="../assets/imgs/img_Daikai_tongpei.png" alt=""  width="100%" height="100%">
+        </div>
+         <div class="card-tip tongsha" v-show="showCardTip5">
+          <img src="../assets/imgs/img_Daikai_tongsha.png" alt=""  width="100%" height="100%">
         </div>
         <div class="xz-modal-timer" v-show="showXzSortTimer">
           <img src="../assets/imgs/img_Xuanze_shijian.png" alt=""  width="100%" height="100%">
@@ -278,7 +300,8 @@
       :class="{'chu': index === 0, 'tian': index === 1, 'kan': index === 2}">
         <img :src="item" alt="" height="100%" style="opacity:0">
         <div class="coin-box" v-show="index === 0">
-          <div class="coins chu-coins" v-show="menType">
+          <div class="coins chu-coins" v-show="menType && ((index == 0 && showLcmTip) ||
+          (index == 1 && showLtmTip) || (index == 2 && showLkmTip))">
             <span v-for="(item, index) in coins" :key="index" :class="{'coin0': index === 0,
             'coin1': index === 1, 'coin2': index === 2, 'coin3': index === 3, 'coin4': index === 4,
             'coin5': index === 5, 'coin6': index === 6, 'coin7': index === 7, 'coin8': index === 8, 'coin9': index === 9, 'active': menType,
@@ -322,12 +345,13 @@
       <img src="../assets/imgs/img_Room_lnvitefriends.png" alt="" width= "100%">
     </div>
     <!-- 交流 -->
-    <div class="talk">
+    <div class="talk" style="display: none;">
       <div class="voice"></div>
       <div class="txt-msg"></div>
     </div>
     <!-- 设置 -->
-    <Setting :account="showAccount" ref="setting"></Setting>
+    <Setting :account="showAccount" ref="setting"   @on-select-card="selectCardBg"
+    @on-select-desktop="selectDesktopBg"></Setting>
      <!-- 规则弹窗 -->
     <Modal :showModal="showRuleModal"
     @on-close="closeRuleModal"
@@ -356,7 +380,8 @@
       </div>
       <div slot="body" class="lm-body">
         <ul>
-          <li class="item" v-for="(item, index) in mType" :key="index">
+          <li class="item" v-for="(item, index) in mType" :key="index"
+          @click="lmType(index)">
             <img :src="item.img" alt=""  width="100%">
           </li>
         </ul>
@@ -370,15 +395,75 @@
         </div>
       </div>
     </Modal>
+    <!-- 配牌弹窗 -->
+    <Modal :showModal="showPeModal"
+    :showClose="showClose"
+    class="xz-modal pe-modal">
+      <div slot="modal-bg" class="modal-bg">
+        <img src="../assets/imgs/img_Bet_background.png" alt=""  width="100%" height="100%">
+      </div>
+      <!-- <div slot="title" class="xz-title title-active">
+         <img src="../assets/imgs/img_Bet_title.png" alt=""  width="100%">
+      </div> -->
+      <div slot="body" class="xz-body">
+        <ul>
+          <li class="item" v-show="!showLcmTip">
+            <span class="label">
+              <img src="../assets/imgs/img_Bet_chumen.png" alt="">
+            </span>
+            <div class="select-xz">
+              <div class="nums">
+                <span class="num" v-for="(item, index) in lowz" :key="index" @click="selectCmScore(item.value)">
+                  <img :src="item.img" alt="">
+                </span>
+              </div>
+            </div>
+          </li>
+          <li class="item" v-show="!showLtmTip">
+            <span class="label">
+              <img src="../assets/imgs/img_Bet_tianmen.png" alt="">
+            </span>
+            <div class="select-xz">
+              <div class="nums">
+                <span class="num" v-for="(item, index) in lowz" :key="index" @click="selectTmScore(item.value)">
+                  <img :src="item.img" alt="">
+                </span>
+              </div>
+            </div>
+          </li>
+          <li class="item" v-show="!showLkmTip">
+            <span class="label">
+              <img src="../assets/imgs/img_Bet_kanmen.png" alt="">
+            </span>
+            <div class="select-xz">
+              <div class="nums">
+                <span class="num" v-for="(item, index) in lowz" :key="index" @click="selectKmScore(item.value)">
+                  <img :src="item.img" alt="">
+                </span>
+              </div>
+            
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div slot="foot" class="xz-foot">
+        <div class="ok xz-btn" @touchstart="peOk">
+          <img src="../assets/imgs/img_Bet_touzhu.png" alt=""  width="100%" height="100%">
+        </div>
+        <div class="cancel xz-btn" @touchstart="peCancel">
+          <img src="../assets/imgs/img_Bet_fangqi.png" alt=""  width="100%" height="100%">
+        </div>
+      </div>
+    </Modal>
     <!-- 下注弹窗 -->
     <Modal :showModal="showXzModal"
     :showClose="showClose"
     :site="site"
     :hide="toggShow"
     class="xz-modal">
-    <div slot="modal-bg" class="modal-bg">
-      <img src="../assets/imgs/img_Bet_background.png" alt=""  width="100%" height="100%">
-    </div>
+      <div slot="modal-bg" class="modal-bg">
+        <img src="../assets/imgs/img_Bet_background.png" alt=""  width="100%" height="100%">
+      </div>
       <div slot="title" class="xz-title title-active">
          <img src="../assets/imgs/img_Bet_title.png" alt=""  width="100%">
       </div>
@@ -393,7 +478,7 @@
             <span class="label">
               <img src="../assets/imgs/img_Bet_chumen.png" alt="">
             </span>
-            <div class="select-xz">
+            <div class="select-xz" :class="{'blue': !showLcmTip, 'gray': showLcmTip}">
               <div class="nums">
                 <span class="num" v-for="(item, index) in lowz" :key="index" @click="selectCmScore(item.value)">
                   <img :src="item.img" alt="">
@@ -411,7 +496,7 @@
             <span class="label">
               <img src="../assets/imgs/img_Bet_tianmen.png" alt="">
             </span>
-            <div class="select-xz">
+            <div class="select-xz" :class="{'blue': !showLtmTip, 'gray': showLtmTip}">
               <div class="nums">
                 <span class="num" v-for="(item, index) in lowz" :key="index" @click="selectTmScore(item.value)">
                   <img :src="item.img" alt="">
@@ -429,7 +514,7 @@
             <span class="label">
               <img src="../assets/imgs/img_Bet_kanmen.png" alt="">
             </span>
-            <div class="select-xz">
+            <div class="select-xz" :class="{'blue': !showLkmTip, 'gray': showLkmTip}">
               <div class="nums">
                 <span class="num" v-for="(item, index) in lowz" :key="index" @click="selectKmScore(item.value)">
                   <img :src="item.img" alt="">
@@ -815,13 +900,74 @@ export default {
       showReleaseReadyModal: false,
       releaseReadyText: '', // 游戏中解散房间提示文字
       isCurUserReady: false, // 当前玩家是否准备，不可抢庄
-      curCardBg: tabImgs.cards[3],
+      curCardBg: tabImgs.cards[0],
+      curDesktopBg: tabImgs.games[0],
       cards: tabImgs.djCards, // 所有的牌组合方式
       cardList: [
-        // {
-        //   bImg: tabImgs.cards[0],
-        //   fImg: tabImgs.cards[0]
-        // }
+        {
+          bImg: tabImgs.cards[0],
+          fImg: tabImgs.cards[0]
+        },
+        {
+          bImg: tabImgs.cards[0],
+          fImg: tabImgs.cards[0]
+        },
+        {
+          bImg: tabImgs.cards[0],
+          fImg: tabImgs.cards[0]
+        },
+        {
+          bImg: tabImgs.cards[0],
+          fImg: tabImgs.cards[0]
+        },
+        {
+          bImg: tabImgs.cards[0],
+          fImg: tabImgs.cards[0]
+        },
+        {
+          bImg: tabImgs.cards[0],
+          fImg: tabImgs.cards[0]
+        },
+        {
+          bImg: tabImgs.cards[0],
+          fImg: tabImgs.cards[0]
+        },
+        {
+          bImg: tabImgs.cards[0],
+          fImg: tabImgs.cards[0]
+        },
+        {
+          bImg: tabImgs.cards[0],
+          fImg: tabImgs.cards[0]
+        },
+        {
+          bImg: tabImgs.cards[0],
+          fImg: tabImgs.cards[0]
+        },
+        {
+          bImg: tabImgs.cards[0],
+          fImg: tabImgs.cards[0]
+        },
+        {
+          bImg: tabImgs.cards[0],
+          fImg: tabImgs.cards[0]
+        },
+        {
+          bImg: tabImgs.cards[0],
+          fImg: tabImgs.cards[0]
+        },
+        {
+          bImg: tabImgs.cards[0],
+          fImg: tabImgs.cards[0]
+        },
+        {
+          bImg: tabImgs.cards[0],
+          fImg: tabImgs.cards[0]
+        },
+        {
+          bImg: tabImgs.cards[0],
+          fImg: tabImgs.cards[0]
+        }
       ], // 最终展示牌
       showCards: false, // 是否显示发牌
       checkResult1: false, // 查看牌1结果，翻牌
@@ -914,12 +1060,24 @@ export default {
       showReleaseRoomBtns: false,
       showOwnerReleaseReadyModal: false,
       ownerReleaseReadyText: '',
-      showCardTip: false,
+      showCardTip1: false,
+      showCardTip2: false,
+      showCardTip3: false,
+      showCardTip4: false,
+      showCardTip5: false,
       toggShow: false,
       toggleXzModal: false,
       canXz: true,
-      showLmModal: true,
-      showLmClose: false
+      canLm: true,
+      showLmModal: false,
+      showLmClose: false,
+      showLcmTip: false,
+      showLtmTip: false,
+      showLkmTip: false,
+      selectLcm: false,
+      selectLtm: false,
+      selectLkm: false,
+      showPeModal: false
     }
   },
   props: {
@@ -946,6 +1104,10 @@ export default {
       dafault: false
     },
     cardBg: {
+      type: String,
+      dafault: ''
+    },
+    desktopBg: {
       type: String,
       dafault: ''
     }
@@ -982,6 +1144,9 @@ export default {
       this.cardList.forEach((item) => {
         item.bImg = this.curCardBg
       })
+    },
+    desktopBg (val) {
+      this.curDesktopBg = val
     }
   },
   created () {
@@ -989,6 +1154,7 @@ export default {
    // this.users = this.ds
     this.gameMsg = this.ds
     this.curCardBg = this.cardBg
+    this.curDesktopBg = this.desktopBg
     // 注册交互事件
     this.registerFn()
     // 获取当前时间
@@ -998,6 +1164,16 @@ export default {
     this.closeTime()
   },
   methods: {
+    // 选择牌面背景
+    selectCardBg (url) {
+      this.curCardBg = url
+      this.cardList.forEach((item) => {
+        item.bImg = this.curCardBg
+      })
+    },
+    selectDesktopBg (url) {
+      this.curDesktopBg = url
+    },
     closeTime () {
       clearInterval(this.timer)
       this.timer = null
@@ -1014,7 +1190,7 @@ export default {
     registerFn () {
       let vm = this
       // 获取系统电量
-      this.$JsBridge.registerHandler('djUpdatePower', function (data, responseCallback) {
+      this.$JsBridge.registerHandler('qtUpdatePower', function (data, responseCallback) {
         let powerSize = data
         if (powerSize <= 100 && powerSize > 75) {
           vm.power = ['green', 'green', 'green', 'green']
@@ -1027,7 +1203,7 @@ export default {
         }
       })
       // 系统更新加入游戏的用户列表
-      this.$JsBridge.registerHandler('djUpdateUsers', function (data, responseCallback) {
+      this.$JsBridge.registerHandler('qtUpdateUsers', function (data, responseCallback) {
         // 将原生带来的参数，显示在show标签位置
         let arrs = []
         arrs = window.JSON.parse(data)
@@ -1036,7 +1212,7 @@ export default {
         responseCallback('')
       })
       // 系统发牌
-      this.$JsBridge.registerHandler('djUpdateCards', function (data, responseCallback) {
+      this.$JsBridge.registerHandler('qtUpdateCards', function (data, responseCallback) {
         // 将原生带来的参数，显示在show标签位置
         let list = window.JSON.parse(data)
         vm.updateCards(list)
@@ -1044,7 +1220,7 @@ export default {
         responseCallback('')
       })
       // // 系统更新投注结果
-      this.$JsBridge.registerHandler('djUpdateCoins', function (data, responseCallback) {
+      this.$JsBridge.registerHandler('qtUpdateCoins', function (data, responseCallback) {
         // 将原生带来的参数，显示在show标签位置
         let coins = window.JSON.parse(data)
         vm.updateCoins(coins)
@@ -1054,7 +1230,7 @@ export default {
         responseCallback('')
       })
       // 投注后更新结果
-      this.$JsBridge.registerHandler('djUpdateResult', function (data, responseCallback) {
+      this.$JsBridge.registerHandler('qtUpdateResult', function (data, responseCallback) {
         // 将原生带来的参数，显示在show标签位置
      //   vm.coinList = []
         let res = window.JSON.parse(data)
@@ -1065,7 +1241,7 @@ export default {
         responseCallback('')
       })
        // 游戏未开始解散房间
-      this.$JsBridge.registerHandler('djReleaseWait', function (data, responseCallback) {
+      this.$JsBridge.registerHandler('qtReleaseWait', function (data, responseCallback) {
         console.log('游戏未开始解散房间')
         // 将原生带来的参数，显示在show标签位置
        // vm.users = window.JSON.parse(data)
@@ -1084,7 +1260,7 @@ export default {
         responseCallback('')
       })
       // 游戏中解散房间
-      this.$JsBridge.registerHandler('djReleaseReady', function (data, responseCallback) {
+      this.$JsBridge.registerHandler('qtReleaseReady', function (data, responseCallback) {
         // 将原生带来的参数，显示在show标签位置
         console.log('游戏中解散房间')
         let flag = false
@@ -1159,7 +1335,7 @@ export default {
         responseCallback('')
       })
        // 断线重新连接
-      this.$JsBridge.registerHandler('djResetConnect', function (data, responseCallback) {
+      this.$JsBridge.registerHandler('qtResetConnect', function (data, responseCallback) {
         let sign = vm.$sn({
           userId: vm.userId,
           roomId: vm.roomId
@@ -1178,7 +1354,7 @@ export default {
         })
         responseCallback(params)
       })
-      this.$JsBridge.registerHandler('djConnectGame', function (data, responseCallback) {
+      this.$JsBridge.registerHandler('qtConnectGame', function (data, responseCallback) {
         console.log(data)
         console.log('断线重连了')
         let res = window.JSON.parse(data)
@@ -1459,6 +1635,9 @@ export default {
     // 出门投注分数
     selectCmScore (val) {
       this.$audio.play(this.$audio.ui)
+      if (this.showLcmTip) {
+        return
+      }
       this.cmType = 1
       this.cmScore += val
       if (this.cmScore >= this.gameMsg.baseScore) {
@@ -1477,6 +1656,9 @@ export default {
     // 天门投注分数
     selectTmScore (val) {
       this.$audio.play(this.$audio.ui)
+      if (this.showLtmTip) {
+        return
+      }
       this.tmType = 2
       this.tmScore += val
       if (this.tmScore >= this.gameMsg.baseScore) {
@@ -1495,6 +1677,9 @@ export default {
     // 投注坎门
     selectKmScore (val) {
       this.$audio.play(this.$audio.ui)
+      if (this.showLkmTip) {
+        return
+      }
       this.kmType = 3
       this.kmScore += val
       if (this.kmScore >= this.gameMsg.baseScore) {
@@ -1594,11 +1779,36 @@ export default {
       this.toggleXzModal = !this.toggleXzModal
       this.toggShow = this.toggleXzModal
     },
+    lmType (index) {
+      if (index === 0) {
+        this.selectLcm = !this.selectLcm
+      } else if (index === 1) {
+        this.selectLtm = !this.selectLtm
+      } else if (index === 2) {
+        this.selectLkm = !this.selectLkm
+      }
+    },
     lmOk () {
+      if (!this.canLm) {
+        return
+      }
+      this.canLm = false
       this.showLmModal = false
+      this.playCards()
     },
     lmCancel () {
+      if (!this.canLm) {
+        return
+      }
+      this.canLm = false
       this.showLmModal = false
+      this.playCards()
+    },
+    peOk () {
+
+    },
+    peCancel () {
+
     },
     // 邀请好友
     invateFriend () {
@@ -1771,8 +1981,9 @@ export default {
       this.isShowXz = true
       this.isDown = false
       this.isDownSu = false
-      this.qz = false
+      // this.qz = false
       this.allScores = []
+      this.showScore = false
       this.timer = null
       this.timer1 = null
       this.timer2 = null
@@ -1798,7 +2009,7 @@ export default {
       this.kmScore = 0
       this.showXzTotal = false
       this.canXz = true
-      this.showScore = false
+      this.canLm = true
       this.scores = []
       this.showCards = false
       this.checkResult1 = false
@@ -1836,6 +2047,7 @@ export default {
       //   return
       // }
       // 如果人数最少2人，即可开始游戏
+      let ii = 1
       if (arr.length < MIN_USER) {
         arr.forEach((item) => {
           if (Number(item.userId) === Number(vm.userId)) {
@@ -1861,10 +2073,21 @@ export default {
               vm.isCurUserReady = false
             }
             item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
-            vm.users.unshift(item)
+            let obj = {}
+            for (let key in item) {
+              vm.$set(obj, key, item[key])
+            }
+            vm.$set(vm.users, 0, obj)
+           // vm.users.unshift(item)
           } else {
             item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
-            vm.users.push(item)
+          //  vm.users.push(item)
+            let obj = {}
+            for (let key in item) {
+              vm.$set(obj, key, item[key])
+            }
+            vm.$set(vm.users, ii, obj)
+            ii++
           }
         })
       } else {
@@ -1892,11 +2115,22 @@ export default {
             } else {
               vm.isCurUserReady = false
             }
-            vm.users.unshift(item)
+           // vm.users.unshift(item)
+            let obj = {}
+            for (let key in item) {
+              vm.$set(obj, key, item[key])
+            }
+            vm.$set(vm.users, 0, obj)
           } else {
             item.curUser = false
             item.headimgurl = item.headimgurl + HEAD_IMG_SIZE
-            vm.users.push(item)
+           // vm.users.push(item)
+            let obj = {}
+            for (let key in item) {
+              vm.$set(obj, key, item[key])
+            }
+            vm.$set(vm.users, ii, obj)
+            ii++
           }
         })
         // 显示准备按钮
@@ -1915,11 +2149,18 @@ export default {
             vm.isMaster = false
             // 禁止抢庄
             vm.isGameStart = true
+            vm.$audio.play1(vm.$audio.sg)
+            vm.showCardTip1 = true
+            let timert = setTimeout(() => {
+              clearInterval(timert)
+              timert = null
+              vm.showCardTip1 = false
+            }, 1000)
             // 开始发牌
             vm.users.forEach((its) => {
               if (Number(its.userId) === Number(vm.userId) && (its.banker === true)) {
                 console.log('发牌了')
-                vm.playCards()
+                vm.showLmModal = true
               }
             })
           }
@@ -1928,74 +2169,75 @@ export default {
     },
     updateCards (list) {
       let vm = this
-      vm.cardList = []
-      let res = []
-      let obj = {}
-      list.forEach((item, index) => {
-        if (Number(item.doorNum) === 0) {
-          obj = item
-        } else {
-          res.push(item)
-        }
-      })
-      res.push(obj)
-      res.forEach((item, index) => {
-        // 大九
-        if (item.pokerList.length === 1) {
-          let arr1 = []
-          for (let key in item.pokerList[0]) {
-            arr1.push(item.pokerList[0][key])
-          }
-          for (let i = 0; i < vm.cards.length; i++) {
-            let arr2 = []
-            if (vm.cards[i] instanceof Object) {
-              for (let key in vm.cards[i]) {
-                if (key !== 'img') {
-                  arr2.push(vm.cards[i][key])
-                }
-              }
-            }
-              // 匹配对应的牌
-            if (vm.regCard(arr1, arr2)) {
-              vm.cardList.push({
-                bImg: vm.curCardBg,
-                fImg: vm.cards[i].img
-              })
-            }
-          }
-        }
-      })
-      vm.showCards = true
-       // let timert = setTimeout(() => {
-       //   vm.showCardTip = true
-       // }, 2000)
-      vm.timer1 = setTimeout(() => {
+     // vm.cardList = []
+     // let res = []
+     // let obj = {}
+      // list.forEach((item, index) => {
+      //   if (Number(item.doorNum) === 0) {
+      //     obj = item
+      //   } else {
+      //     res.push(item)
+      //   }
+      // })
+      // res.push(obj)
+      // res.forEach((item, index) => {
+      //   // 大九
+      //   if (item.pokerList.length === 1) {
+      //     let arr1 = []
+      //     for (let key in item.pokerList[0]) {
+      //       arr1.push(item.pokerList[0][key])
+      //     }
+      //     for (let i = 0; i < vm.cards.length; i++) {
+      //       let arr2 = []
+      //       if (vm.cards[i] instanceof Object) {
+      //         for (let key in vm.cards[i]) {
+      //           if (key !== 'img') {
+      //             arr2.push(vm.cards[i][key])
+      //           }
+      //         }
+      //       }
+      //         // 匹配对应的牌
+      //       if (vm.regCard(arr1, arr2)) {
+      //         vm.cardList.push({
+      //           bImg: vm.curCardBg,
+      //           fImg: vm.cards[i].img
+      //         })
+      //       }
+      //     }
+      //   }
+      // })
+      // vm.showCards = true
+      // let timert = setTimeout(() => {
+      // vm.$audio.play3(vm.$audio.pk)
+       //   vm.showCardTip2 = true
+       // }, 3000)
+    //  vm.timer1 = setTimeout(() => {
          // clearInterval(timert)
          // timert = null
-        vm.checkResult1 = true
-        // vm.showCardTip = false
-        vm.isDownSu = true
-        vm.users.forEach((item) => {
-          if (Number(item.userId) === Number(vm.userId)) {
-            item.xz = 0
-          } else {
-            item.xz = 1
-          }
-        })
-        vm.timer2 = setTimeout(() => {
-          if (vm.isShowXz) {
-            vm.showXzModal = true
-            vm.showXzTotal = true
-            vm.showXzSortTimer = true
-            vm.sortTimerVal = setInterval(() => {
-              if (vm.xzSortTimer <= 0) {
-                vm.clearXzTimer()
-              }
-              vm.xzSortTimer -= 1
-            }, 1000)
-          }
-        }, 500)
-      }, 3000)
+      //  vm.checkResult1 = true
+        // vm.showCardTip2 = false
+      vm.isDownSu = true
+      vm.users.forEach((item) => {
+        if (Number(item.userId) === Number(vm.userId)) {
+          item.xz = 0
+        } else {
+          item.xz = 1
+        }
+      })
+      vm.timer2 = setTimeout(() => {
+        if (vm.isShowXz) {
+          vm.showXzModal = true
+          vm.showXzTotal = true
+          vm.showXzSortTimer = true
+          vm.sortTimerVal = setInterval(() => {
+            if (vm.xzSortTimer <= 0) {
+              vm.clearXzTimer()
+            }
+            vm.xzSortTimer -= 1
+          }, 1000)
+        }
+      }, 500)
+   //   }, 3000)
     },
     updateCoins (coins) {
       let vm = this
@@ -2047,6 +2289,13 @@ export default {
             }
             console.log(vm.bks)
             console.log(vm.bks.join('---'))
+            vm.$audio.play2(vm.$audio.dx)
+            vm.showCardTip3 = true
+            let timert = setTimeout(() => {
+              clearInterval(timert)
+              timert = null
+              vm.showCardTip3 = false
+            }, 2000)
             vm.coins.forEach((item, index) => {
               item.down = vm.bks[index]
             })
@@ -2112,6 +2361,13 @@ export default {
             })
             console.log(vm.bks)
             console.log(vm.bks.join('---'))
+            vm.$audio.play2(vm.$audio.dx)
+            vm.showCardTip3 = true
+            let timert = setTimeout(() => {
+              clearInterval(timert)
+              timert = null
+              vm.showCardTip3 = false
+            }, 2000)
             vm.coins.forEach((item, index) => {
               item.down = vm.bks[index]
             })
@@ -2160,19 +2416,29 @@ export default {
         vm.isDownSu = false
         vm.menType = true
         let timert = setTimeout(() => {
-          vm.showCardTip = true
-        }, 2000)
+          vm.$audio.play3(vm.$audio.pk)
+          vm.showCardTip2 = true
+        }, 3000)
         vm.timer3 = setTimeout(() => {
           clearInterval(timert)
           timert = null
           vm.checkResult2 = true
-          vm.showCardTip = false
+          vm.showCardTip2 = false
           vm.scores = []
           vm.showScore = true
-          vm.users.forEach((item) => {
+          let as = []
+          vm.users.forEach((ite) => {
+            let obj = {}
+            for (let key in ite) {
+              obj[key] = ite[key]
+            }
+            as.push(obj)
+          })
+          as.forEach((item) => {
             for (let i = 0; i < result.length; i++) {
               if (Number(item.userId) === Number(result[i].userId)) {
                 vm.scores.push(result[i])
+                item.score = item.score + result[i].winScore
               }
             }
           })
@@ -2181,7 +2447,8 @@ export default {
           let bankerId = ''
           let curIndex = ''
          // let bankerIndex = ''
-          let he = false
+          let zjhe = false
+          let xjhe = []
           result.forEach((item, index) => {
             // 庄家赢了
             if (item.banker === true) {
@@ -2190,7 +2457,11 @@ export default {
               if (item.winScore > 0) {
                 winer = true
               } else if (Number(item.winScore) === 0) {
-                he = true
+                zjhe = true
+              }
+            } else {
+              if (Number(item.winScore) === 0) {
+                xjhe.push(index)
               }
             }
             // 庄家输了
@@ -2213,7 +2484,7 @@ export default {
           })
           // 庄家赢了
           vm.timer4 = setTimeout(() => {
-            if (!he) {
+            if (!zjhe) {
               if (winer) {
                 console.log('庄家赢了')
                 if (Number(bankerId) === Number(vm.userId)) {
@@ -2243,6 +2514,16 @@ export default {
                     coins[i] = 'hide'
                   } else {
                     coins[i] = 'move'
+                    result.forEach((it, ix) => {
+                      if (it.banker === false && it.betting === false) {
+                        vm.users.forEach((t, j) => {
+                          if (Number(t.userId) === Number(t.it)) {
+                            coins[j * 2] = 'hide'
+                            coins[j * 2 + 1] = 'hide'
+                          }
+                        })
+                      }
+                    })
                   }
                 }
               }
@@ -2263,6 +2544,8 @@ export default {
               item.down = 'active'
               item.show = coins[index]
             })
+            vm.$audio.play4(vm.$audio.px)
+            vm.users = as
           }, 6000)
           vm.timer5 = setTimeout(() => {
             if (gameover === true) {
@@ -2625,6 +2908,151 @@ export default {
       }
     }
   }
+   .cards{
+    position: absolute;
+    top: 8%;
+    width: 100%;
+    height: 35%;
+    z-index: 1001;
+    .card-list{
+      position: relative;
+    /* bottom: -75%; */
+      top: 15%;
+      width: 60%;
+      height: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      -webkit-perspective: 500;
+      -moz-perspective: 500;
+      -ms-perspective: 500;
+      perspective: 500;
+      -ms-transform: perspective(500px);
+      -moz-transform: perspective(500px); /*重要*/
+      li{
+        display: inline-block;
+        list-style: none;
+        position: absolute;
+        left: 25%;
+      /*  bottom: 180px; */
+        top: -50px;
+        width: 14%;
+        height: 64px;
+        border: 1px solid #ddd;
+        z-index: 1;
+        transform-style: preserve-3d; /*重要*/
+        transition: 0.6s;
+        transform-style: preserve-3d; /*重要*/
+        img{
+          width: 100%;
+        }
+        .front ,.back{
+          position: absolute;
+          left: 0;
+          top: 0;
+          backface-visibility: hidden;  /*重要*/
+          width: 100%;
+          // height: 100%;
+        }
+        .front {
+            transform: rotateY(0deg);
+            z-index: 2;
+        }
+        .back {
+            transform: rotateY(-180deg);
+        }
+      }
+      .reverse{
+        transform: rotateY(180deg);
+      }
+      .fanzhuan{
+        transform: rotateY(180deg);
+      // animation: reverseCard 0.3s linear 2s forwards;
+      }
+    .card0{
+        left: 5%;
+        z-index: 0;
+        animation: card0Move 0.3s linear 0.5s forwards;
+      }
+      .card1{
+        left: 10%;
+        z-index: 1;
+        animation: card1Move 0.3s linear 0.5s forwards;
+      }
+      .card2{
+        left: 15%;
+        z-index: 2;
+        animation: card2Move 0.3s linear 0.5s forwards;
+      }
+      .card3{
+        left: 20%;
+        z-index: 3;
+        animation: card3Move 0.3s linear 0.5s forwards;
+      }
+      .card4{
+        left: 25%;
+        z-index: 4;
+        animation: card4Move 0.3s linear 1s forwards;
+      }
+      .card5{
+        left: 30%;
+        z-index: 5;
+        animation: card5Move 0.3s linear 1s forwards;
+      }
+      .card6{
+        left: 35%;
+        z-index: 6;
+        animation: card6Move 0.3s linear 1s forwards;
+      }
+      .card7{
+        left: 40%;
+        z-index: 7;
+        animation: card7Move 0.3s linear 1s forwards;
+      }
+      .card8{
+        left: 45%;
+        z-index: 8;
+        animation: card8Move 0.3s linear 1.5s forwards;
+      }
+      .card9{
+        left: 50%;
+        z-index: 9;
+        animation: card9Move 0.3s linear 1.5s forwards;
+      }
+      .card10{
+        left: 55%;
+        z-index: 10;
+        animation: card10Move 0.3s linear 1.5s forwards;
+      }
+      .card11{
+        left: 60%;
+        z-index: 11;
+        animation: card11Move 0.3s linear 1.5s forwards;
+      }
+      .card12{
+        left: 65%;
+        z-index: 12;
+        animation: card12Move 0.3s linear 2s forwards;
+      }
+      .card13{
+        left: 70%;
+        z-index: 13;
+        animation: card13Move 0.3s linear 2s forwards;
+      }
+      .card14{
+        left: 75%;
+        z-index: 14;
+        animation: card14Move 0.3s linear 2s forwards;
+      }
+      .card15{
+        left: 80%;
+        z-index: 15;
+        animation: card15Move 0.3s linear 2s forwards;
+      }
+    }
+    .card-list.active{
+      animation: cardsMove 0.3s linear forwards;
+    }
+  }
   .res-site{
     z-index: 1001;
     .result{
@@ -2853,8 +3281,9 @@ export default {
   }
   .game-info{
     position: absolute;
-    top: 90px;
-    left: 50%;
+   // top: 90px;
+    top: 6px;
+    left: 46%;
     transform: translateX(-50%);
     color: #fff;
     font-family: 'fzFont';
@@ -3663,21 +4092,28 @@ export default {
           vertical-align: middle;
         }
         img{
-          flex: 0 0 auto;
+          flex: 0 0 50px;
+          width: 50px;
+          height: 50px;
           display: inline-block;
           vertical-align: middle;
         }
       }
+    }
+    .lm-tip{
+       position: absolute;
+      top: -15px;
+      left: -15px;
     }
   }
   .card-table-tip{
     z-index: 1002;
     .card-tip{
       position: absolute;
-      top: 20%;
+      top: 16%;
       left: 50%;
-      width: 92px;
-      height: 56px;
+      width: 110px;
+    //  height: 56px;
       transform: translate(-50%, 0%);
     }
 
@@ -3711,112 +4147,7 @@ export default {
       background-size: 100% 100%;
     }
   }
-  /**发牌动画**/
-  .cards{
-    position: absolute;
-    top: 10%;
-    width: 100%;
-    height: 35%;
-    z-index: 1001;
-    .card-list{
-      position: relative;
-    /* bottom: -75%; */
-      top: 15%;
-      width: 60%;
-      height: 60px;
-      left: 56%;
-      transform: translateX(-70%);
-      -webkit-perspective: 500;
-      -moz-perspective: 500;
-      -ms-perspective: 500;
-      perspective: 500;
-      -ms-transform: perspective(500px);
-      -moz-transform: perspective(500px); /*重要*/
-      li{
-        display: inline-block;
-        list-style: none;
-        position: absolute;
-        left: 25%;
-      /*  bottom: 180px; */
-        top: -50px;
-        width: 13%;
-        height: 62px;
-        border: 1px solid #ddd;
-        z-index: 1;
-        transform-style: preserve-3d; /*重要*/
-        transition: 0.6s;
-        transform-style: preserve-3d; /*重要*/
-        img{
-          width: 100%;
-        }
-        .front ,.back{
-          position: absolute;
-          left: 0;
-          top: 0;
-          backface-visibility: hidden;  /*重要*/
-          width: 100%;
-          // height: 100%;
-        }
-        .front {
-            transform: rotateY(0deg);
-            z-index: 2;
-        }
-        .back {
-            transform: rotateY(-180deg);
-        }
-      }
-      .reverse{
-        transform: rotateY(180deg);
-      }
-      .fanzhuan{
-        transform: rotateY(180deg);
-      // animation: reverseCard 0.3s linear 2s forwards;
-      }
-    .card0{
-        left: 35%;
-        z-index: 0;
-        animation: card0Move 0.3s linear 0.5s forwards;
-      }
-      .card1{
-        left: 40%;
-        z-index: 1;
-        animation: card1Move 0.3s linear 1s forwards;
-      }
-      .card2{
-        left: 45%;
-        z-index: 2;
-        animation: card2Move 0.3s linear 1.5s forwards;
-      }
-      .card3{
-        left: 50%;
-        z-index: 3;
-        animation: card3Move 0.3s linear 2s forwards;
-      }
-      .card4{
-        left: 55%;
-        z-index: 4;
-        animation: card4Move 0.3s linear 0.5s forwards;
-      }
-      .card5{
-        left: 60%;
-        z-index: 5;
-        animation: card5Move 0.3s linear 1s forwards;
-      }
-      .card6{
-        left: 65%;
-        z-index: 6;
-        animation: card6Move 0.3s linear 1.5s forwards;
-      }
-      .card7{
-        left: 70%;
-        z-index: 7;
-        animation: card7Move 0.3s linear 2s forwards;
-      }
-    }
-    .card-list.active{
-      animation: cardsMove 0.3s linear forwards;
-    }
-  }
+
 }
 .xz-modal{
   .xz-body{
@@ -3825,7 +4156,7 @@ export default {
       li.item{
         display: flex;
         flex-direction: row;
-        margin-bottom: 12px;
+        margin-bottom: 24px;
         .label{
           // flex: 0 0 150px;
           // width: 150px;
@@ -3843,16 +4174,15 @@ export default {
           // width: 890px;
           flex: 0 0 auto;
           width: auto;
-          height: 66px;
+          height: 78px;
           margin-left: 12px;
-          background: #6dc4d8;
           border-radius: 30px;
           .nums{
             display: inline-block;
             .num{
               display: inline-block;
-              width: 66px;
-              height: 66px;
+              width: 78px;
+              height: 78px;
               margin-left: 20px;
               img{
                 display: inline-block;
@@ -3893,6 +4223,12 @@ export default {
             }
           }
         }
+        .blue{
+          background: #6dc4d8;
+        }
+        .gray{
+          background: #bbb;
+        }
       }
       li.item:last-child{
         margin-bottom: 0;
@@ -3906,8 +4242,8 @@ export default {
       position: relative;
       top: 15px;
       display: inline-block;
-      width: 36%;
-      height: 48px;
+      width: 38%;
+      height: 60px;
     }
   }
 }
@@ -5702,87 +6038,173 @@ export default {
 }
 @keyframes card0Move {
   0%{
-    left: 35%;
+    left: 5%;
     top: -50px;
   }
   100%{
-    left: 21%;
-    top: 280px;
+    left: 2%;
+    top: 240px;
   }
 }
 @keyframes card1Move {
+  0%{
+    left: 10%;
+    top: -50px;
+  }
+  100%{
+   // left: 26%;
+    left: 6%;
+    top: 240px;
+  }
+}
+@keyframes card2Move {
+  0%{
+    left: 15%;
+    top: -50px;
+  }
+  100%{
+   // left: 51%;
+    left: 10%;
+    top: 240px;
+  }
+}
+@keyframes card3Move {
+  0%{
+    left: 20%;
+    top: -50px;
+  }
+  100%{
+   // left: 51%;
+    left: 14%;
+    top: 240px;
+  }
+}
+@keyframes card4Move {
+  0%{
+    left: 25%;
+    top: -50px;
+  }
+  100%{
+   // left: 81%;
+    left: 30%;
+    top: 240px;
+  }
+}
+@keyframes card5Move {
+  0%{
+    left: 30%;
+    top: -50px;
+  }
+  100%{
+   // left: 86%;
+    left: 34%;
+    top: 240px;
+  }
+}
+@keyframes card6Move {
+  0%{
+    left: 35%;
+    top: -20px;
+  }
+  100%{
+   // left: 50%;
+    left: 38%;
+    top: 240px;
+  }
+}
+@keyframes card7Move {
   0%{
     left: 40%;
     top: -50px;
   }
   100%{
-   // left: 26%;
-    left: 52%;
-    top: 280px;
+    left: 42%;
+    top: 240px;
   }
 }
-@keyframes card2Move {
+@keyframes card8Move {
   0%{
     left: 45%;
     top: -50px;
   }
   100%{
-   // left: 51%;
-    left: 82%;
-    top: 280px;
+    left: 57%;
+    top: 240px;
   }
 }
-@keyframes card3Move {
+@keyframes card9Move {
   0%{
     left: 50%;
     top: -50px;
   }
   100%{
-   // left: 56%;
-    left: 50%;
-    top: -50px;
+   // left: 26%;
+    left: 61%;
+    top: 240px;
   }
 }
-@keyframes card4Move {
+@keyframes card10Move {
   0%{
     left: 55%;
     top: -50px;
   }
   100%{
-   // left: 81%;
-    left: 26%;
-    top: 280px;
+   // left: 51%;
+    left: 65%;
+    top: 240px;
   }
 }
-@keyframes card5Move {
+@keyframes card11Move {
   0%{
     left: 60%;
     top: -50px;
   }
   100%{
-   // left: 86%;
-    left: 57%;
-    top: 280px;
+   // left: 51%;
+    left: 69%;
+    top: 240px;
   }
 }
-@keyframes card6Move {
+@keyframes card12Move {
   0%{
     left: 65%;
-    top: -20px;
+    top: -50px;
   }
   100%{
-   // left: 50%;
-    left: 87%;
-    top: 280px;
+   // left: 81%;
+    left: 35%;
+    top: -50px;
   }
 }
-@keyframes card7Move {
+@keyframes card13Move {
   0%{
     left: 70%;
     top: -50px;
   }
   100%{
-    left: 55%;
+   // left: 86%;
+    left: 40%;
+    top: -50px;
+  }
+}
+@keyframes card14Move {
+  0%{
+    left: 75%;
+    top: -50px;
+  }
+  100%{
+   // left: 50%;
+    left: 45%;
+    top: -50px;
+  }
+}
+@keyframes card15Move {
+  0%{
+    left: 80%;
+    top: -50px;
+  }
+  100%{
+    left: 50%;
     top: -50px;
   }
 }
