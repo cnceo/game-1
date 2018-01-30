@@ -66,7 +66,7 @@
         </div>
       </div>
     </div>
-    
+
     <!--最终结果页面-->
     <div class="user-site res-site">
       <div class="user-item" v-for="(item, index) in scores" :key="index"
@@ -290,7 +290,7 @@
           <img src="../assets/imgs/img_Daikai_tongsha.png" alt=""  width="100%" height="100%">
         </div>
         <div class="xz-modal-timer" v-show="showXzSortTimer">
-          <img src="../assets/imgs/img_Xuanze_shijian.png" alt=""  width="100%" height="100%">
+          <!-- <img src="../assets/imgs/img_Xuanze_shijian.png" alt=""  width="100%" height="100%"> -->
           <span class="text">{{xzSortTimer}}</span>
         </div>
       </div>
@@ -313,7 +313,8 @@
           </div>
         </div>
         <div class="coin-box" v-show="index === 1">
-          <div class="coins tian-coins" v-show="menType">
+          <div class="coins tian-coins" v-show="menType && ((index == 0 && showLcmTip) ||
+          (index == 1 && showLtmTip) || (index == 2 && showLkmTip))">
             <span v-for="(item, index) in coins" :key="index" :class="{'coin0': index === 0,
             'coin1': index === 1, 'coin2': index === 2, 'coin3': index === 3, 'coin4': index === 4,
             'coin5': index === 5, 'coin6': index === 6, 'coin7': index === 7, 'coin8': index === 8, 'coin9': index === 9, 'active': menType,
@@ -325,7 +326,8 @@
           </div>
         </div>
         <div class="coin-box" v-show="index === 2">
-          <div class="coins kan-coins" v-show="menType">
+          <div class="coins kan-coins" v-show="menType && ((index == 0 && showLcmTip) ||
+          (index == 1 && showLtmTip) || (index == 2 && showLkmTip))">
               <span v-for="(item, index) in coins" :key="index" :class="{'coin0': index === 0,
               'coin1': index === 1, 'coin2': index === 2, 'coin3': index === 3, 'coin4': index === 4,
               'coin5': index === 5, 'coin6': index === 6, 'coin7': index === 7, 'coin8': index === 8, 'coin9': index === 9, 'active': menType,
@@ -441,7 +443,7 @@
                   <img :src="item.img" alt="">
                 </span>
               </div>
-            
+
             </div>
           </li>
         </ul>
@@ -635,7 +637,7 @@
     </Modal>
     <!-- 单局结束分享页 -->
     <Modal :showModal="showShareModal"
-    :showClose="showClose"
+    @on-close="exitGame"
     class="share-modal">
     <div slot="modal-bg" class="modal-bg">
       <img src="../assets/imgs/img-End-background.png" alt=""  width="100%" height="100%">
@@ -1984,6 +1986,7 @@ export default {
       // this.qz = false
       this.allScores = []
       this.showScore = false
+      this.menType = false
       this.timer = null
       this.timer1 = null
       this.timer2 = null
@@ -2015,11 +2018,13 @@ export default {
       this.checkResult1 = false
       this.checkResult2 = false
       this.cardList = []
-      this.menType = false
       this.coins.forEach((item) => {
         item.show = ''
         item.down = ''
       })
+    },
+    exitGame () {
+      this.$emit('on-exit', '')
     },
     gameRule () {
       this.showRuleModal = true
@@ -4112,7 +4117,7 @@ export default {
       position: absolute;
       top: 16%;
       left: 50%;
-      width: 110px;
+      width: 180px;
     //  height: 56px;
       transform: translate(-50%, 0%);
     }
@@ -5612,330 +5617,360 @@ export default {
   0% {
     top: 0px;
     left: 60px;
+    opacity: 1;
   }
   100% {
     top: 400px;
     left: 20px;
-  //  opacity: 0;
+   opacity: 0;
   }
 }
 @keyframes Move1_0 {
   0% {
     top: 0px;
     left: 60px;
+    opacity: 1;
   }
   100% {
     top: 380px;
     left: -160px;
-  //  opacity: 0;
+    opacity: 0;
   }
 }
 @keyframes Move2_0 {
   0% {
     top: 0px;
     left: 60px;
+    opacity: 1;
   }
   100% {
     top: 400px;
     left: -360px;
-  //  opacity: 0;
+    opacity: 0;
   }
 }
 @keyframes Move0_1 {
   0% {
     top: 150px;
     left: 100px;
+    opacity: 1;
   }
   100% {
     top: 360px;
     left: 20px;
-  //  opacity: 0;
+    opacity: 0;
   }
 }
 @keyframes Move1_1 {
   0% {
    top: 150px;
     left: 100px;
+    opacity: 1;
   }
   100% {
     top: 360px;
     left: -120px;
-  //  opacity: 0;
+    opacity: 0;
   }
 }
 @keyframes Move2_1 {
   0% {
     top: 150px;
     left: 100px;
+    opacity: 1;
   }
   100% {
     top: 420px;
     left: -420px;
-  //  opacity: 0;
+    opacity: 0;
   }
 }
 @keyframes Move0_2 {
   0% {
     top: -20px;
     left: 150px;
+    opacity: 1;
   }
   100% {
     top: 200px;
     left: 900px;
-   // opacity: 0;
+    opacity: 0;
   }
 }
 @keyframes Move1_2 {
   0% {
     top: -20px;
     left: 150px;
+    opacity: 1;
   }
   100% {
     top: 160px;
     left: 600px;
-   // opacity: 0;
+    opacity: 0;
   }
 }
 @keyframes Move2_2 {
   0% {
     top: -20px;
     left: 150px;
+    opacity: 1;
   }
   100% {
     top: 210px;
     left: 300px;
-   // opacity: 0;
+    opacity: 0;
   }
 }
 @keyframes Move0_3 {
   0% {
     top: 60px;
     left: 70px;
+    opacity: 1;
   }
   100% {
     top: 230px;
     left: 900px;
-   // opacity: 0;
+    opacity: 0;
   }
 }
 @keyframes Move1_3 {
   0% {
     top: 60px;
     left: 70px;
+    opacity: 1;
   }
   100% {
     top: 230px;
     left: 600px;
-   // opacity: 0;
+    opacity: 0;
   }
 }
 @keyframes Move2_3 {
   0% {
     top: 60px;
     left: 70px;
+    opacity: 1;
   }
   100% {
     top: 180px;
     left: 300px;
-   // opacity: 0;
+    opacity: 0;
   }
 }
 @keyframes Move0_4 {
   0% {
     top: 100px;
     left: 120px;
+    opacity: 1;
   }
   100% {
     top: 200px;
     left: -200px;
-   // opacity: 0;
+    opacity: 0;
   }
 }
 @keyframes Move1_4 {
   0% {
      top: 100px;
     left: 120px;
+    opacity: 1;
   }
   100% {
     top: 160px;
     left: -480px;
-   // opacity: 0;
+    opacity: 0;
   }
 }
 @keyframes Move2_4 {
   0% {
     top: 100px;
     left: 120px;
+    opacity: 1;
   }
   100% {
     top: 210px;
     left: -640px;
-   // opacity: 0;
+    opacity: 0;
   }
 }
 @keyframes Move0_5 {
   0% {
     top: 40px;
     left: 140px;
+    opacity: 1;
   }
   100% {
     top: 240px;
     left: -160px;
-   // opacity: 0;
+   opacity: 0;
   }
 }
 @keyframes Move1_5 {
   0% {
     top: 40px;
     left: 140px;
+    opacity: 1;
   }
   100% {
     top: 250px;
     left: -480px;
-   // opacity: 0;
+    opacity: 0;
   }
 }
 @keyframes Move2_5 {
   0% {
     top: 40px;
     left: 140px;
+    opacity: 1;
   }
   100% {
     top: 160px;
     left: -640px;
-   // opacity: 0;
+    opacity: 0;
   }
 }
 @keyframes Move0_6 {
   0% {
     top: 110px;
     left: 50px;
+    opacity: 1;
   }
   100% {
     top: -50px;
     left: 900px;
-   // opacity: 0;
+    opacity: 0;
   }
 }
 @keyframes Move1_6 {
   0% {
     top: 110px;
     left: 50px;
+    opacity: 1;
   }
   100% {
     top: -80px;
     left: 600px;
-   // opacity: 0;
+    opacity: 0;
   }
 }
 @keyframes Move2_6 {
   0% {
     top: 110px;
     left: 50px;
+    opacity: 1;
   }
   100% {
     top: -50px;
     left: 300px;
-   // opacity: 0;
+    opacity: 0;
   }
 }
 @keyframes Move0_7 {
   0% {
     top: 50px;
     left: 20px;
+    opacity: 1;
   }
   100% {
     top: -90px;
     left: 900px;
-   // opacity: 0;
+    opacity: 0;
   }
 }
 @keyframes Move1_7 {
   0% {
     top: 50px;
     left: 20px;
+    opacity: 1;
   }
   100% {
     top: -30px;
     left: 600px;
-   // opacity: 0;
+    opacity: 0;
   }
 }
 @keyframes Move2_7 {
   0% {
      top: 50px;
     left: 20px;
+    opacity: 1;
   }
   100% {
     top: -110px;
     left: 320px;
-   // opacity: 0;
+    opacity: 0;
   }
 }
 @keyframes Move0_8 {
   0% {
     top: 90px;
     left: 180px;
+    opacity: 1;
   }
   100% {
     top: -50px;
     left: -200px;
-   // opacity: 0;
+    opacity: 0;
   }
 }
 @keyframes Move1_8 {
   0% {
      top: 90px;
     left: 180px;
+    opacity: 1;
   }
   100% {
     top: -100px;
     left: -520px;
-   // opacity: 0;
+    opacity: 0;
   }
 }
 @keyframes Move2_8 {
   0% {
     top: 90px;
     left: 180px;
+    opacity: 1;
   }
   100% {
     top: -50px;
     left: -640px;
-   // opacity: 0;
+    opacity: 0;
   }
 }
 @keyframes Move0_9 {
   0% {
     top: 150px;
     left: 150px;
+    opacity: 1;
   }
   100% {
     top: -90px;
     left: -180px;
-   // opacity: 0;
+    opacity: 0;
   }
 }
 @keyframes Move1_9 {
   0% {
      top: 150px;
     left: 150px;
+    opacity: 1;
   }
   100% {
     top: -30px;
     left: -480px;
-   // opacity: 0;
+    opacity: 0;
   }
 }
 @keyframes Move2_9 {
   0% {
      top: 150px;
     left: 150px;
+    opacity: 1;
   }
   100% {
     top: -110px;
     left: -640px;
-   // opacity: 0;
+    opacity: 0;
   }
 }
 /**分数动画**/

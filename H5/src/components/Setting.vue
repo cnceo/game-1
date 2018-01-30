@@ -306,7 +306,8 @@ export default {
     },
     // 音乐设置
     changeMusic (val) {
-      let value = parseInt((this.music.max * val) / 100)
+   //   let value = parseInt((this.music.max * val) / 100)
+      let value = ((this.music.max * val) / 100).toFixed(1)
    //   let local = window.localStorage
     //  local.setItem('musicSize', value)
        // 调用android原生内部方法

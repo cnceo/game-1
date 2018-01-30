@@ -1,5 +1,6 @@
 package com.game.qt;
 
+import com.game.qt.jsbridge.BridgeWebView;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 
 public class Constants {
@@ -10,4 +11,10 @@ public class Constants {
     public static IWXAPI wx_api ;
     public static Boolean flag = false;
     public static final String URL = "http://www.syhpgkj.com:8080";
+    public static String TYPE = null;
+    public static String sign = null;
+    public static String roomId = null;
+    public static  String userId = null;
+    public static boolean isGame = false;
+    public static boolean isGameOver = false;
 }

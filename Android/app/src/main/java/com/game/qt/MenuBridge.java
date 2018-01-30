@@ -5,6 +5,8 @@ import com.game.qt.socket.NettyClient;
 import com.game.qt.jsbridge.BridgeHandler;
 import com.game.qt.jsbridge.BridgeWebView;
 import com.game.qt.jsbridge.CallBackFunction;
+import com.game.qt.socket.NettyReconnectCallback;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.net.URLEncoder;
@@ -20,8 +22,11 @@ import static com.game.qt.MainActivity.callBack;
 
 public class MenuBridge {
     public static BridgeWebView bridgeWebView;
+    public static BridgeWebView rbridgeWebView;
+    public static CallBackFunction fn;
     public static void registerMenuEvent(BridgeWebView mbridgeWebView) {
         bridgeWebView = mbridgeWebView;
+        rbridgeWebView = mbridgeWebView;
         /**
          * H5获取用户信息
          */
@@ -139,25 +144,54 @@ public class MenuBridge {
         bridgeWebView.registerHandler("enterRoom", new BridgeHandler() {
             @Override
             public void handler(String data, CallBackFunction function) {
+                fn = function;
                 //显示接收的消息(POST请求)
 //                CallBackSingleton singleton = CallBackSingleton.getInstance();
 //                singleton.addObject("joinRoom", function);
                 String roomId = null;
                 String userId = null;
-                NettyClient nettyClient = new NettyClient();
+                final NettyClient nettyClient = new NettyClient();
+                nettyClient.setrCallBack(new NettyReconnectCallback() {
+                    @Override
+                    public void reconnectCallback() {
+                        nettyClient.close();
+                        //1013命令
+                        try {
+                            nettyClient.connect();
+                            Log.e("断线重连数据", "hahhaah");
+                            rbridgeWebView.callHandler(Constants.TYPE + "ResetConnectResetConnect", "", new CallBackFunction() {
+
+                                @Override
+                                public void onCallBack(String data) {
+                                    Log.e("断线重连数据", data);
+                                }
+                            });
+                            resetConnect();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
                 try {
                     JSONObject jsonObject = new JSONObject(data);
                     String param = jsonObject.getString("param");
                     JSONObject obj1 = new JSONObject(param);
+                    Constants.TYPE = obj1.getString("type");
+                    Constants.sign = obj1.getString("sign");
                     String params = obj1.getString("params");
               //      Log.d("参数信息为：",params);
                     String datas = new JSONObject(params).getString("data");
                     roomId = new JSONObject(datas).getString("roomId");
                     userId = new JSONObject(datas).getString("userId");
+                    Constants.roomId = roomId;
+                    Constants.userId = userId;
                     nettyClient.connect();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                Constants.isGame = true;
+                Constants.isGameOver = false;
                 Map map = new HashMap();
                 map.put("roomId", roomId);
                 map.put("userId", userId);
@@ -221,6 +255,7 @@ public class MenuBridge {
                 map.put("roomId", roomId);
                 map.put("userId", userId);
                 map.put("ready", ready);
+
                 SocketHandler.connectUserSocket(map, 1003, function, bridgeWebView);
             }
         });
@@ -322,7 +357,7 @@ public class MenuBridge {
                 map.put("userId", userId);
                 map.put("userDoorVOList", arrayList);
              //   Log.i("Map参数：", map.toString());
-                SocketHandler.updateResult(map, 1008, function, bridgeWebView);
+                SocketHandler.connectUserSocket(map, 1008, function, bridgeWebView);
             }
         });
         /**
@@ -420,12 +455,23 @@ public class MenuBridge {
             public void handler(String data, CallBackFunction function) {
                 //显示接收的消息(POST请求)
             //    Log.i("游戏结束统计", data);
+                Constants.isGameOver = true;
                 postRequest(data, function);
 //                String res = postRequest(data);
 //                Log.i("游戏结束统计", res);
 //                function.onCallBack( res);
             }
         });
+
+    }
+    /* 断线重连 */
+    public static void resetConnect () {
+        Map map = new HashMap();
+        map.put("sign", Constants.sign);
+        map.put("roomId", Constants.roomId);
+        map.put("userId", Constants.userId);
+        Log.e("断线重连数据", map.toString());
+        SocketHandler.connectUserSocket(map, 1013, fn, bridgeWebView);
 
     }
     /**

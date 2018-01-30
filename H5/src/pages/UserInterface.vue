@@ -234,13 +234,13 @@
     <!-- 大九 -->
     <dj-game :dj="showDj" :uid="userId" :rid="roomId"
     :isOwner="isMaster" :ds="gameDatas" :cardBg="cardBg"
-    :desktopBg="desktopBg" @on-close="closeDj"></dj-game>
+    :desktopBg="desktopBg" @on-close="closeDj" @on-exit="exitDj"></dj-game>
     <!-- 清推 -->
     <qt-game :qt="showQt"  :uid="userId" :rid="roomId"
-    :isOwner="isMaster" :ds="gameDatas" :cardBg="cardBg" 
-    :desktopBg="desktopBg" @on-close="closeQt"></qt-game>
+    :isOwner="isMaster" :ds="gameDatas" :cardBg="cardBg"
+    :desktopBg="desktopBg" @on-close="closeQt" @on-exit="exitQt"></qt-game>
     <!-- 混推 -->
-    <ht-game :ht="showHt" @on-close="closeHt"></ht-game>
+    <ht-game :ht="showHt" @on-close="closeHt" @on-exit="exitQt"></ht-game>
     <!-- 代开 -->
     <dk-modal :dk="showDkModal" :ds="gameDatas" @on-close="closeDk" :score="dkScore" :round="dkRound"></dk-modal>
 
@@ -421,6 +421,23 @@ export default {
     this.desktopBg = tabImgs.games[0]
     // 注册交互时间
     // this.registerFn()
+    let vm = this
+    this.$JsBridge.registerHandler('exitAccount', function (data, responseCallback) {
+      vm.$refs.setting.changeAccount()
+      responseCallback('')
+    })
+    this.$JsBridge.registerHandler('djExit', function (data, responseCallback) {
+      vm.showDj = false
+      responseCallback('')
+    })
+    this.$JsBridge.registerHandler('qtExit', function (data, responseCallback) {
+      vm.showQt = false
+      responseCallback('')
+    })
+    this.$JsBridge.registerHandler('htExit', function (data, responseCallback) {
+      vm.showHt = false
+      responseCallback('')
+    })
   },
   mounted () {
   },
@@ -1065,12 +1082,31 @@ export default {
         this.showTip = false
       }, 1000)
     },
+    exitDj () {
+      this.showDj = false
+    },
     // 玩清推游戏
-    closeQt () {
+    closeQt (msg) {
+      this.showQt = false
+      this.showTip = true
+      this.tipMsg = msg
+      setTimeout(() => {
+        this.showTip = false
+      }, 1000)
+    },
+    exitQt () {
       this.showQt = false
     },
     // 玩混推游戏
-    closeHt () {
+    closeHt (msg) {
+      this.showHt = false
+      this.showTip = true
+      this.tipMsg = msg
+      setTimeout(() => {
+        this.showTip = false
+      }, 1000)
+    },
+    exitHt () {
       this.showHt = false
     },
     closeDk () {

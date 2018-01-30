@@ -12,7 +12,7 @@ import android.widget.Toast;
 import android.content.Intent;
 
 public class LoginActivity extends Activity {
-
+    private AudioManager audioMgr = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,10 +21,14 @@ public class LoginActivity extends Activity {
         // 开始启动Server，播放背景音乐
         Intent intent = new Intent(LoginActivity.this,MusicServer.class);
         // bindService(intent, conn, Context.BIND_AUTO_CREATE);
-        AudioManager audioMgr = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        int curVolume = audioMgr.getStreamVolume(AudioManager.STREAM_MUSIC);
-        // bindService(intent, conn, Context.BIND_AUTO_CREATE);
-        intent.putExtra("voice", curVolume);
+  //      AudioManager audioMgr = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+ //       int curVolume = audioMgr.getStreamVolume(AudioManager.STREAM_MUSIC);
+//        // bindService(intent, conn, Context.BIND_AUTO_CREATE);
+  //      intent.putExtra("voice", curVolume);
+        audioMgr = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+     //   String curVolume = String.valueOf(SystemVoice.getVoice(audioMgr, LoginActivity.this));
+        float curVolume = SystemVoice.getVoice(audioMgr, LoginActivity.this);
+        intent.putExtra("voice", curVolume + "");
         startService(intent);
     }
 

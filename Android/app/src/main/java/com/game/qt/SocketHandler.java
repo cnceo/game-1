@@ -36,18 +36,13 @@ import io.netty.channel.ChannelFutureListener;
 
 public class SocketHandler {
     public static CallBackFunction callBack1;
-    public static CallBackFunction callBack2;
     public static CallBackFunction callBack3;
     public static CallBackFunction callBack4;
-    public static CallBackFunction callBack5;
-    public static CallBackFunction callBack6;
     public static ChannelManager channelManager;
     public static BridgeWebView bridgeWebView1;
     public static BridgeWebView bridgeWebView2;
     public static BridgeWebView bridgeWebView3;
     public static BridgeWebView bridgeWebView4;
-    public static BridgeWebView bridgeWebView5;
-    public static BridgeWebView bridgeWebView6;
     public static void sendSocketConnect (Map map, int command) {
         channelManager = ChannelManager.getInstance();
         RequestMessage requestMessage = new RequestMessage();
@@ -70,8 +65,134 @@ public class SocketHandler {
             @Override
             public void responseCallback(ResponseMessage responseMessage) {
                 if (responseMessage.getCommand() == 1004) {
+                    Constants.isGame = false;
+                    Constants.isGameOver = false;
                     // command: 1004, 游戏未开始房主其他玩家是否退出
-                    bridgeWebView1.callHandler("releaseWait", "", new CallBackFunction() {
+                    updateDateToH5(bridgeWebView1, "ReleaseWait", "");
+//                    bridgeWebView1.callHandler(Constants.TYPE + "ReleaseWait", "", new CallBackFunction() {
+//
+//                        @Override
+//                        public void onCallBack(String data) {
+//
+//                        }
+//                    });
+                } else {
+
+                    String json = JSON.toJSONString(responseMessage.getData());
+                    // command: 1007 拦门发牌
+                    if (responseMessage.getCommand() == 1007) {
+                        updateDateToH5(bridgeWebView1, "UpdateCards", json);
+//                        bridgeWebView1.callHandler(Constants.TYPE + "UpdateCards", json, new CallBackFunction() {
+//
+//                            @Override
+//                            public void onCallBack(String data) {
+//
+//                            }
+//                        });
+                    // command: 1008 下注更新结果
+                    } else if (responseMessage.getCommand() == 1008) {
+                        callBack1.onCallBack(json);
+                        updateDateToH5(bridgeWebView1, "UpdateCoins", json);
+//                        bridgeWebView1.callHandler(Constants.TYPE + "UpdateCoins", json, new CallBackFunction() {
+//                            @Override
+//                            public void onCallBack(String data) {
+//
+//                            }
+//                        });
+                        // command: 1011 下注更新结果
+                    } else if (responseMessage.getCommand() == 1011) {
+                        callBack1.onCallBack(json);
+                        updateDateToH5(bridgeWebView1, "UpdateResult", json);
+//                        bridgeWebView1.callHandler(Constants.TYPE + "UpdateResult", json, new CallBackFunction() {
+//
+//                            @Override
+//                            public void onCallBack(String data) {
+//
+//                            }
+//                        });
+                        // command: 1012 游戏中解散房间是否同意
+                    }else if (responseMessage.getCommand() == 1012) {
+                     //   NettyClient.close();
+                        try {
+                            JSONObject jsonobj = new JSONObject(json);
+                            boolean disband = jsonobj.getBoolean("disband");
+                            if (disband) {
+                                Constants.isGame = false;
+                                Constants.isGameOver = false;
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        updateDateToH5(bridgeWebView1, "ReleaseReady", json);
+//                        bridgeWebView1.callHandler(Constants.TYPE + "ReleaseReady", json, new CallBackFunction() {
+//
+//                            @Override
+//                            public void onCallBack(String data) {
+//
+//                            }
+//                        });
+                        // command:  1013 断线重连
+                    } else if (responseMessage.getCommand() == 1013) {
+                        Log.e("断线重连更新数据", json);
+                        try {
+//                            JSONObject jsonobj = new JSONObject(json);
+//                            String roomUserList = jsonobj.getString("roomUserVOList");
+//                            String doorVOlist = jsonobj.getString("doorVOList");
+//                            if (jsonobj.get("needConnection") == true) {
+//                                if (jsonobj.get("turnStep") == "UN_START" || jsonobj.get("turnStep") == "UN_BLOCK" ) {
+//                                    updateDateToH5(bridgeWebView1, "UpdateUsers", roomUserList);
+//                                } else if (jsonobj.get("turnStep") == "HAS_BLOCK") {
+//                                    updateDateToH5(bridgeWebView1, "UpdateUsers", roomUserList);
+//                                    updateDateToH5(bridgeWebView1, "UpdateCards", roomUserList);
+//                                } else if (jsonobj.get("turnStep") == "BETTING") {
+//                                    //UN_PUSH_CARE UN_PUSH-CARD
+//                                   // updateDateToH5(bridgeWebView1, "UpdateUsers", roomUserList);
+//                                  //  updateDateToH5(bridgeWebView1, "UpdateCards", roomUserList);
+//                                }
+//                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        updateDateToH5(bridgeWebView1, "ConnectGame", json);
+//                        bridgeWebView1.callHandler(Constants.TYPE + "ConnectGame", json, new CallBackFunction() {
+//
+//                            @Override
+//                            public void onCallBack(String data) {
+//
+//                            }
+//                        });
+                        // command:  游戏中用户列表更新
+                    } else if (responseMessage.getCommand() == 1014) {
+                        // command:  游戏中用户列表更新
+                    } else {
+                        Log.e("返回的用户列表为", responseMessage.getData().toString());
+
+                        callBack1.onCallBack(json);
+                        updateDateToH5(bridgeWebView1, "UpdateUsers", json);
+//                        bridgeWebView1.callHandler(Constants.TYPE + "UpdateUsers", json, new CallBackFunction() {
+//
+//                            @Override
+//                            public void onCallBack(String data) {
+//
+//                            }
+//                        });
+                    }
+
+                }
+
+            }
+        });
+    }
+    public static void resetConnectUser (Map map, int command, BridgeWebView bridgeWebView) {
+        bridgeWebView2 = bridgeWebView;
+        sendSocketConnect(map, command);
+        channelManager.setCallback(new NettyCallback() {
+            @Override
+            public void responseCallback(ResponseMessage responseMessage) {
+                Log.e("断线重连数据", "aaa");
+                if (responseMessage.getCommand() == 1004) {
+                    // command: 1004, 游戏未开始房主其他玩家是否退出
+                    bridgeWebView2.callHandler(Constants.TYPE + "ReleaseWait", "", new CallBackFunction() {
 
                         @Override
                         public void onCallBack(String data) {
@@ -83,17 +204,16 @@ public class SocketHandler {
                     String json = JSON.toJSONString(responseMessage.getData());
                     // command: 1007 拦门发牌
                     if (responseMessage.getCommand() == 1007) {
-                        bridgeWebView1.callHandler("updateCards", json, new CallBackFunction() {
+                        bridgeWebView2.callHandler(Constants.TYPE + "UpdateCards", json, new CallBackFunction() {
 
                             @Override
                             public void onCallBack(String data) {
 
                             }
                         });
-                    // command: 1008 下注更新结果
+                        // command: 1008 下注更新结果
                     } else if (responseMessage.getCommand() == 1008) {
-                        callBack1.onCallBack(json);
-                        bridgeWebView1.callHandler("updateCoins", json, new CallBackFunction() {
+                        bridgeWebView2.callHandler(Constants.TYPE + "UpdateCoins", json, new CallBackFunction() {
                             @Override
                             public void onCallBack(String data) {
 
@@ -101,7 +221,7 @@ public class SocketHandler {
                         });
                         // command: 1011 下注更新结果
                     } else if (responseMessage.getCommand() == 1011) {
-                        bridgeWebView1.callHandler("updateResult", json, new CallBackFunction() {
+                        bridgeWebView2.callHandler(Constants.TYPE + "UpdateResult", json, new CallBackFunction() {
 
                             @Override
                             public void onCallBack(String data) {
@@ -110,7 +230,30 @@ public class SocketHandler {
                         });
                         // command: 1012 游戏中解散房间是否同意
                     }else if (responseMessage.getCommand() == 1012) {
-                        bridgeWebView1.callHandler("releaseReady", json, new CallBackFunction() {
+                        bridgeWebView2.callHandler(Constants.TYPE + "ReleaseReady", json, new CallBackFunction() {
+
+                            @Override
+                            public void onCallBack(String data) {
+
+                            }
+                        });
+                        // command:  1013 断线重连
+                    } else if (responseMessage.getCommand() == 1013) {
+                        try {
+                            JSONObject jsonobj = new JSONObject(json);
+                            String roomUserList = jsonobj.getString("roomUserVOList");
+                            String doorVOlist = jsonobj.getString("doorVOList");
+//                            if (jsonobj.get("needConnection") == true) {
+//                                if (jsonobj.get("turnStep") == "UN_START" || jsonobj.get("turnStep") == "UN_BLOCK" ) {
+//                                    updateDateToH5();
+//                                }
+//                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        Log.e("断线重连更新数据", json);
+                        bridgeWebView2.callHandler(Constants.TYPE + "ConnectGame", json, new CallBackFunction() {
 
                             @Override
                             public void onCallBack(String data) {
@@ -118,10 +261,11 @@ public class SocketHandler {
                             }
                         });
                         // command:  游戏中用户列表更新
+                    } else if (responseMessage.getCommand() == 1014) {
+                        // command:  游戏中用户列表更新
                     } else {
-                     //   Log.i("返回的用户列表为", responseMessage.getData().toString());
-                        callBack1.onCallBack(json);
-                        bridgeWebView1.callHandler("updateUsers", json, new CallBackFunction() {
+                        //   Log.i("返回的用户列表为", responseMessage.getData().toString());
+                        bridgeWebView2.callHandler(Constants.TYPE + "UpdateUsers", json, new CallBackFunction() {
 
                             @Override
                             public void onCallBack(String data) {
@@ -136,64 +280,6 @@ public class SocketHandler {
         });
     }
 
-//    public static void connectCardSocket (Map map, int command, CallBackFunction function,  BridgeWebView bridgeWebView) {
-//        callBack2 = function;
-//        bridgeWebView2 = bridgeWebView;
-//        sendSocketConnect(map, command);
-//        channelManager.setCallback(new NettyCallback() {
-//            @Override
-//            public void responseCallback(ResponseMessage responseMessage) {
-//                String json = JSON.toJSONString(responseMessage.getData());
-//                // command: 1011 更新单局结束游戏结果
-//                if (responseMessage.getCommand() == 1011) {
-//                    callBack2.onCallBack(json);
-//                    bridgeWebView2.callHandler("updateResult", json, new CallBackFunction() {
-//
-//                        @Override
-//                        public void onCallBack(String data) {
-//
-//                        }
-//                    });
-//                    // command: 1012 // 游戏中主动解散房间
-//                } else if (responseMessage.getCommand() == 1012) {
-//                    bridgeWebView2.callHandler("releaseReady", json, new CallBackFunction() {
-//
-//                        @Override
-//                        public void onCallBack(String data) {
-//
-//                        }
-//                    });
-//                    // command: 1007 其他玩家发牌
-//                }  else if (responseMessage.getCommand() == 1007)  {
-//                    callBack2.onCallBack(json);
-//                    bridgeWebView2.callHandler("updateCards", json, new CallBackFunction() {
-//
-//                        @Override
-//                        public void onCallBack(String data) {
-//
-//                        }
-//                    });
-//                }   else if (responseMessage.getCommand() == 1008)  {
-//                    callBack2.onCallBack(json);
-//                    bridgeWebView2.callHandler("updateResult", json, new CallBackFunction() {
-//
-//                        @Override
-//                        public void onCallBack(String data) {
-//
-//                        }
-//                    });
-//                }else {
-//                    bridgeWebView2.callHandler("updateUsers", json, new CallBackFunction() {
-//
-//                        @Override
-//                        public void onCallBack(String data) {
-//
-//                        }
-//                    });
-//                }
-//            }
-//        });
-//    }
     public static void updateResult (Map map, int command, CallBackFunction function,  BridgeWebView bridgeWebView) {
         callBack3 = function;
         bridgeWebView3 = bridgeWebView;
@@ -204,7 +290,7 @@ public class SocketHandler {
                 String json = JSON.toJSONString(responseMessage.getData());
                 // command: 1012  // 游戏中主动解散房间
                 if (responseMessage.getCommand() == 1012) {
-                    bridgeWebView3.callHandler("releaseReady", json, new CallBackFunction() {
+                    bridgeWebView3.callHandler(Constants.TYPE + "ReleaseReady", json, new CallBackFunction() {
                         @Override
                         public void onCallBack(String data) {
                         }
@@ -212,16 +298,29 @@ public class SocketHandler {
                     // command: 1011 更新单局结束游戏结果
                 } else if (responseMessage.getCommand() == 1011){
                     callBack3.onCallBack(json);
-                    bridgeWebView3.callHandler("updateResult", json, new CallBackFunction() {
+                    bridgeWebView3.callHandler(Constants.TYPE + "UpdateResult", json, new CallBackFunction() {
 
                         @Override
                         public void onCallBack(String data) {
                             //    Toast.makeText(getApplicationContext(), data, Toast.LENGTH_SHORT).show();
                         }
                     });
-                }  else if (responseMessage.getCommand() == 1007)  {
+                    // command:  1013 断线重连
+                } else if (responseMessage.getCommand() == 1013) {
+                    Log.e("断线重连更新数据", json);
+                    bridgeWebView3.callHandler(Constants.TYPE + "ConnectGame", json, new CallBackFunction() {
+
+                        @Override
+                        public void onCallBack(String data) {
+
+                        }
+                    });
+                    // command:  游戏中用户列表更新
+                } else if (responseMessage.getCommand() == 1014) {
+                    // command:  游戏中用户列表更新
+                }   else if (responseMessage.getCommand() == 1007)  {
                     callBack3.onCallBack(json);
-                    bridgeWebView3.callHandler("updateCards", json, new CallBackFunction() {
+                    bridgeWebView3.callHandler(Constants.TYPE + "UpdateCards", json, new CallBackFunction() {
 
                         @Override
                         public void onCallBack(String data) {
@@ -230,7 +329,7 @@ public class SocketHandler {
                     });
                 }   else if (responseMessage.getCommand() == 1008)  {
                     callBack3.onCallBack(json);
-                    bridgeWebView3.callHandler("updateCoins", json, new CallBackFunction() {
+                    bridgeWebView3.callHandler(Constants.TYPE + "UpdateCoins", json, new CallBackFunction() {
 
                         @Override
                         public void onCallBack(String data) {
@@ -238,7 +337,7 @@ public class SocketHandler {
                         }
                     });
                 } else {
-                    bridgeWebView3.callHandler("updateUsers", json, new CallBackFunction() {
+                    bridgeWebView3.callHandler(Constants.TYPE + "UpdateUsers", json, new CallBackFunction() {
 
                         @Override
                         public void onCallBack(String data) {
@@ -257,61 +356,19 @@ public class SocketHandler {
         channelManager.setCallback(new NettyCallback() {
             @Override
             public void responseCallback(ResponseMessage responseMessage) {
-        //        if (responseMessage.getData() == null) {
-                    callBack4.onCallBack("");
-//                } else {
-//                    String json = JSON.toJSONString(responseMessage.getData());
-//                    callBack4.onCallBack(json);
-//                    bridgeWebView4.callHandler("updateUsers", json, new CallBackFunction() {
-//
-//                        @Override
-//                        public void onCallBack(String data) {
-//                            //    Toast.makeText(getApplicationContext(), data, Toast.LENGTH_SHORT).show();
-//                        }
-//                    });
-//                }
+                Constants.isGame = false;
+                Constants.isGameOver = false;
+                callBack4.onCallBack("");
+            }
+        });
+    }
+    public static void updateDateToH5 (BridgeWebView bridgeWebView, String fnName, String data) {
+        bridgeWebView.callHandler(Constants.TYPE + fnName, data, new CallBackFunction() {
+
+            @Override
+            public void onCallBack(String data) {
 
             }
         });
     }
-
-//    public static void connectReleaseWaitSocket (Map map, int command, CallBackFunction function,  BridgeWebView bridgeWebView) {
-//        callBack5 = function;
-//        bridgeWebView5 = bridgeWebView;
-//        sendSocketConnect(map, command);
-//        channelManager.setCallback(new NettyCallback() {
-//            @Override
-//            public void responseCallback(ResponseMessage responseMessage) {
-//                if (responseMessage.getCode() == 200) {
-//                    callBack5.onCallBack("");
-//                    bridgeWebView5.callHandler("releaseWait", "", new CallBackFunction() {
-//
-//                        @Override
-//                        public void onCallBack(String data) {
-//                            //    Toast.makeText(getApplicationContext(), data, Toast.LENGTH_SHORT).show();
-//                        }
-//                    });
-//                }
-//            }
-//        });
-//    }
-//    public static void connectReleaseReadySocket (Map map, int command, CallBackFunction function,  BridgeWebView bridgeWebView) {
-//        callBack6 = function;
-//        bridgeWebView6 = bridgeWebView;
-//        sendSocketConnect(map, command);
-//        channelManager.setCallback(new NettyCallback() {
-//            @Override
-//            public void responseCallback(ResponseMessage responseMessage) {
-//                String json = JSON.toJSONString(responseMessage.getData());
-//                callBack6.onCallBack(json);
-//                bridgeWebView6.callHandler("releaseReady", json, new CallBackFunction() {
-//
-//                    @Override
-//                    public void onCallBack(String data) {
-//
-//                    }
-//                });
-//            }
-//        });
-//    }
 }

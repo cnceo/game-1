@@ -9,6 +9,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
+import android.util.Log;
 
 public class MusicServer extends Service {
     private HomeWatcherReceiver mHomeKeyReceiver;
@@ -18,8 +19,8 @@ public class MusicServer extends Service {
     public static final String SYSTEM_DIALOG_REASON_HOME_KEY = "homekey";
     public boolean isStart = false;
     public boolean isExit = false;
-    private int curVolume = 0;
-    private static final int VOICE_SIZE = 5;
+    private float curVolume = 0;
+    private static float VOICE_SIZE = 0.5f;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -56,32 +57,47 @@ public class MusicServer extends Service {
     public void onStart(Intent intent, int startId) {
         super.onStart(intent, startId);
 
+//        if (mediaPlayer == null) {
+//            // R.raw.mmp是资源文件，MP3格式的
+//            mediaPlayer = MediaPlayer.create(this, R.raw.bg);
+//            mediaPlayer.setLooping(true);
+//            mediaPlayer.start();
+//            mediaPlayer.setVolume(0.5f, 0.5f);
+//        }
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
         if (mediaPlayer == null) {
             // R.raw.mmp是资源文件，MP3格式的
             mediaPlayer = MediaPlayer.create(this, R.raw.bg);
             mediaPlayer.setLooping(true);
             mediaPlayer.start();
-
+            mediaPlayer.setVolume(0.5f, 0.5f);
         }
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
         if (isStart) {
             mediaPlayer.start();
         }
         // 获取冲activity中传来的音量
+      //  String voice = intent.getStringExtra("voice");
         String voice = intent.getStringExtra("voice");
-
+    //    Log.e("voice", voice);
+   //     mediaPlayer.setVolume(curVolume, curVolume);
         if (voice == null) {
+            Log.e("aaaa", "aaa");
             curVolume = VOICE_SIZE;
         } else {
-            curVolume = Integer.parseInt(voice);
+          //  curVolume = Integer.parseInt(voice);
+            curVolume = Float.parseFloat(voice + "f");
+//            Log.e("后台获取", String.valueOf(curVolume));
+//             mediaPlayer.setVolume(Float.parseFloat(voice + "f"), Float.parseFloat(voice + "f"));
+//            audioMgr = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+//            audioMgr.setStreamVolume(AudioManager.STREAM_MUSIC, curVolume,
+//                    AudioManager.FLAG_PLAY_SOUND);
+            mediaPlayer.setVolume(curVolume, curVolume);
         }
-       // mediaPlayer.setVolume(0.0f, 1.0f);
-        audioMgr = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        audioMgr.setStreamVolume(AudioManager.STREAM_MUSIC, curVolume,
-        AudioManager.FLAG_PLAY_SOUND);
+        Log.e("bbb", curVolume + "a");
+
         return super.onStartCommand(intent, flags, startId);
 
     }
@@ -113,8 +129,8 @@ public class MusicServer extends Service {
                 // 亮屏
             }else if (action.equals(Intent.ACTION_SCREEN_ON)) {
                 if (isStart && !isExit) {
-                    isStart = false;
-                    mediaPlayer.start();
+                 //   isStart = false;
+                 //   mediaPlayer.start();
                 }
 
                // 暗屏
